@@ -9,6 +9,40 @@ const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
 
+escapeRegex = function (str) {
+  return (str+'').replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
+};
+
+// GET Projects
+router.get('/a', function(req, res, next) {
+  var noMatch = null;
+  if(req.query.search) {
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+
+    Customer.find({name: regex}, function(err, customers){
+         if(err){
+             console.log(err);
+         } else {
+            if(customers.length < 1) {
+                noMatch = "Við fundum því miður enga viðskiptavini....";
+            }
+            res.render("customers",{title: 'Viðskiptavinir', customers: customers, noMatch: noMatch});
+         }
+      });
+  } else {
+      // Get all campgrounds from DB
+      Customer.find({}, function(err, customers){
+         if(err){
+             console.log(err);
+         } else {
+            return res.render('customers', { title: 'Viðskiptavinir', customers: customers, moment: moment, noMatch: noMatch});
+         }
+      });
+  }
+
+});
+
+
 /* GET users listing. */
 router.get('/',  function(req, res, next) {
   Lead.find({}).sort([['created', 'descending']]).exec(function(err, leads) {
