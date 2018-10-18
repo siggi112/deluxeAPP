@@ -10,7 +10,7 @@ const moment = require('moment');
 const numeral = require('numeral');
 
 /* GET users listing. */
-router.get('/', mid.requiresLogin, function(req, res, next) {
+router.get('/',  function(req, res, next) {
   Lead.find({}).sort([['created', 'descending']]).exec(function(err, leads) {
         if(err){
             console.log(err);
@@ -23,7 +23,7 @@ router.get('/', mid.requiresLogin, function(req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/new', mid.requiresLogin, function(req, res, next) {
+router.get('/new',  function(req, res, next) {
               return res.render('pages/leads/new', { title: 'Leads', moment: moment});
 
 });
@@ -51,7 +51,7 @@ router.get('/sales-dashboard', mid.requiresLogin, function(req, res, next) {
 });
 
 // POST / update lead status
-router.post('/update-status/:Lead_id', mid.requiresLogin, function (req, res) {
+router.post('/update-status/:Lead_id',  function (req, res) {
   Lead.findById(req.params.Lead_id, function(err, lead) {
 
   lead.firstname = sanitize(req.body.firstname),
@@ -70,7 +70,7 @@ router.post('/update-status/:Lead_id', mid.requiresLogin, function (req, res) {
 });
 
 // POST / update lead status
-router.post('/mark-sold/:Lead_id', mid.requiresLogin, function (req, res) {
+router.post('/mark-sold/:Lead_id',  function (req, res) {
   Lead.findById(req.params.Lead_id, function(err, lead) {
   lead.total = sanitize(req.body.total),
   lead.status = "Sold",
@@ -105,7 +105,7 @@ router.post('/mark-sold/:Lead_id', mid.requiresLogin, function (req, res) {
 
 
 // POST / resister new client
-router.post('/new-message',  mid.requiresLogin, function(req, res, next) {
+router.post('/new-message',   function(req, res, next) {
   if (req.body.message) {
 
 
@@ -132,7 +132,7 @@ router.post('/new-message',  mid.requiresLogin, function(req, res, next) {
 });
 
 // GET /single client
-router.get('/:lead_id', mid.requiresLogin, function(req, res, next) {
+router.get('/:lead_id',  function(req, res, next) {
   Lead.findById(req.params.lead_id, function(err, lead) {
           if (err) {
             console.log(err);
