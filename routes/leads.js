@@ -13,51 +13,34 @@ escapeRegex = function (str) {
   return (str+'').replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
 };
 
-//   <% if(noMatch !== null) { %>
-                // <h5><%= noMatch %></h5>
-           // <% } %>
 
-// GET Projects
-router.get('/a', function(req, res, next) {
-  var noMatch = null;
-  if(req.query.search) {
-    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-
-    Customer.find({name: regex}, function(err, customers){
-         if(err){
-             console.log(err);
-         } else {
-            if(customers.length < 1) {
-                noMatch = "Við fundum því miður enga viðskiptavini....";
-            }
-            res.render("customers",{title: 'Viðskiptavinir', customers: customers, noMatch: noMatch});
-         }
-      });
-  } else {
-      // Get all campgrounds from DB
-      Customer.find({}, function(err, customers){
-         if(err){
-             console.log(err);
-         } else {
-            return res.render('customers', { title: 'Viðskiptavinir', customers: customers, moment: moment, noMatch: noMatch});
-         }
-      });
-  }
-
-});
 
 
 /* GET users listing. */
 router.get('/',  function(req, res, next) {
-  Lead.find({}).sort([['created', 'descending']]).exec(function(err, leads) {
-        if(err){
-            console.log(err);
-          } else {
-              var message = req.query.message;
-              return res.render('pages/leads', { title: 'Leads', moment: moment, leads: leads, message: message});
-
-        }
-  });
+  var noMatch = null;
+  if(req.query.search) {
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    console.log(regex);
+    Lead.find({firstname: regex}, function(err, leads){
+         if(err){
+             console.log(err);
+         } else {
+            if(leads.length < 1) {
+                noMatch = "Sorry we found no leads....";
+            }
+                      return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
+         }
+      });
+  } else {
+      Lead.find({}, function(err, leads){
+         if(err){
+             console.log(err);
+         } else {
+            return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
+         }
+      });
+  }
 });
 
 /* GET users listing. */

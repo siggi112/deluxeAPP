@@ -25,9 +25,14 @@
                       <div class="row">
                         <div class="col-md-8">
                           <div class="search-form">
+                                    <form class="" id="searchForm" action="/leads" method="get">
                                     <div class="input-group">
-                                      <input type="text" placeholder="Search for lead..." class="form-control">
+                                      <input type="text" name="search" autocomplete="off" placeholder="Search for lead..." class="form-control">
+                                      <div class="input-group-append">
+                                  <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
                                     </div>
+                                    </form>
                           </div>
                         </div>
                             <div class="col-md-4">
@@ -51,15 +56,17 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <% if (leads.length === 0) { %>
-      <tr>
-        <td>There are no leads....</td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
+                          <% if(noMatch !== null) { %>
+                            <tr>
+                              <td><%= noMatch %></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
 
-<% } %>
+                              <% } %>
+
+
 <% leads.forEach(function(lead) { %>
 
   <tr>
