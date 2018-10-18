@@ -1,0 +1,170 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+            <div class="container-fluid">
+              <h2 class="no-margin-bottom">Sales Dashboard</h2>
+            </div>
+          </header>
+          <!-- Breadcrumb-->
+          <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item active">Sales Dashboard</li>
+            </ul>
+          </div>
+          <section class="dashboard-counts no-padding-bottom">
+        <div class="container-fluid">
+                      <p>Leads - <%= moment().format("MMMM") %>, <%= moment().format("YYYY") %></p>
+          <div class="row bg-white has-shadow">
+            <!-- Item -->
+            <div class="col-xl-3 col-sm-6">
+              <div class="item d-flex align-items-center">
+                <div class="icon bg-violet"><i class="icon-user"></i></div>
+                <div class="title"><span>Total<br>Submitted</span>
+                </div>
+                <div class="number"><strong>53</strong></div>
+              </div>
+            </div>
+            <!-- Item -->
+            <div class="col-xl-3 col-sm-6">
+              <div class="item d-flex align-items-center">
+                <div class="icon bg-red"><i class="icon-padnote"></i></div>
+                <div class="title"><span>Total<br>Open</span>
+                </div>
+                <div class="number"><strong>37</strong></div>
+              </div>
+            </div>
+            <!-- Item -->
+            <div class="col-xl-3 col-sm-6">
+              <div class="item d-flex align-items-center">
+                <div class="icon bg-green"><i class="icon-bill"></i></div>
+                <div class="title"><span>Total<br>Sold</span>
+                </div>
+                <div class="number"><strong>40</strong></div>
+              </div>
+            </div>
+            <!-- Item -->
+            <div class="col-xl-3 col-sm-6">
+              <div class="item d-flex align-items-center">
+                <div class="icon bg-orange"><i class="icon-check"></i></div>
+                <div class="title"><span>Total<br>Revenue</span>
+                </div>
+                <div class="number"><strong>5.000.000 ISK</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-header">
+
+    </section>
+
+      <section class="feeds no-padding-top">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Trending Articles-->
+          <div class="col-lg-5">
+            <div class="articles card">
+              <div class="card-close">
+                <div class="dropdown">
+<div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+              </div>
+              <div class="card-header d-flex align-items-center">
+                <h2 class="h3">Leads last Month</h2>
+              </div>
+              <div class="card-body no-padding">
+
+
+
+
+              </div>
+            </div>
+          </div>
+          <!-- Trending Articles-->
+          <div class="col-lg-5">
+            <div class="articles card">
+              <div class="card-close">
+                <div class="dropdown">
+                <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+              </div>
+              <div class="card-header d-flex align-items-center">
+                <h2 class="h3">Leads this month</h2>
+              </div>
+              <div class="card-body no-padding">
+
+
+
+
+                                <% if (leads.length === 0) { %>
+                                  <div class="item d-flex align-items-center">
+                                    <div class="text">
+                                        <h3 class="h5">There are no new leads</h3><small></small></div>
+                                  </div>
+
+                      <% } %>
+                      <% leads.forEach(function(lead) { %>
+                        <div class="item d-flex align-items-center">
+                          <div class="text"><a href="/leads/<%= lead.id %>">
+                              <h3 class="h5"><%= lead.firstname %> <div class="badge badge-rounded bg-green <%= lead.status %>"><%= lead.status %></div> </h3></a><small><%= lead.startdate %> - <%= lead.travellers %> PAX with budget per person <%= lead.budget %></small></div>
+                        </div>
+                        <% }); %>
+
+
+              </div>
+            </div>
+          </div>
+
+
+                    <!-- Recent Activities -->
+                    <div class="col-lg-2">
+                      <div class="recent-activities card">
+                        <div class="card-close">
+                          <div class="dropdown">
+                            <div aria-labelledby="closeCard8" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                          </div>
+                        </div>
+                        <div class="card-header">
+                          <h3 class="h4">Currency Converter</h3>
+                        </div>
+                        <div class="card-body">
+                      <form>
+                          <input type="hidden" class="form-control" id="OneUSD" value="112.32">
+                        <div class="form-group">
+                              <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">ISK</span></div>
+                                <input type="text" name="totalISK" id="iskconvert" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="input-group">
+                                      <div class="input-group-prepend"><span class="input-group-text">USD</span></div>
+                                      <input type="text" name="totalUSD" id="usdValue" value="$1" class="form-control" disabled="">
+                                    </div>
+                                  </div>
+                      </form>
+                    </div>
+                      </div>
+                      <div class="statistic d-flex align-items-center bg-white has-shadow">
+                    <div class="icon bg-green"><i class="fa fa-line-chart"></i></div>
+                    <div class="text"><strong>10.000.000 ISK</strong><br><small>Sales Goal</small></div>
+                  </div>
+                      <div class="statistic d-flex align-items-center bg-white has-shadow">
+                    <div class="icon bg-green"><i class="fa fa-line-chart"></i></div>
+                    <div class="text"><strong>99.9%</strong><br><small>Conversion Rate</small></div>
+                  </div>
+                    </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+<%- include ../../temp/footer.ejs %>

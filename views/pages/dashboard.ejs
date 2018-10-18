@@ -1,0 +1,160 @@
+<%- include ../temp/header.ejs %>
+<%- include ../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../temp/sidebar.ejs %>
+  <div class="content-inner">
+    <!-- Page Header-->
+    <header class="page-header">
+      <div class="container-fluid">
+        <h2 class="no-margin-bottom">Dashboard</h2>
+      </div>
+    </header>
+    <!-- Dashboard Counts Section-->
+    <section class="dashboard-counts no-padding-bottom">
+      <div class="container-fluid">
+        <div class="row bg-white has-shadow">
+          <!-- Item -->
+          <div class="col-xl-3 col-sm-6">
+            <div class="item d-flex align-items-center">
+              <div class="icon bg-violet"><i class="icon-user"></i></div>
+              <div class="title"><span>Total<br>Bookings</span>
+              </div>
+              <div class="number"><strong><%= totalBookings %></strong></div>
+            </div>
+          </div>
+          <!-- Item -->
+          <div class="col-xl-3 col-sm-6">
+            <div class="item d-flex align-items-center">
+              <div class="icon bg-red"><i class="icon-padnote"></i></div>
+              <div class="title"><span>Total<br>Completed</span>
+              </div>
+              <div class="number"><strong><%= totalCompleted %></strong></div>
+            </div>
+          </div>
+          <!-- Item -->
+          <div class="col-xl-3 col-sm-6">
+            <div class="item d-flex align-items-center">
+              <div class="icon bg-green"><i class="icon-bill"></i></div>
+              <div class="title"><span>Unpaid<br>Invoices</span>
+              </div>
+              <div class="number"><strong>40</strong></div>
+            </div>
+          </div>
+          <!-- Item -->
+          <div class="col-xl-3 col-sm-6">
+            <div class="item d-flex align-items-center">
+              <div class="icon bg-orange"><i class="icon-check"></i></div>
+              <div class="title"><span>New<br>Leads</span>
+              </div>
+              <div class="number"><strong>50</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Dashboard Header Section    -->
+    <section class="dashboard-header">
+
+    </section>
+
+    <!-- Feeds Section-->
+    <section class="feeds no-padding-top">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Trending Articles-->
+          <div class="col-lg-5">
+            <div class="articles card">
+              <div class="card-close">
+                <div class="dropdown">
+<div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+              </div>
+              <div class="card-header d-flex align-items-center">
+                <h2 class="h3">Pending Bookings   </h2>
+              </div>
+              <div class="card-body no-padding">
+                <% if (bookings.length === 0) { %>
+                  <div class="item d-flex align-items-center">
+                    <div class="text">
+                        <h3 class="h5">There are no pending bookings</h3><small></small></div>
+                  </div>
+
+      <% } %>
+      <% bookings.forEach(function(booking) { %>
+        <div class="item d-flex align-items-center">
+          <div class="text"><a href="/bookings/<%= booking.id %>">
+              <h3 class="h5"><%= booking.firstname %> <%= booking.lastname %></h3></a><small><%= moment(booking.arrivaldate).format('LL') %> to <%= moment(booking.departuredate).format('LL') %></small></div>
+        </div>
+        <% }); %>
+              </div>
+            </div>
+          </div>
+          <!-- Trending Articles-->
+          <div class="col-lg-5">
+            <div class="articles card">
+              <div class="card-close">
+                <div class="dropdown">
+                <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+              </div>
+              <div class="card-header d-flex align-items-center">
+                <h2 class="h3">New Leads</h2>
+              </div>
+              <div class="card-body no-padding">
+
+                <% if (leads.length === 0) { %>
+                  <div class="item d-flex align-items-center">
+                    <div class="text">
+                        <h3 class="h5">There are no new leads</h3><small></small></div>
+                  </div>
+
+      <% } %>
+      <% leads.forEach(function(lead) { %>
+        <div class="item d-flex align-items-center">
+          <div class="text"><a href="/leads/<%= lead.id %>">
+              <h3 class="h5"><%= lead.firstname %></h3></a><small><%= lead.startdate %> - <%= lead.travellers %> PAX with budget per person <%= lead.budget %></small></div>
+        </div>
+        <% }); %>
+
+
+              </div>
+            </div>
+          </div>
+
+
+                    <!-- Recent Activities -->
+                    <div class="col-lg-2">
+                      <div class="recent-activities card">
+                        <div class="card-close">
+                          <div class="dropdown">
+                            <div aria-labelledby="closeCard8" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                          </div>
+                        </div>
+                        <div class="card-header">
+                          <h3 class="h4">Currency Converter</h3>
+                        </div>
+                        <div class="card-body">
+                      <form>
+                          <input type="hidden" class="form-control" id="OneUSD">
+                        <div class="form-group">
+                              <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text">ISK</span></div>
+                                <input type="text" name="totalISK" id="iskconvert" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="input-group">
+                                      <div class="input-group-prepend"><span class="input-group-text">USD</span></div>
+                                      <input type="text" name="totalUSD" id="usdValue" value="$1" class="form-control" disabled>
+                                    </div>
+                                  </div>
+                      </form>
+                    </div>
+                      </div>
+                    </div>
+
+        </div>
+      </div>
+    </section>
+
+  <%- include ../temp/footer.ejs %>

@@ -1,0 +1,227 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+            <div class="container-fluid">
+              <h2 class="no-margin-bottom">Create new itinerary</h2>
+            </div>
+          </header>
+          <!-- Breadcrumb-->
+          <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item active">Create new itinerary      </li>
+            </ul>
+          </div>
+          <section class="tables">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-2">
+
+                  <form id="createItinerary" class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Set travel dates</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label class="form-label">Arrival date</label>
+                        <input placeholder="Arrival date" id="dpd1" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Departure date</label>
+                        <input  placeholder="Departure date" id="dpd2" class="form-control">
+                      </div>
+                      <input id="datePicker" type="text" class="form-control">
+                    </div>
+                    <div class="card-footer text-right">
+                      <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                  </form>
+
+                  <form id="createItinerary" class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Itinerary Details</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <input  id="dpd1" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Discount</label>
+                        <input  id="dpd1" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Total Cost</label>
+                        <input  id="dpd2" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Total VAT</label>
+                        <input   id="dpd2" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Total Price</label>
+                        <input   id="dpd2" class="form-control">
+                      </div>
+                    </div>
+                    <div class="card-footer text-right">
+                      <button type="submit" class="btn btn-primary success">Save</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-10" id="daysList">
+
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div id="hotelDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+                        <div role="document" class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 id="hotelLabel" class="modal-title"></h4>
+                              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                              <form method="post" id="roomCalculatePrice">
+                                <div class="form-group">
+                                  <label>Room Type</label>
+                                  <select id="roomType" class="form-control custom-select" name="type">
+                              <option selected disabled>Select Room Type</option>
+                              </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>Check-in</label>
+                                  <input type="text" id="checkIn" placeholder="Arrival" name="start" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label>Check-out</label>
+                                  <input type="text" id="checkOut" placeholder="Departure" name="start" class="form-control">
+                                </div>
+                                <p id="pricePerNight">Please Select Room</p>
+                                <input type="hidden" id="roomItemPrice" value="">
+                                <input type="hidden" id="thisRoomPrice" value="">
+                            </div>
+                            <input type="hidden" id="thisSupplier">
+                            <div class="modal-footer">
+                              <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                              <button type="submit" class="btn btn-primary">Get Price</button>
+                              <button type="button" id="SaveSelectedRoom" class="btn btn-primary">Save</button>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+<% hotels.forEach(function(hotel) { %>
+
+<input type="hidden" class="hotel" value="<%= hotel.name %>" data-id="<%= hotel.id %>">
+
+
+<% }); %>
+
+<%- include ../../temp/footer.ejs %>
+
+
+
+<script>
+
+
+
+$( "#createItinerary" ).submit(function( event ) {
+
+  event.preventDefault();
+  var arrival = $("#dpd1").val();
+  var departure = $("#dpd2").val();
+  var startDate = moment(arrival);
+  var endDate = moment(departure);
+  var tripDuration = endDate.diff(startDate, 'days');
+  tripDuration += 1;
+  tripNights = tripDuration - 1;
+
+
+  if (tripDuration > 0) {
+    var durationDays = 1;
+    var arrivalDate = " - Arrival";
+    for (i = 0; i < tripDuration; i++) {
+
+
+
+
+
+      $("#daysList").append("<div class='card day-card'><input type='hidden' id='thisDay' value='"+ moment(startDate) +"'><div class='card-header'><strong>Day "+ durationDays +""+ arrivalDate +" </br>"+ moment(startDate).format('LL') +"</strong><div class='day-amount float-right new "+ moment(startDate) +"'>0 ISK</div><input type='hidden' id='"+ moment(startDate) +"'></div><div class='card-body'><p class='card-text'>There is no activity selected for this date...</p><button class='btn btn-outline-dark btn-sm'><span class='fa fa-plus'></span> Add</button></div><div class='card-footer text-muted'><div class='form-group center'><select class='form-control custom-select  "+ moment(startDate) +"' day-data='"+ moment(startDate) +"' id='hotels'><option disabled selected>Select Hotel</option></select></div></div></div>");
+        durationDays += 1;
+        startDate.add('days', 1);
+        arrivalDate = "";
+    }
+  }
+
+
+    $( ".hotel" ).each(function() {
+      var hotelName = $(this).val();
+      var hotelID = $(this).attr("data-id");
+      $('select#hotels').append($('<option>', {
+          value: hotelID,
+          text: hotelName
+      }));
+    });
+
+    $( "select#hotels" ).change(function() {
+      $('select#roomType').empty().append('<option selected="selected disabled">Select Room Type</option>');
+      var selectedSupplierID = $(this).val();
+      var selectedDay = $(this).attr("day-data");
+      $("#thisSupplier").val(selectedSupplierID);
+      alert(selectedDay);
+      $('#hotelDetails').modal('show');
+      $("#hotelLabel").text("Details for Hotel");
+      $.get( "/itineraries/get-rooms/"+ selectedSupplierID, function( data ) {
+
+        for (i = 0; i < data.length; i++) {
+          $('select#roomType').append($('<option>', {
+              value: data[i]._id,
+              text : data[i].type
+          }));
+        }
+      });
+    });
+
+    $( "#roomCalculatePrice" ).submit(function(event) {
+      event.preventDefault();
+      var selectedSupplierID = $("#thisSupplier").val();
+      var getRoomType = $("select#roomType option:selected").val();
+      var startDate = $("#checkIn").val();
+      var endDate = $("#checkOut").val();
+      $("#thisRoomPrice").val(getRoomType);
+      $.post( "/itineraries/get-room-price/"+ selectedSupplierID +"/"+ getRoomType, { startDate: startDate, endDate:endDate })
+      .done(function( data ) {
+
+        $("#pricePerNight").html(data.totalCal);
+        $("#RoomitemPrice").val(data.totalCal);
+        console.log(data.totalCal);
+      })
+
+
+
+    });
+});
+
+$( "#SaveSelectedRoom" ).click(function() {
+
+  $( "#target" ).click();
+});
+
+
+$('#datePicker').datepicker({
+    orientation: "bottom auto",
+    todayHighlight: true,
+    autoclose: true,
+    datesDisabled: ['10/06/2018', '10/21/2018']
+});
+
+
+</script>

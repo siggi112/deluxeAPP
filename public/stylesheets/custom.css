@@ -1,0 +1,116 @@
+/* your styles go here */
+
+.login-page::before {
+  -webkit-filter: blur(1px);
+  filter: blur(1px);
+}
+
+.articles .item small {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+nav.navbar {
+  background: #0277BD;
+}
+
+nav.side-navbar ul li.active > a {
+    background: #0277BD;
+    color: #fff;
+    border-left: 4px solid #039BE5;
+}
+
+nav.side-navbar ul li.active > a:hover {
+    background: #0277BD;
+}
+
+nav.side-navbar ul li a:hover {
+    background: #0277BD;
+    border-left: 4px solid #039BE5;
+    color: #fff;
+}
+
+.login-page .form-holder .info {
+    background: rgba(2, 119, 189, 0.9);
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #0277BD;
+    border-color: #0277BD;
+}
+
+input.input-material:focus {
+    border-color: #0277BD;
+}
+
+input.input-material ~ label.active {
+    font-size: 0.8rem;
+    top: -10px;
+    color: #0277BD;
+}
+
+.form-control:focus {
+    color: #0277BD;
+    background-color: #fff;
+    border-color: #0277BD;
+    outline: none;
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(2, 119, 189, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(2, 119, 189, 0.25);
+}
+
+a {
+    color: #0277BD;
+    text-decoration: none;
+        font-weight: 500;
+}
+
+.badge.badge-rounded {
+    padding: 6px 8px;
+}
+
+button.btn.btn-outline-dark.btn-sm.add-to-day {
+    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-right: 5px;
+}
+
+.card-body.client {
+    line-height: 35px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #0277BD;
+}
+
+a:focus, a:hover {
+  color:  #0277BD;
+}
+
+form.inclineForm {
+    display: inline-block;
+}
+
+input.form-control.lead-type {
+    width: 60%;
+}
+
+.day-card .form-group.center {
+    width: 30%;
+    margin: 0px;
+}
+
+.day-amount.float-right.new {
+    padding: 10px 25px;
+    background: #f3f3f3;
+    color: #216C2A;
+}
+
+.badge.badge-rounded.bg-green.Follow-up {
+    background: #FDD835!IMPORTANT;
+}
+
+.badge.badge-rounded.bg-green.Inactive {
+    background: #E53935!IMPORTANT;
+}

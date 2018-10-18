@@ -1,0 +1,257 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+                      <div class="container-fluid">
+                        <h2 class="no-margin-bottom"><%= lead.firstname %></h2>
+                      </div>
+          </header>
+
+          <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+              <li class="breadcrumb-item active">lead</li>
+            </ul>
+          </div>
+
+          <section class="forms">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-4">
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Contact <div class="badge badge-rounded bg-green <%= lead.status %>"><%= lead.status %></div></h3>
+                      <div class="card-close">
+                      <div class="dropdown">
+                        <% if(lead.status === "Sold"){ %>
+                        <% } else { %>
+                                                <a href="#" class="edit-model" data-toggle="modal" data-target="#editModal"> <i class="fa fa-pencil"></i></a>
+                        <% } %>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+                          <h4><%= lead.firstname %></h4>
+                          <% if(lead.phone){ %>
+                          <i class="fa fa-phone"></i> <%= lead.phone %></br>
+                          <% } %>
+                          <i class="fa fa-envelope"></i> <%= lead.email %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Details</h3>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+                          <p class="text-muted mb-0">Number of travellers: <%= lead.travellers %> PAX</p>
+                          <p class="text-muted mb-0">Budget per person: <%= lead.budget %></p>
+                          <p class="text-muted mb-0">Desired arrival month: <%= lead.startdate %></p>
+                          <hr>
+                          <% if(lead.trip){ %>
+                            <p><strong>Requested trip:</strong></p>
+                          <i class="fa fa-send"></i> <%= lead.trip %></br>
+                          <hr>
+                          <% } %>
+                          <% if(lead.status === "Sold"){ %>
+                              <button type="button" class="btn btn-success" disabled><span class="fa fa-check"></span> Marked as sold!</button>
+                          <% } else { %>
+                          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#markSold">Mark as sold</button>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                  <!-- Inline Form-->
+                  <div class="col-lg-8">
+                      <div class="card">
+                        <div class="card-header pt-2 pb-2">
+                          <ul class="nav nav-pills card-header-pills">
+                            <li class="nav-item"><a data-toggle="pill" href="#log" role="tab" class="nav-link active">Activity log</a></li>
+                          </ul>
+                        </div>
+                        <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+      <div class="card lead-single">
+                    <div class="card-header">
+                      <form method="post" action="/leads/new-message">
+                      <div class="input-group">
+                        <input type="hidden" value="<%= lead.id %>" name="owner">
+                        <input type="text" placeholder="Message" name="message" class="form-control lead-type">
+                        <select class="form-control" name="type">
+                              <option value="Email">Email</option>
+                              <option value="Phone Call">Phone Call</option>
+                          </select>
+                        <div class="input-group-append">
+                          <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-send"></i></button>
+                        </div>
+                      </div>
+                    </form>
+                    </div>
+                    <div class="list-group card-list-group">
+
+                      <% messages.forEach(function(message) { %>
+
+
+                        <div class="list-group-item py-5">
+                          <div class="media">
+                          <div class="media-body">
+                              <div class="media-heading">
+                                <h5><%= moment(message.created).format('lll') %> - <%= message.type %></h5>
+                              </div>
+                              <div class="text-muted text-small"><%= message.text %></div>
+                            </div>
+                          </div>
+                        </div>
+
+    <% }); %>
+
+
+
+
+
+                    </div>
+                  </div>
+
+    </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                </div>
+
+            </section>
+
+            <!-- Modal -->
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Lead</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <form method="post" action="/leads/update-status/<%= lead.id %>">
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Name</label>
+                      <input type="text" class="form-control" name="firstname" value="<%= lead.firstname %>">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Phone Number</label>
+                      <input type="text" class="form-control" name="phone" value="<%= lead.phone %>">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Email</label>
+                      <input type="email" class="form-control" name="email" value="<%= lead.email %>">
+                    </div>
+                    <hr></hr>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Travellers</label>
+                      <input type="number" class="form-control" name="travellers" value="<%= lead.travellers %>">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Budget per person</label>
+                      <input type="text" class="form-control" name="budget" value="<%= lead.budget %>">
+                    </div>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Desired arrival month</label>
+                      <input type="text" class="form-control" name="startdate" value="<%= lead.startdate %>">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Status</label>
+                        <select class="form-control custom-select" name="status">
+                          <% if(lead.status === "New"){ %>
+                              <option value="New" selected>New</option>
+                              <option value="Inactive">Inactive</option>
+                              <option value="Follow-up">Follow-up</option>
+                          <% } %> <% if(lead.status === "Inactive"){ %>
+                              <option value="Inactive" selected>Inactive</option>
+                              <option value="Follow-up">Follow-up</option>
+                          <% }  %> <% if(lead.status === "Follow-up"){ %>
+                              <option value="Follow-up" selected>Follow-up</option>
+                              <option value="Inactive">Inactive</option>
+                          <% } %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="markSold" tabindex="-1" role="dialog" aria-labelledby="markSold" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mark lead as sold</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form method="post" action="/leads/mark-sold/<%= lead.id %>">
+              <input type="hidden" class="form-control" name="firstname" value="<%= lead.firstname %>">
+              <input type="hidden" class="form-control" name="email" value="<%= lead.email %>">
+                <input type="hidden" class="form-control" name="phonenumber" value="<%= lead.phone %>">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Total ISK</label>
+            <input type="text" class="form-control" name="total" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Arrival date</label>
+            <input type="text" class="form-control" name="arrivalDate" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Departure date</label>
+            <input type="text" class="form-control" name="departureDate" id="recipient-name">
+          </div>
+          <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Payment instructions have been sent.</label>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include ../../temp/footer.ejs %>
+<% if (message === "newMessage") { %>
+  <script type="text/javascript">
+
+
+
+  Messenger().post({
+    extraClasses: 'messenger-fixed messenger-on-top  messenger-on-right',
+    theme: 'flat',
+  message: 'New Message created!',
+  type: 'success'
+  });
+  </script>
+
+<% } %>
