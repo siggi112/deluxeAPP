@@ -13,6 +13,10 @@ escapeRegex = function (str) {
   return (str+'').replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
 };
 
+//   <% if(noMatch !== null) { %>
+                // <h5><%= noMatch %></h5>
+           // <% } %>
+
 // GET Projects
 router.get('/a', function(req, res, next) {
   var noMatch = null;
