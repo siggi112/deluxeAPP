@@ -29,7 +29,7 @@ router.get('/new',  function(req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/sales-dashboard', mid.requiresLogin, function(req, res, next) {
+router.get('/sales-dashboard',function(req, res, next) {
   var begin = moment().startOf('month').format("YYYY-MM-DD");
   var end = moment().endOf('month').format("YYYY-MM-DD");
   console.log("Start "+ begin);

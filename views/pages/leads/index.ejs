@@ -21,10 +21,22 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="card">
-                    <div class="card-close">
-                      <div class="dropdown">
-                        <button type="button" id="closeCard3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
-                        <div aria-labelledby="closeCard3" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div class="search-form">
+                                    <div class="input-group">
+                                      <input type="text" placeholder="Search for lead..." class="form-control">
+                                    </div>
+                          </div>
+                        </div>
+                            <div class="col-md-4">
+                              <div class="float-right">
+                                <form class="incline" action="/leads/new" method="get">
+                                    <button class="btn btn-outline-dark btn-sm new-lead-t" type="submit"><span class="fa fa-plus"></span> New Lead</button>
+                                </form>
+                              </div>
+                          </div>
                       </div>
                     </div>
                     <div class="card-body">

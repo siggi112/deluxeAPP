@@ -12,6 +12,7 @@ const index = require('./routes/index');
 const suppliers = require('./routes/suppliers');
 const leads = require('./routes/leads');
 const itineraries = require('./routes/itineraries');
+const operations = require('./routes/operations');
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use('/', index);
 app.use('/suppliers', suppliers );
 app.use('/leads', leads );
 app.use('/itineraries', itineraries );
+app.use('/operations', operations );
 
 
 // catch 404 and forward to error handler
