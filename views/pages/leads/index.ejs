@@ -27,10 +27,7 @@
                           <div class="search-form">
                                     <form class="" id="searchForm" action="/leads" method="get">
                                     <div class="input-group">
-                                      <input type="text" name="search" autocomplete="off" placeholder="Search for lead..." class="form-control">
-                                      <div class="input-group-append">
-                                  <button type="submit" class="btn btn-primary">Search</button>
-                                </div>
+                                    <input type="text" name="search" autocomplete="off" id="searchNow" placeholder="Search for lead..." class="form-control">
                                     </div>
                                     </form>
                           </div>
@@ -55,7 +52,7 @@
                               <th>Date Submitted</th>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody id="leadsResults">
                           <% if(noMatch !== null) { %>
                             <tr>
                               <td><%= noMatch %></td>
@@ -77,8 +74,6 @@
 
 </tr>
       <% }); %>
-
-
                           </tbody>
                         </table>
                       </div>
@@ -92,3 +87,25 @@
 
 
 <%- include ../../temp/footer.ejs %>
+<script type="text/javascript">
+$( "#searchNow" ).keyup(function(e) {
+  var searchQuery = $(this).val();
+
+  $.get( "/leads/search?search="+ searchQuery, function( data ) {
+  $("#leadsResults").html("");
+
+  if (0 < data.length) {
+    for (var i = 0; i < data.length; i++) {
+      $("#leadsResults").append('<tr><th scope="row"><a href="/leads/'+   data[i]._id +'">'+   data[i].firstname +'</a></th><td>'+ data[i].email +'</td><td>'+ data[i].email +'</td><td>'+ data[i].startdate +'</td></tr>')
+
+
+    }
+  } else {
+
+    $("#leadsResults").append('<tr><td>There are no leads...</td><td></td><td></td><td></td></tr>')
+
+  }
+
+});
+});
+</script>

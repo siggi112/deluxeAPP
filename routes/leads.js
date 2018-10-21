@@ -19,9 +19,22 @@ escapeRegex = function (str) {
 /* GET users listing. */
 router.get('/',  function(req, res, next) {
   var noMatch = null;
+      Lead.find({}, function(err, leads){
+         if(err){
+             console.log(err);
+         } else {
+            return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
+         }
+      });
+
+});
+
+
+/* GET users listing. */
+router.get('/search',  function(req, res, next) {
+  var noMatch = null;
   if(req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-    console.log(regex);
     Lead.find({firstname: regex}, function(err, leads){
          if(err){
              console.log(err);
@@ -29,7 +42,7 @@ router.get('/',  function(req, res, next) {
             if(leads.length < 1) {
                 noMatch = "Sorry we found no leads....";
             }
-                      return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
+          res.send(leads);
          }
       });
   } else {
@@ -37,7 +50,7 @@ router.get('/',  function(req, res, next) {
          if(err){
              console.log(err);
          } else {
-            return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
+            res.send(leads);
          }
       });
   }
