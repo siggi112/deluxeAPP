@@ -14,20 +14,19 @@ escapeRegex = function (str) {
 };
 
 
-
-
-/* GET users listing. */
-router.get('/',  function(req, res, next) {
-  var noMatch = null;
-      Lead.find({}, function(err, leads){
-         if(err){
-             console.log(err);
-         } else {
-            return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment, noMatch: noMatch});
-         }
-      });
-
+router.get('/', function(req, res, next) {
+    var message = req.query.message;
+    Lead.find({}).sort([['created', 'descending']]).exec(function(err, leads) {
+          if(err){
+              console.log(err);
+            } else {
+            var message = req.query.message;
+            return res.render('pages/leads', { title: 'Leads', leads: leads, moment: moment});
+          }
+    });
 });
+
+
 
 
 /* GET users listing. */
