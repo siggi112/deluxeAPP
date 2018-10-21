@@ -30,6 +30,10 @@ nav.side-navbar ul li a:hover {
     color: #fff;
 }
 
+nav.side-navbar {
+  transition: 0.45s;
+}
+
 .login-page .form-holder .info {
     background: rgba(2, 119, 189, 0.9);
     color: #fff;

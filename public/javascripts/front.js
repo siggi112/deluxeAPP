@@ -23,9 +23,9 @@ $(document).ready(function () {
 
     // ------------------------------------------------------- //
     // Tooltips init
-    // ------------------------------------------------------ //    
+    // ------------------------------------------------------ //
 
-    $('[data-toggle="tooltip"]').tooltip()    
+    $('[data-toggle="tooltip"]').tooltip()
 
 
     // ------------------------------------------------------- //
@@ -42,12 +42,12 @@ $(document).ready(function () {
     // ------------------------------------------------------- //
     // Sidebar Functionality
     // ------------------------------------------------------ //
-    $('#toggle-btn').on('click', function (e) {
+    $('.side-navbar').hover(function (e) {
         e.preventDefault();
         $(this).toggleClass('active');
 
-        $('.side-navbar').toggleClass('shrinked');
-        $('.content-inner').toggleClass('active');
+        $('.side-navbar').removeClass('shrinked');
+        $('.content-inner').removeClass('active');
         $(document).trigger('sidebarChanged');
 
         if ($(window).outerWidth() > 1183) {
@@ -63,13 +63,15 @@ $(document).ready(function () {
         if ($(window).outerWidth() < 1183) {
             $('.navbar-header .brand-small').show();
         }
+    },function() {
+      $( this ).addClass( "shrinked" );
+      $('.content-inner').addClass('active');
     });
-
     // ------------------------------------------------------- //
     // Universal Form Validation
     // ------------------------------------------------------ //
 
-    $('.form-validate').each(function() {  
+    $('.form-validate').each(function() {
         $(this).validate({
             errorElement: "div",
             errorClass: 'is-invalid',
@@ -81,14 +83,14 @@ $(document).ready(function () {
                 console.log(element);
                 if (element.prop("type") === "checkbox") {
                     error.insertAfter(element.siblings("label"));
-                } 
+                }
                 else {
                     error.insertAfter(element);
                 }
             }
         });
 
-    });    
+    });
 
     // ------------------------------------------------------- //
     // Material Inputs
@@ -116,8 +118,8 @@ $(document).ready(function () {
     });
 
     // ------------------------------------------------------- //
-    // Footer 
-    // ------------------------------------------------------ //   
+    // Footer
+    // ------------------------------------------------------ //
 
     var contentInner = $('.content-inner');
 
