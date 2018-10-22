@@ -126,24 +126,32 @@ router.post('/mark-sold/:Lead_id',  function (req, res) {
       } else { 
 
 
-    var bookingData = {
+    if (req.body.createBooking){
+      var bookingData = {
 
-      firstname: sanitize(req.body.firstname),
-      email: sanitize(req.body.email),
-      phonenumber: sanitize(req.body.phonenumber),
-      arrivaldate: sanitize(req.body.arrivaldate),
-      departuredate: sanitize(req.body.departuredate),
-      finalprice: sanitize(req.body.total),
+        firstname: sanitize(req.body.firstname),
+        email: sanitize(req.body.email),
+        phonenumber: sanitize(req.body.phonenumber),
+        arrivaldate: sanitize(req.body.arrivaldate),
+        departuredate: sanitize(req.body.departuredate),
+        finalprice: sanitize(req.body.total),
 
-    };
+      };
 
-    Booking.create(bookingData, function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        res.redirect('/leads/'+ req.params.Lead_id);
-      }
-    });
+      Booking.create(bookingData, function (error, user) {
+        if (error) {
+          return next(error);
+        } else {
+          res.redirect('/leads/'+ req.params.Lead_id);
+        }
+      });
+
+    } else {
+      res.redirect('/leads/'+ req.params.Lead_id);
+    }
+
+
+
       }
     })
   })

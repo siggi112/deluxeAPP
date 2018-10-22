@@ -12,8 +12,8 @@
 
           <div class="breadcrumb-holder container-fluid">
             <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-              <li class="breadcrumb-item active">lead</li>
+              <li class="breadcrumb-item"><a href="/leads">Leads</a></li>
+              <li class="breadcrumb-item active"><%= lead.firstname %></li>
             </ul>
           </div>
 
@@ -232,8 +232,8 @@
             <input type="text" class="form-control" name="departureDate" id="recipient-name">
           </div>
           <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Payment instructions have been sent.</label>
+    <input type="checkbox" class="form-check-input" name="createBooking" id="createBooking">
+    <label class="form-check-label" for="exampleCheck1">Create New Booking.</label>
       </div>
       </div>
       <div class="modal-footer">
