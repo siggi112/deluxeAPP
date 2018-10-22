@@ -83,6 +83,11 @@
                             <li class="nav-item"><a data-toggle="pill" href="#log" role="tab" class="nav-link active">Activity log</a></li>
                           </ul>
                         </div>
+                        <div class="card-close">
+                  <div class="dropdown">
+                    <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeLead" data-lead="<%= lead._id %>" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Delete Lead <i class="fa fa-times"></i></button>
+                    </div>
+                </div>
                         <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
 
@@ -268,6 +273,29 @@
   </div>
 </div>
 
+<div class="modal fade" id="removeLead" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Lead</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to delete this lead?</p>
+        <form method="post" action="/leads/delete-lead">
+          <input type="hidden" id="leadID" name="leadID" value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <%- include ../../temp/footer.ejs %>
 
@@ -279,6 +307,14 @@ var button = $(event.relatedTarget) // Button that triggered the modal
 var message = button.data('message') // Extract info from data-* attributes
 var modal = $(this)
 modal.find('input#messageDelete').val(message)
+});
+
+$('#removeLead').on('show.bs.modal', function (event) {
+
+var button = $(event.relatedTarget) // Button that triggered the modal
+var message = button.data('lead') // Extract info from data-* attributes
+var modal = $(this)
+modal.find('input#leadID').val(message)
 });
 
 

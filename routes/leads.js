@@ -24,6 +24,18 @@ router.post('/delete/:Lead_id', function(req, res, next) {
     });
 });
 
+router.post('/delete-lead', function(req, res, next) {
+  Lead.remove({
+        _id: sanitize(req.body.leadID)
+    }, function(err, item) {
+        if (err) {
+          return next(err);
+        } else
+        res.redirect('/leads');
+    });
+});
+
+
 
 
 
@@ -199,6 +211,51 @@ router.get('/:lead_id',  function(req, res, next) {
           });
   }
   });
+});
+
+// POST / resister new lead
+router.post('/new-lead',  function(req, res, next) {
+  if (req.body.email) {
+
+      var leadData = {
+        firstname: sanitize(req.body.firstname),
+        email: sanitize(req.body.email),
+        travellers: sanitize(req.body.travellers),
+        phone: sanitize(req.body.phone),
+        startdate: sanitize(req.body.startdate),
+        budget: sanitize(req.body.budget),
+        trip: sanitize(req.body.trip),
+        notes: sanitize(req.body.notes),
+        source: sanitize(req.body.source),
+      };
+
+      Lead.create(leadData, function (error, lead) {
+        if (error) {
+          return next(error);
+        } else {
+
+          var leadID = lead._id;
+          if (leadData.notes) {
+
+            var messageData = {
+              text: sanitize(leadData.notes),
+              type: "Additional information",
+              owner: leadID,
+            };
+
+            Message.create(messageData, function (error, user) {
+              if (error) {return next(error)}
+            })
+          }
+          res.redirect('/leads');
+        }
+      });
+
+    } else {
+      var err = new Error('All fields required.');
+      err.status = 400;
+      return next(err);
+    }
 });
 
 

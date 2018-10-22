@@ -6,7 +6,7 @@
           <!-- Page Header-->
           <header class="page-header">
             <div class="container-fluid">
-              <h2 class="no-margin-bottom">Leads</h2>
+              <h2 class="no-margin-bottom">Create new lead</h2>
             </div>
           </header>
           <!-- Breadcrumb-->
@@ -21,21 +21,20 @@
           <div class="col-lg-12">
                   <div class="card">
                     <div class="card-body">
-                      <form>
-
+                      <form method="post" action="/leads/new-lead">
                         <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
                           <label class="form-control-label">Name</label>
-                          <input type="text" placeholder="Name" class="form-control">
+                          <input type="text" placeholder="Name" name="firstname" class="form-control">
                         </div>
                         <div class="form-group">
                           <label class="form-control-label">Phone Number</label>
-                          <input type="text" placeholder="Phone Number" class="form-control">
+                          <input type="text" placeholder="Phone Number" name="phone" class="form-control">
                         </div>
                         <div class="form-group">
                           <label class="form-control-label">Email</label>
-                          <input type="email" placeholder="Email Address" class="form-control">
+                          <input type="email" placeholder="Email Address" name="email" class="form-control">
                         </div>
 
                     </div>
@@ -68,30 +67,39 @@
                               </div>
                               <div class="form-group">
                                     <label class="form-control-label">Desired Arrival Month</label>
-                                    <select class="form-control custom-select" name="arrival">
-                                      <option value="$2,500 - $5,000">$2,500 - $5,000</option>
-                                      <option value="$5,500 - $7,500">$5,500 - $7,500</option>
-                                      <option value="$7,500 - $10,000">$7,500 - $10,000</option>
-                                      <option value="Don't focus on specific budget">Don't focus on specific budget</option>
+                                    <select class="form-control custom-select selectpicker" ultiple data-live-search="true" name="startdate">
+                                      <option value="January">January</option>
+                                      <option value="February">February</option>
+                                      <option value="March">March</option>
+                                      <option value="April">April</option>
+                                      <option value="April">May</option>
+                                      <option value="April">June</option>
+                                      <option value="July">July</option>
+                                      <option value="August">August</option>
+                                      <option value="September">September</option>
+                                      <option value="October">October</option>
+                                      <option value="November">November</option>
+                                      <option value="December">December</option>
                                     </select>
                                   </div>
                                   <div class="form-group">
+                                        <label class="form-control-label">Source</label>
+                                        <select class="form-control custom-select" name="source">
+                                          <option value="Zicasso">Zicasso</option>
+                                          <option value="Phone">Phone</option>
+                                        </select>
+                                      </div>
+                                  <div class="form-group">
                         <label class="form-label">Additional information (Looking for adventure, romance etc)</label>
-                        <textarea rows="8" class="form-control">The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream.</textarea>
+                        <textarea rows="8" name="notes" class="form-control"></textarea>
                       </div>
-
-
                     </div>
                   </div>
-
-
-
-
-                      </form>
                     </div>
                     <div class="card-footer text-right">
-                      <button class="btn btn-primary">Save</button>
+                      <button type="submit" class="btn btn-primary">Create</button>
                     </div>
+                                          </form>
                   </div>
                 </div>
           </section>
