@@ -7,7 +7,6 @@ const Price = require('../models/price');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
-const async = require("async");
 
 
 
@@ -17,7 +16,7 @@ router.get('/', function(req, res, next) {
             console.log(err);
           } else {
               var message = req.query.message;
-              return res.render('pages/suppliers/supplier-list', { title: 'Suppliers', suppliers: suppliers, message: message});
+              return res.render('/pages/suppliers', { title: 'Suppliers', suppliers: suppliers, message: message});
 
         }
   });

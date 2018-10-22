@@ -13,6 +13,19 @@ escapeRegex = function (str) {
   return (str+'').replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
 };
 
+router.post('/delete/:Lead_id', function(req, res, next) {
+  Message.remove({
+        _id: sanitize(req.body.messageID)
+    }, function(err, item) {
+        if (err) {
+          return next(err);
+        } else
+        res.redirect('/leads/'+ req.params.Lead_id +'?message=deleted');
+    });
+});
+
+
+
 
 router.get('/', function(req, res, next) {
     var message = req.query.message;
