@@ -87,10 +87,14 @@ $( "#searchNow" ).keyup(function(e) {
 
   $.get( "/leads/search?search="+ searchQuery, function( data ) {
   $("#leadsResults").html("");
-
+    console.log(data);
   if (0 < data.length) {
     for (var i = 0; i < data.length; i++) {
+<<<<<<< HEAD
       $("#leadsResults").append('<tr><th scope="row"><a href="/leads/'+   data[i]._id +'">'+   data[i].firstname +'</a></th><td>'+ data[i].email +'</td><td>'+ data[i].email +'</td><td>'+ data[i].status +'</td><td>'+ moment(data[i].created).format('LL') +'</td></tr>')
+=======
+      $("#leadsResults").append('<tr><th scope="row"><a href="/leads/'+   data[i]._id +'">'+   data[i].firstname +'</a></th><td>'+ data[i].email +'</td><td>'+ data[i].email +'</td><td>'+ moment(data[i].created).format('LL') +'</td></tr>')
+>>>>>>> f2d3d11654884e45a7a5c070acd9d3a3e2de8e55
 
 
     }
