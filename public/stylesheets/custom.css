@@ -132,3 +132,40 @@ img#MainLogo {
     width: 250px;
     display: inline-block;
 }
+
+#sidebarConfirm {
+    background: #fff;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1), -1px 0 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1), -1px 0 2px rgba(0, 0, 0, 0.05);
+}
+
+nav.navbar.confirm-booking {
+    padding: 5px 0px;
+}
+
+button.btn.btn-primary.confirm-booking.pull-right.float-right {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px 0px;
+}
+
+span.confirmBooking {
+    font-size: 14px;
+}
+
+p.confirmTotal {
+    font-size: 20px;
+    color: #216C2A;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+label#terms {
+    font-size: 12px;
+}
