@@ -110,6 +110,14 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Deluxe Iceland', message: message });
 });
 
+// Get booking details and instert for client
+router.get('/finnish-booking', function(req, res, next) {
+
+    res.render('pages/bookings/finnish', { title: 'Finnish your booking'});
+
+
+});
+
 
 
 

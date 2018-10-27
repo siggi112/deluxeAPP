@@ -118,3 +118,17 @@ input.form-control.lead-type {
 .badge.badge-rounded.bg-green.Inactive {
     background: #E53935!IMPORTANT;
 }
+
+.content-inner {
+    transition: 0.45s;
+}
+
+form#client-on-board {
+    max-width: 100%;
+}
+
+img#MainLogo {
+    height: auto;
+    width: 250px;
+    display: inline-block;
+}

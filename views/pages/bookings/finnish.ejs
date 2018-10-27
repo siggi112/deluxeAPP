@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="stylesheets/fontastic.css">
+    <!-- Google fonts - Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="stylesheets/style.default.premium.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="stylesheets/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <%- include ../../temp/nav-client.ejs %>
+    <div class="page login-page client-on-board bg-white">
+      <div class="container d-flex">
+        <div class="form-holder">
+          <div class="row">
+            <!-- Form Panel    -->
+            <div class="col-lg-12">
+              <div class="form d-flex align-items-center">
+                <div class="content">
+                  <form role="form" id="client-on-board" action="/login" method="POST" autocomplete="off">
+                    <div class="row">
+                      <div class="col-lg-12">
+                    <p><strong>Barbara Cherlin</strong> confirm your booking with us
+                    <br>Arriving 28 January, 2019 - 2 February, 2019</p>
+
+                    <br>
+                    <p><strong>Details</strong></p>
+                  </div>
+                      <div class="col-lg-5">
+                        <div class="form-group">
+                        <label class="form-control-label">Mobile number while travelling</label>
+                        <input type="text" placeholder="e.g. 1 248 123 4567" autocomplete="off" class="form-control">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-control-label">Address</label>
+                        <input type="text" placeholder="Your street address" autocomplete="off" class="form-control">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-control-label">Post/Zip Code</label>
+                        <input type="text" placeholder="e.g. 12345" autocomplete="off" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-lg-2"></div>
+                      <div class="col-lg-5">
+                        <div class="form-group">
+                        <label class="form-control-label">State/Province</label>
+                        <input type="text" placeholder="e.g. California" autocomplete="off" class="form-control">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-control-label">City</label>
+                        <input type="text" placeholder="e.g. Los Angeles" autocomplete="off" class="form-control">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-control-label">Country</label>
+                        <input type="text" placeholder="e.g. Los Angeles" autocomplete="off" class="form-control">
+                        </div>
+                        </div>
+                        <div class="col-lg-12">
+                          <hr>
+                          <p><strong>Flight Information</strong></p>
+                        </div>
+                          <div class="col-lg-5">
+                            <div class="form-group">
+                            <label class="form-control-label">Arrival Flight</label>
+                            <input type="text" placeholder="e.g. FI604 - 08:00 AM - 24/10/2019" autocomplete="off" class="form-control">
+                            <small class="help-block-none">Flight Number - Est Arrival - MM/DD/YYYY</small>
+                            </div>
+                          </div>
+                              <div class="col-lg-2"></div>
+                          <div class="col-lg-5">
+                            <div class="form-group">
+                            <label class="form-control-label">Departure Flight</label>
+                            <input type="text" placeholder="e.g. FI604 - 05:00 PM - 29/10/2019" autocomplete="off" class="form-control">
+                            <small class="help-block-none">Flight Number - Est Depature - MM/DD/YYYY</small>
+                            </div>
+                          </div>
+                            <div class="col-lg-12">
+                              <hr>
+                              <p><strong>Travellers</strong></p>
+                              <p>Traveller 1</p>
+                            </div>
+                            <div class="col-lg-5">
+                              <div class="form-group">
+                              <label class="form-control-label">Full Name</label>
+                              <input type="text" placeholder="e.g. John Smith" autocomplete="off" class="form-control">
+                              </div>
+                            </div>
+                              <div class="col-lg-2">
+                                  <div class="form-group">
+                                  <label class="form-control-label">Title</label>
+                                  <input type="text" placeholder="e.g. John Smith" autocomplete="off" class="form-control">
+                                  </div>
+                              </div>
+                              <div class="col-lg-5">
+                                <div class="form-group">
+                                <label class="form-control-label">Date of Birth</label>
+                                <input type="text" placeholder="e.g. 10/11/1965" autocomplete="off" class="form-control">
+                                <small class="help-block-none">MM/DD/YYYY</small>
+                                </div>
+                              </div>
+                              <div class="col-lg-12">
+                                <hr>
+                                <p><strong>Special Requests or important information</strong></p>
+                                <div class="form-group">
+                                <label class="form-label">Something we need to know before your arrival?</label>
+                                <textarea rows="8" class="form-control"></textarea>
+                              </div>
+                              </div>
+                              <div class="col-lg-6">
+                                <div class="i-checks">
+                                <input id="checkboxCustom1" type="checkbox" value="" class="checkbox-template">
+                                <label for="checkboxCustom1">I ACCEPT THE TERMS AND CONDITIONS</label>
+                                </div>
+                              </div>
+                                <div class="col-lg-6">
+                                  <button type="submit" class="btn btn-primary  pull-right float-right">Confirm Booking</button>
+                              </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="copyrights text-center">
+        <p>Deluxe Iceland - Iceland Holiday ehf</a>
+        </p>
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
+    <!-- Main File-->
+    <script src="javascripts/front.js"></script>
+  </body>
+</html>
