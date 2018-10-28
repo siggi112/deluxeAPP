@@ -111,9 +111,9 @@ router.get('/', function(req, res, next) {
 });
 
 // Get booking details and instert for client
-router.get('/finnish-booking', function(req, res, next) {
+router.get('/confirm-booking', function(req, res, next) {
 
-    res.render('pages/bookings/finnish', { title: 'Finnish your booking'});
+    res.render('pages/bookings/confirm', { title: 'Confirm your booking'});
 
 
 });
