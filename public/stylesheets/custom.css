@@ -169,3 +169,12 @@ p.confirmTotal {
 label#terms {
     font-size: 12px;
 }
+
+p.float-left.paymentTotal {
+    float: left !IMPORTANT;
+    display: inline-block;
+    color: #216C2A;
+    font-size: 18px;
+    margin: 0;
+    margin-right: 10px;
+}
