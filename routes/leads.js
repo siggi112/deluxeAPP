@@ -215,7 +215,6 @@ router.get('/:lead_id',  function(req, res, next) {
 
 // POST / resister new lead
 router.post('/new-lead',  function(req, res, next) {
-  if (req.body.email) {
 
       var leadData = {
         firstname: sanitize(req.body.firstname),
@@ -251,11 +250,8 @@ router.post('/new-lead',  function(req, res, next) {
         }
       });
 
-    } else {
-      var err = new Error('All fields required.');
-      err.status = 400;
-      return next(err);
-    }
+    
+
 });
 
 
