@@ -13,6 +13,7 @@ const suppliers = require('./routes/suppliers');
 const leads = require('./routes/leads');
 const itineraries = require('./routes/itineraries');
 const operations = require('./routes/operations');
+const bookings = require('./routes/bookings');
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use('/suppliers', suppliers );
 app.use('/leads', leads );
 app.use('/itineraries', itineraries );
 app.use('/operations', operations );
+app.use('/bookings', bookings );
 
 
 // catch 404 and forward to error handler
@@ -59,7 +61,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
 
 module.exports = app;

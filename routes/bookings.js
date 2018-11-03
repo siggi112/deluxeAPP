@@ -179,17 +179,46 @@ router.post('/update-status/:Booking_id', mid.requiresLogin, function (req, res)
 });
 
 /* GET users listing. */
-router.get('/', mid.requiresLogin, function(req, res, next) {
-  Booking.find({}).sort({'arrivaldate': -1}).exec(function(err, bookings) {
+router.get('/search',  function(req, res, next) {
+  var noMatch = null;
+  if(req.query.search) {
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    console.log(req.query.search);
+    Booking.find({firstname: regex}, function(err, bookings){
+         if(err){
+             console.log(err);
+         } else {
+            if(bookings.length < 1) {
+                noMatch = "Sorry we found no bookings....";
+            }
+          res.send(bookings);
+         }
+      });
+  } else {
+      Booking.find({}, function(err, bookings){
+         if(err){
+             console.log(err);
+         } else {
+            res.send(bookings);
+         }
+      });
+  }
+});
+
+/* GET users listing. */
+router.get('/',  function(req, res, next) {
+  Booking.find({}).sort([['arrivaldate', 'descending']]).exec(function(err, bookings) {
         if(err){
             console.log(err);
           } else {
               var message = req.query.message;
-              return res.render('bookings', { title: 'Bookings', moment: moment, bookings: bookings, message: message});
+              return res.render('pages/bookings', { title: 'Bookings', moment: moment, bookings: bookings, message: message});
 
         }
   });
 });
+
+
 
 // GET /single client
 router.get('/edit/:booking_id', mid.requiresLogin, function(req, res, next) {
@@ -200,51 +229,10 @@ router.get('/edit/:booking_id', mid.requiresLogin, function(req, res, next) {
 
 
 // GET /single client
-router.get('/:booking_id', mid.requiresLogin, function(req, res, next) {
+router.get('/:booking_id', function(req, res, next) {
           Booking.findById(req.params.booking_id, function(err, booking) {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    Day.find({ 'booking': req.params.booking_id }, function (err, days) {
-                        if (err) return handleError(err);
-                    Request.find({ 'booking': req.params.booking_id }, function (err, requests) {
-                          if (err) return handleError(err);
-                    var message = req.query.message;
-                    var startDate = moment(booking.arrivaldate);
-                    var endDate = moment(booking.departuredate);
-                    var tripDuration = endDate.diff(startDate, 'days');
-                    tripDuration += 1;
-                    var arrivalDate = moment(startDate).format('LL');
-                    var calOutstanding =  booking.finalprice - booking.paid;
-                    var totalOutstanding = numeral(calOutstanding).format('0,0');
-                    var Paid = numeral(booking.paid).format('0,0');
-                    var Total = numeral(booking.finalprice).format('0,0');
-                    var totalPrice = Total.replace(/,/g, '.');
-                    Transaction.find({ 'bookingId': req.params.booking_id }, function (err, payments) {
-
-                      var totalPaid = 0;
-
-
-                          for (var i = 0; i < payments.length; i++) {
-
-                            if (payments[i].status === "Paid"){
-                              totalPaid += payments[i].amount;
-
-                            }
-
-                          }
-
-                    var outstanding = booking.finalprice - totalPaid;
-                    Partner.find(function(err, partners){
-                    Message.find({ 'owner': req.params.booking_id, }, function (err, messages) {
-                    return res.render('pages/bookings/single', {title: 'Booking - '+ booking.firstname + ' '+ booking.lastname, partners: partners, payments: payments, numeral: numeral, moment: moment, booking: booking, tripDuration: tripDuration, arrivalDate: arrivalDate, outstanding: outstanding, totalPrice: totalPrice, totalPaid: totalPaid, days: days, message: message, requests: requests, messages: messages});
-                            });
-                            })
-                      });
-                      });
-                });
-          }
-    });
+                    return res.render('pages/bookings/single', {title: 'Booking', moment: moment, booking: booking});
+                  });
 });
 
 

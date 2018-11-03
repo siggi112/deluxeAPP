@@ -178,3 +178,13 @@ p.float-left.paymentTotal {
     margin: 0;
     margin-right: 10px;
 }
+
+.icon.day-hold {
+    padding-right: 15px;
+    border-right: 1px solid #f3f3f3;
+}
+
+i.material-icons.flight {
+    font-size: 35px;
+    margin: 0px;
+}
