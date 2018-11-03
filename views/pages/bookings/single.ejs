@@ -1,0 +1,274 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner active" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+                      <div class="container-fluid">
+                        <h2 class="no-margin-bottom"><%= booking.firstname %> <%= booking.lastname %></h2>
+                      </div>
+          </header>
+
+          <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/bookings">Bookings</a></li>
+              <li class="breadcrumb-item active"><%= booking.firstname %> <%= booking.lastname %></li>
+            </ul>
+          </div>
+
+          <section class="forms">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-4">
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Contact</h3>
+                      <div class="card-close">
+                      <div class="badge badge-rounded bg-green <%= booking.status %>"><%= booking.status %></div>
+                    </div>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <h4><%= booking.firstname %> <%= booking.lastname %></h4>
+
+                              <i class="fa fa-phone"></i> <%= booking.phonenumber %><br>
+
+                              <i class="fa fa-envelope"></i> <%= booking.email %><br>
+
+                            </div><div class="col-md-6">
+
+                                                        <p class="text-muted mb-0">Address: <%= booking.address %></p>
+                                                        <p class="text-muted mb-0">Post/Zip Code: <%= booking.zip %></p>
+                                                        <p class="text-muted mb-0">City/Town: <%= booking.city %></p>
+                                                        <p class="text-muted mb-0">Country: <%= booking.country %></p>
+                            </div>
+                          </div>
+
+
+                          <hr>
+
+
+                          <div class="client-info">
+                        <div class="row">
+                          <div class="col-4">
+                            <i class="material-icons flight">flight_land</i>
+                            <br>
+                            <strong>Arrival Flight</strong><br><small><%= booking.arrivalflight %></small></div>
+                          <div class="col-4"></div>
+                          <div class="col-4">
+                            <i class="material-icons flight">flight_takeoff</i>
+                            <br>
+                            <strong>Departure Flight</strong><br><small><%= booking.departureflight %></small></div>
+                        </div>
+                      </div>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="recent-updates card">
+                      <div class="card-header">
+                        <h3 class="h4">Travellers</h3>
+                      </div>
+                      <div class="card-body no-padding">
+                        <!-- Item-->
+                        <div class="item d-flex justify-content-between">
+                          <div class="info d-flex">
+                            <div class="title">
+                              <h5>MR</h5>
+                              <p><strong>John Algo</strong> - Age 28</p>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Item-->
+                        <div class="item d-flex justify-content-between">
+                          <div class="info d-flex">
+                            <div class="title">
+                              <h5>Mrs</h5>
+                              <p><strong>John Algo</strong> - Age 28</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+
+                  <!-- Inline Form-->
+                  <div class="col-lg-8">
+                      <div class="card">
+                        <div class="card-header pt-2 pb-2">
+                          <ul class="nav nav-pills card-header-pills">
+                            <li class="nav-item"><a data-toggle="pill" href="#log" role="tab" class="nav-link active">Itinerary</a></li>
+                            <li class="nav-item"><a data-toggle="pill" href="#suppliers" role="tab" class="nav-link">Suppliers</a></li>
+                            <li class="nav-item"><a data-toggle="pill" href="#emails" role="tab" class="nav-link">Emails</a></li>
+                            <li class="nav-item"><a data-toggle="pill" href="#payments" role="tab" class="nav-link">Payments</a></li>
+                            <li class="nav-item"><a data-toggle="pill" href="#activity" role="tab" class="nav-link">Activity Log</a></li>
+                          </ul>
+                        </div>
+                        <div class="card-close">
+
+                </div>
+                        <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+
+      <div class="recent-updates card">
+        <div class="card-body no-padding">
+          <!-- Item-->
+          <div class="item d-flex justify-content-between">
+            <div class="info d-flex">
+              <div class="icon day-hold"><strong>Day 1</strong></div>
+              <div class="title">
+                <h5>Arrival in Iceland</h5>
+                <p><i class="icon-clock"></i> 6:00 AM - <i class="fa fa-hotel"></i> Hotel Rangá</p>
+              </div>
+            </div>
+            <div class="date text-right"><strong>23</strong><span>May</span></div>
+          </div>
+          <!-- Item-->
+          <div class="item d-flex justify-content-between">
+            <div class="info d-flex">
+              <div class="icon day-hold"><strong>Day 2</strong></div>
+              <div class="title">
+                <h5>The Golden Circle</h5>
+                <p><i class="icon-clock"></i> 9:00 AM - <i class="fa fa-hotel"></i> Hotel Rangá</p>
+              </div>
+            </div>
+            <div class="date text-right"><strong>24</strong><span>May</span></div>
+          </div>
+          <!-- Item-->
+          <div class="item d-flex justify-content-between">
+            <div class="info d-flex">
+              <div class="icon day-hold"><strong>Day 3</strong></div>
+              <div class="title">
+                <h5>The South Coast & Glacier Walk</h5>
+                <p><i class="icon-clock"></i> 9:00 AM - <i class="fa fa-hotel"></i> Hotel Rangá</p>
+              </div>
+            </div>
+            <div class="date text-right"><strong>25</strong><span>May</span></div>
+          </div>
+          <!-- Item-->
+          <div class="item d-flex justify-content-between">
+            <div class="info d-flex">
+              <div class="icon day-hold"><strong>Day 4</strong></div>
+              <div class="title">
+                <h5>Reykjanes Peninsula & Blue Lagoon</h5>
+                <p><i class="icon-clock"></i> 9:00 AM - <i class="fa fa-hotel"></i> Hotel Rangá</p>
+              </div>
+            </div>
+            <div class="date text-right"><strong>26</strong><span>May</span></div>
+          </div>
+          <!-- Item-->
+          <div class="item d-flex justify-content-between">
+            <div class="info d-flex">
+              <div class="icon day-hold"><strong>Day 5</strong></div>
+              <div class="title">
+                <h5>Depature</h5>
+                <p><i class="icon-clock"></i> 1:00 PM - <i class="fa fa-hotel"></i> Hotel Rangá</p>
+              </div>
+            </div>
+            <div class="date text-right"><strong>27</strong><span>May</span></div>
+          </div>
+        </div>
+      </div>
+                  </div>
+                      <div class="tab-pane fade" id="suppliers" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <div class="recent-updates card">
+                    <div class="card-body no-padding">
+                      <!-- Item-->
+                      <div class="item d-flex justify-content-between">
+                        <div class="info d-flex">
+                          <div class="icon"><i class="icon-rss-feed"></i></div>
+                          <div class="title">
+                            <h5>Lorem ipsum dolor sit amet.</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+                          </div>
+                        </div>
+                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+                      </div>
+                      <!-- Item-->
+                      <div class="item d-flex justify-content-between">
+                        <div class="info d-flex">
+                          <div class="icon"><i class="icon-rss-feed"></i></div>
+                          <div class="title">
+                            <h5>Lorem ipsum dolor sit amet.</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+                          </div>
+                        </div>
+                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+                      </div>
+                      <!-- Item        -->
+                      <div class="item d-flex justify-content-between">
+                        <div class="info d-flex">
+                          <div class="icon"><i class="icon-rss-feed"></i></div>
+                          <div class="title">
+                            <h5>Lorem ipsum dolor sit amet.</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+                          </div>
+                        </div>
+                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+                      </div>
+                      <!-- Item-->
+                      <div class="item d-flex justify-content-between">
+                        <div class="info d-flex">
+                          <div class="icon"><i class="icon-rss-feed"></i></div>
+                          <div class="title">
+                            <h5>Lorem ipsum dolor sit amet.</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+                          </div>
+                        </div>
+                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+                      </div>
+                      <!-- Item-->
+                      <div class="item d-flex justify-content-between">
+                        <div class="info d-flex">
+                          <div class="icon"><i class="icon-rss-feed"></i></div>
+                          <div class="title">
+                            <h5>Lorem ipsum dolor sit amet.</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+                          </div>
+                        </div>
+                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                      </div>
+                      <div class="tab-pane fade" id="emails" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+
+                      </div>
+                      <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+
+                      </div>
+                      <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+
+                      </div>
+
+    </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+
+
+
+<%- include ../../temp/footer.ejs %>

@@ -1,0 +1,108 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner active" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+            <div class="container-fluid">
+              <h2 class="no-margin-bottom">Bookings</h2>
+            </div>
+          </header>
+          <!-- Breadcrumb-->
+          <div class="breadcrumb-holder container-fluid">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item active">Bookings            </li>
+            </ul>
+          </div>
+          <section class="tables">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div class="search-form">
+                                    <form class="" id="searchForm" action="/bookings" method="get">
+                                    <div class="input-group">
+                                    <input type="text" name="search" autocomplete="off" id="searchNow" placeholder="Search for booking..." class="form-control">
+                                    </div>
+                                    </form>
+                          </div>
+                        </div>
+                            <div class="col-md-4">
+                              <div class="float-right">
+                                <form class="incline" action="/bookings/new" method="get">
+                                    <button class="btn btn-outline-dark btn-sm new-lead-t" type="submit"><span class="fa fa-plus"></span> New Booking</button>
+                                </form>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Status</th>
+                              <th>Country</th>
+                              <th>Start day</th>
+                            </tr>
+                          </thead>
+                          <tbody id="leadsResults">
+
+
+
+<% bookings.forEach(function(booking) { %>
+
+  <tr>
+    <th scope="row"><a href="/bookings/<%= booking.id %>"><%= booking.firstname %> <%= booking.lastname %></a></th>
+    <td><%= booking.email %></td>
+      <td><%= booking.country %></td>
+    <td><%= booking.status %></td>
+    <td><%= moment(booking.arrivaldate).format('LL') %></td>
+
+</tr>
+      <% }); %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+
+<%- include ../../temp/footer.ejs %>
+<script type="text/javascript">
+$( "#searchNow" ).keyup(function(e) {
+  var searchQuery = $(this).val();
+
+  $.get( "/bookings/search?search="+ searchQuery, function( data ) {
+  $("#leadsResults").html("");
+    console.log(data);
+  if (0 < data.length) {
+    for (var i = 0; i < data.length; i++) {
+
+      $("#leadsResults").append('<tr><th scope="row"><a href="/bookings/'+   data[i]._id +'">'+   data[i].firstname  +" "+  data[i].lastname +'</a></th><td>'+ data[i].email +'</td><td>'+ data[i].status +'</td><td>'+ data[i].country +'</td><td>'+ moment(data[i].arrivaldate).format('LL') +'</td></tr>')
+
+
+
+
+    }
+  } else {
+
+    $("#leadsResults").append('<tr><td>There are no bookings...</td><td></td><td></td><td></td><td></td></tr>')
+
+  }
+
+});
+});
+</script>
