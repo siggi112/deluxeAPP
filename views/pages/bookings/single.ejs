@@ -115,8 +115,8 @@
                           </ul>
                         </div>
                         <div class="card-close">
-
-                </div>
+                          <button href="#changeBookingModal" role="button" data-toggle="modal"  class="dropdown-toggle"><i class="fa fa-gear"></i> Edit Booking</button>
+                      </div>
                         <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
 
@@ -266,9 +266,193 @@
 
             </section>
 
+            <div class="modal" id="changeBookingModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-full" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Booking - <%= booking.firstname %> <%= booking.lastname %></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body p-4" id="result">
+                                <div class="row">
+                                    <div class="col-sm-6 col-lg-5 no-padding">
+                                      <div class="card">
+  <table class="table table-hover shopping-cart-wrap">
+  <thead class="text-muted">
+  <tr>
+    <th scope="col">Item</th>
+    <th scope="col">VAT</th>
+    <th scope="col">Commission</th>
+    <th scope="col">Quantity</th>
+    <th scope="col">Credit</th>
+    <th scope="col">Total</th>
+    <th scope="col" class="text-right"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  	<td>
+  <figure class="media">
+  	<figcaption class="media-body">
+  		<h6 class="title text-truncate">Product name goes here </h6>
+  		<dl class="param param-inline small">
+  		  <dt>Date: </dt>
+  		  <dd>XXL</dd>
+  		</dl>
+  	</figcaption>
+  </figure>
+  	</td>
+  	<td>
+      <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
+                                      <option value="0">0%</option>
+                                      <option value="11">11%</option>
+                                        <option value="24">24%</option>
+                                    </select>
+  	</td>
+    <td>
+      <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
+                                      <option value="0">0%</option>
+                                      <option value="5">5%</option>
+                                      <option value="10">10%</option>
+                                      <option value="15">15%</option>
+                                      <option value="20">20%</option>
+                                      <option value="25">25%</option>
+                                      <option value="30">30%</option>
+                                    </select>
+    </td>
+    <td>
+      <input placeholder="QTY"  class="form-control">
+    </td>
+  	<td>
+  		<div class="price-wrap">
+  			<var class="price">USD 145</var>
+  		</div> <!-- price-wrap .// -->
+  	</td>
+    <td>
+      <div class="price-wrap">
+        <var class="price">USD 145</var>
+      </div> <!-- price-wrap .// -->
+    </td>
+  	<td class="text-right">
+  	<a href="" class="btn btn-outline-danger"> × </a>
+  	</td>
+  </tr>
+  <tr>
+    <td>
+  <figure class="media">
+    <figcaption class="media-body">
+      <h6 class="title text-truncate">Product name goes here </h6>
+      <dl class="param param-inline small">
+        <dt>Date: </dt>
+        <dd>XXL</dd>
+      </dl>
+    </figcaption>
+  </figure>
+    </td>
+    <td>
+      <select class="form-control">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </td>
+    <td>
+      <select class="form-control">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </td>
+    <td>
+      <select class="form-control">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </td>
+    <td>
+      <div class="price-wrap">
+        <var class="price">USD 145</var>
+      </div> <!-- price-wrap .// -->
+    </td>
+    <td>
+      <div class="price-wrap">
+        <var class="price">USD 145</var>
+      </div> <!-- price-wrap .// -->
+    </td>
+    <td class="text-right">
+    <a href="" class="btn btn-outline-danger"> × </a>
+    </td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-7 no-padding">
+                                      <ul class="nav nav-tabs nav-justified">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#home">Accommodation</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#menu1">Activities</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#menu2">Driving Guidance</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#menu3">Custom</a>
+  </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane container active" id="home">
+    <div class="form-group">
+                                    <label class="form-control-label">Desired Arrival Month</label>
+                                    <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
+                                      <option value="January">January</option>
+                                      <option value="February">February</option>
+                                      <option value="March">March</option>
+                                      <option value="April">April</option>
+                                      <option value="April">May</option>
+                                      <option value="April">June</option>
+                                      <option value="July">July</option>
+                                      <option value="August">August</option>
+                                      <option value="September">September</option>
+                                      <option value="October">October</option>
+                                      <option value="November">November</option>
+                                      <option value="December">December</option>
+                                    </select>
+                                  </div>
 
 
+  </div>
+  <div class="tab-pane container fade" id="menu1">2...</div>
+  <div class="tab-pane container fade" id="menu2">3...</div>
+    <div class="tab-pane container fade" id="menu3">4...</div>
+</div>
 
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 <%- include ../../temp/footer.ejs %>
+<script type="text/javascript">
+$('#nav-tab a').on('click', function (e) {
+e.preventDefault()
+$(this).tab('show')
+})
+</script>
