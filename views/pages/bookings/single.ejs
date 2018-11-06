@@ -277,124 +277,27 @@
                         </div>
                         <div class="modal-body p-4" id="result">
                                 <div class="row">
-                                    <div class="col-sm-6 col-lg-5 no-padding">
-                                      <div class="card">
-  <table class="table table-hover shopping-cart-wrap">
-  <thead class="text-muted">
-  <tr>
-    <th scope="col">Item</th>
-    <th scope="col">VAT</th>
-    <th scope="col">Commission</th>
-    <th scope="col">Quantity</th>
-    <th scope="col">Credit</th>
-    <th scope="col">Total</th>
-    <th scope="col" class="text-right"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-  	<td>
-  <figure class="media">
-  	<figcaption class="media-body">
-  		<h6 class="title text-truncate">Product name goes here </h6>
-  		<dl class="param param-inline small">
-  		  <dt>Date: </dt>
-  		  <dd>XXL</dd>
-  		</dl>
-  	</figcaption>
-  </figure>
-  	</td>
-  	<td>
-      <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
-                                      <option value="0">0%</option>
-                                      <option value="11">11%</option>
-                                        <option value="24">24%</option>
-                                    </select>
-  	</td>
-    <td>
-      <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
-                                      <option value="0">0%</option>
-                                      <option value="5">5%</option>
-                                      <option value="10">10%</option>
-                                      <option value="15">15%</option>
-                                      <option value="20">20%</option>
-                                      <option value="25">25%</option>
-                                      <option value="30">30%</option>
-                                    </select>
-    </td>
-    <td>
-      <input placeholder="QTY"  class="form-control">
-    </td>
-  	<td>
-  		<div class="price-wrap">
-  			<var class="price">USD 145</var>
-  		</div> <!-- price-wrap .// -->
-  	</td>
-    <td>
-      <div class="price-wrap">
-        <var class="price">USD 145</var>
-      </div> <!-- price-wrap .// -->
-    </td>
-  	<td class="text-right">
-  	<a href="" class="btn btn-outline-danger"> × </a>
-  	</td>
-  </tr>
-  <tr>
-    <td>
-  <figure class="media">
-    <figcaption class="media-body">
-      <h6 class="title text-truncate">Product name goes here </h6>
-      <dl class="param param-inline small">
-        <dt>Date: </dt>
-        <dd>XXL</dd>
-      </dl>
-    </figcaption>
-  </figure>
-    </td>
-    <td>
-      <select class="form-control">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </td>
-    <td>
-      <select class="form-control">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </td>
-    <td>
-      <select class="form-control">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-    </td>
-    <td>
-      <div class="price-wrap">
-        <var class="price">USD 145</var>
-      </div> <!-- price-wrap .// -->
-    </td>
-    <td>
-      <div class="price-wrap">
-        <var class="price">USD 145</var>
-      </div> <!-- price-wrap .// -->
-    </td>
-    <td class="text-right">
-    <a href="" class="btn btn-outline-danger"> × </a>
-    </td>
-  </tr>
-  </tbody>
-  </table>
-  </div>
+                                    <div class="col-sm-6 col-lg-5 no-padding cart-side">
+                                      <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>Item</th>
+                                          <th>VAT</th>
+                                          <th>Commission</th>
+                                          <th>QTY</th>
+                                          <th>Net</th>
+                                          <th>Total</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="shoppingCart">
+
+                                      </tbody>
+                                    </table>
+                                  </div>
                                     </div>
                                     <div class="col-sm-6 col-lg-7 no-padding">
-                                      <ul class="nav nav-tabs nav-justified">
+                                      <ul class="nav nav-tabs nav-justified serviceTabs">
   <li class="nav-item">
     <a class="nav-link active" data-toggle="tab" href="#home">Accommodation</a>
   </li>
@@ -411,30 +314,49 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
-  <div class="tab-pane container active" id="home">
-    <div class="form-group">
-                                    <label class="form-control-label">Desired Arrival Month</label>
-                                    <select class="form-control custom-select selectpicker" ultiple="" data-live-search="true" name="startdate">
-                                      <option value="January">January</option>
-                                      <option value="February">February</option>
-                                      <option value="March">March</option>
-                                      <option value="April">April</option>
-                                      <option value="April">May</option>
-                                      <option value="April">June</option>
-                                      <option value="July">July</option>
-                                      <option value="August">August</option>
-                                      <option value="September">September</option>
-                                      <option value="October">October</option>
-                                      <option value="November">November</option>
-                                      <option value="December">December</option>
-                                    </select>
-                                  </div>
+  <div class="tab-pane active serviceHolder" id="home">
+    <div class="service-search">
+    <form id="getRooms" class="form-inline">
+      <div class="form-group">
+        <label for="inlineFormInput" class="sr-only">Select Accommodation</label>
+        <select class="form-control custom-select" id="hotels"><option disabled="" selected="">Select Hotel</option></select>
+      </div>
+      <div class="input-daterange input-group" id="datepicker">
+<input type="text" class="input-sm form-control" id="dpd1" autocomplete="false" name="from" placeholder="Check-in"/>
+<input type="text" class="input-sm form-control" id="dpd2" autocomplete="false" name="to" placeholder="Check-out"/>
+</div>
+                            <div class="form-group">
+                              <button type="submit" class="btn btn-primary search-for-service">Search</button>
+                            </div>
+                          </form>
+
+                        </div>
+                        <div class="service-items-holder">
+                          <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                          <thead>
+                            <tr>
+                              <th>Room Type</th>
+                              <th>Max Persons</th>
+                              <th>VAT</th>
+                              <th>Commission</th>
+                              <th>NET Total</th>
+                              <th>Per Night</th>
+                              <th id="tripNights"></th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody id="listofRooms">
+                          </tbody>
+                        </table>
+                      </div>
+                        </div>
 
 
   </div>
-  <div class="tab-pane container fade" id="menu1">2...</div>
-  <div class="tab-pane container fade" id="menu2">3...</div>
-    <div class="tab-pane container fade" id="menu3">4...</div>
+  <div class="tab-pane container fade serviceHolder" id="menu1">2...</div>
+  <div class="tab-pane container fade serviceHolder" id="menu2">3...</div>
+    <div class="tab-pane  fade serviceHolder" id="menu3">4...</div>
 </div>
 
                                     </div>
@@ -448,11 +370,90 @@
                 </div>
             </div>
 
+            <% hotels.forEach(function(hotel) { %>
+
+            <input type="hidden" class="hotel" value="<%= hotel.name %>" data-id="<%= hotel.id %>">
+
+
+            <% }); %>
+
+            <%- include ../../temp/footer.ejs %>
+
 
 <%- include ../../temp/footer.ejs %>
-<script type="text/javascript">
-$('#nav-tab a').on('click', function (e) {
-e.preventDefault()
-$(this).tab('show')
-})
+
+<script type='text/javascript'>
+
+function removeCartFunction(btn){
+
+  var itemID = btn.getAttribute('data');
+
+  $( "#shoppingCart" ).find("tr#"+ itemID).remove();
+
+
+}
+
+function addCartFunction(btn){
+
+var itemID = btn.getAttribute('data');
+var roomType = btn.getAttribute('type');
+var roomSleeps = btn.getAttribute('sleeps');
+
+
+$("#shoppingCart").append('<tr id="'+ itemID +'"><th scope="row">'+ roomType +'</th><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="11">11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td><input value="1" placeholder="QTY" class="form-control"></td><td>87.000 ISK</td><td><button data="'+  itemID+'" onclick="removeCartFunction(this);" class="btn btn-danger"> - </button></td></tr>')
+
+}
+
+
+
+$( "#getRooms" ).submit(function( event ) {
+  event.preventDefault();
+  $("tbody#listofRooms").html("");
+  var arrival = $("#dpd1").val();
+  var departure = $("#dpd2").val();
+  var startDate = moment(arrival);
+  var endDate = moment(departure);
+  var tripDuration = endDate.diff(startDate, 'days');
+  tripDuration += 1;
+  tripNights = tripDuration - 1;
+  $("th#tripNights").text("Total Price for "+ tripNights + " nights");
+  var selectedSupplierID = $( "#hotels option:selected" ).val();
+  $.get( "/itineraries/get-rooms/"+ selectedSupplierID, function( data ) {
+
+    for (i = 0; i < data.length; i++) {
+      $('#listofRooms').append($('<tr id='+  data[i]._id +'><input type="hidden" class="itemId" value='+  data[i]._id +'><input type="hidden" name="roomType"><td>'+  data[i].type +'</td><td>'+  data[i].sleeps +'</td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="11">11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td>87.000 ISK</td><td>87.000 ISK</td><td>87.000 ISK</td><td class="text-right"><button data='+  data[i]._id +' type="'+  data[i].type +'" sleeps="'+  data[i].sleeps +'" onClick="addCartFunction(this);" class="btn btn-primary addToCart"> + </button></td></tr>'
+      ));
+    }
+  });
+
+
+
+});
+
+
+
+
+
+
+
+
+
+    $( ".hotel" ).each(function() {
+      var hotelName = $(this).val();
+      var hotelID = $(this).attr("data-id");
+      $('select#hotels').append($('<option>', {
+          value: hotelID,
+          text: hotelName
+      }));
+    });
+
+
+
+$(function(){
+$('.input-daterange').datepicker({
+ autoclose: true
+});
+});
+
+
 </script>

@@ -9,6 +9,7 @@ var bookingSchema = new mongoose.Schema({
     bookingnumber: {
       type: String
     },
+    cart: [{}],
     email: {
       type: String
     },

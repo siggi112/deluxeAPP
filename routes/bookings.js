@@ -6,6 +6,7 @@ const Booking = require('../models/booking');
 const Day = require('../models/day');
 const Transaction = require('../models/transaction');
 const Request = require('../models/request');
+const Supplier = require('../models/supplier');
 const Partner = require('../models/partner');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
@@ -231,7 +232,9 @@ router.get('/edit/:booking_id', mid.requiresLogin, function(req, res, next) {
 // GET /single client
 router.get('/:booking_id', function(req, res, next) {
           Booking.findById(req.params.booking_id, function(err, booking) {
-                    return res.render('pages/bookings/single', {title: 'Booking', moment: moment, booking: booking});
+              Supplier.find({'type': 'Hotel'}).exec(function(err, hotels) {
+                    return res.render('pages/bookings/single', {title: 'Booking', moment: moment, booking: booking, hotels: hotels});
+                        });
                   });
 });
 
