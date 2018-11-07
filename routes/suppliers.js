@@ -4,6 +4,7 @@ const Supplier = require('../models/supplier');
 const Season = require('../models/season');
 const Room = require('../models/room');
 const Price = require('../models/price');
+const Tour = require('../models/tour');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');

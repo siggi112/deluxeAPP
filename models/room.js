@@ -6,6 +6,9 @@ var roomSchema = new mongoose.Schema({
   sleeps: {
     type: Number
   },
+  vat: {
+    type: Number
+  },
   numberofrooms: {
     type: String
   },

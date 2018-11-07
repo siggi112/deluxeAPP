@@ -341,7 +341,6 @@
                               <th>VAT</th>
                               <th>Commission</th>
                               <th>NET Total</th>
-                              <th>Per Night</th>
                               <th id="tripNights"></th>
                               <th></th>
                             </tr>
@@ -377,7 +376,6 @@
 
             <% }); %>
 
-            <%- include ../../temp/footer.ejs %>
 
 
 <%- include ../../temp/footer.ejs %>
@@ -419,12 +417,31 @@ $( "#getRooms" ).submit(function( event ) {
   $("th#tripNights").text("Total Price for "+ tripNights + " nights");
   var selectedSupplierID = $( "#hotels option:selected" ).val();
   $.get( "/itineraries/get-rooms/"+ selectedSupplierID, function( data ) {
-
+    var a = $("#dpd1").val();
+    var d = $("#dpd2").val();
+    var startDate = moment(a);
+    var endDate = moment(d);
+    var selectedSupplierID = $( "#hotels option:selected" ).val();
     for (i = 0; i < data.length; i++) {
-      $('#listofRooms').append($('<tr id='+  data[i]._id +'><input type="hidden" class="itemId" value='+  data[i]._id +'><input type="hidden" name="roomType"><td>'+  data[i].type +'</td><td>'+  data[i].sleeps +'</td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="11">11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td>87.000 ISK</td><td>87.000 ISK</td><td>87.000 ISK</td><td class="text-right"><button data='+  data[i]._id +' type="'+  data[i].type +'" sleeps="'+  data[i].sleeps +'" onClick="addCartFunction(this);" class="btn btn-primary addToCart"> + </button></td></tr>'
-      ));
+      console.log(startDate);
+      console.log(endDate);
+      var postURL = "/itineraries/get-room-price/"+ selectedSupplierID +"/"+ data[i]._id;
+      console.log(postURL);
+      $.post( postURL, { startDate: startDate, endDate: endDate })
+      .done(function( data ) {
+        console.log(data);
+        $('#listofRooms').append($('<tr id='+  data[i]._id +'><input type="hidden" class="itemId" value='+  data[i]._id +'><input type="hidden" name="roomType"><td>'+  data[i].type +'</td><td>'+  data[i].sleeps +'</td><td><select class="form-control custom-select" name="source" disabled><option value="0">0%</option><option value="11" selected>11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td>87.000 ISK</td><td>'+ data.totalCal +'</td><td class="text-right"><button data='+  data[i]._id +' type="'+  data[i].type +'" sleeps="'+  data[i].sleeps +'" onClick="addCartFunction(this);" class="btn btn-primary addToCart"> + </button></td></tr>'
+        ));
+      })
     }
   });
+
+
+
+
+
+
+
 
 
 
