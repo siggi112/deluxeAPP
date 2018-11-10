@@ -66,24 +66,21 @@ router.post('/calculate-room-price/:supplier_id/:room_id', function(req, res, ne
 
     function calculatePrice(i, priceCount) {
       if(i < days.length) {
-        Price.findOne({'season': days[i]._id, 'item': req.params.room_id }, function (err, price) {
-          if (typeof price._id !== 'undefined' && price._id ) {
+
+        Price.findOne({'season': days[i]._id, 'item': req.params.room_id }, function (error, price) {
+          if(error){
+              console.log("One not found!");
+          }
             totalPrice += price.isk
             calculatePrice(i + 1, priceCount + 1);
-          }
+
         });
 
 
       } else {
         if (err) return handleError(err);
-        console.log("Price Count"+ priceCount)
-        console.log("Day Count"+ i)
-        if (i === priceCount){
-          console.log("Same Count!");
-          var totalCal = totalPrice;
-        } else {
-          var totalCal = 0;
-        }
+
+        var totalCal = totalPrice;
         return res.send({totalCal});
       }
     }
