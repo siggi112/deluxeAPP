@@ -322,11 +322,11 @@
         <select class="form-control custom-select" id="hotels"><option disabled="" selected="">Select Hotel</option></select>
       </div>
       <div class="input-daterange input-group" id="datepicker">
-<input type="text" class="input-sm form-control" id="dpd1" autocomplete="false" name="from" placeholder="Check-in"/>
-<input type="text" class="input-sm form-control" id="dpd2" autocomplete="false" name="to" placeholder="Check-out"/>
+<input type="text" class="input-sm form-control" id="dpd1" autocomplete="false" name="startDate" placeholder="Check-in" required/>
+<input type="text" class="input-sm form-control" id="dpd2" autocomplete="false" name="endDate" placeholder="Check-out" required/>
 </div>
                             <div class="form-group">
-                              <button type="submit" class="btn btn-primary search-for-service">Search</button>
+                              <button type="submit"  data-style="zoom-in" class="btn btn-primary search-for-service">Search</button>
                             </div>
                           </form>
 
@@ -341,7 +341,7 @@
                               <th>VAT</th>
                               <th>Commission</th>
                               <th>NET Total</th>
-                              <th id="tripNights"></th>
+                              <th id="tripNights">Total Price </th>
                               <th></th>
                             </tr>
                           </thead>
@@ -382,6 +382,28 @@
 
 <script type='text/javascript'>
 
+numeral.register('locale', 'fr', {
+    delimiters: {
+        thousands: '.',
+        decimal: ','
+    },
+    abbreviations: {
+        thousand: 'k',
+        million: 'm',
+        billion: 'b',
+        trillion: 't'
+    },
+    ordinal : function (number) {
+        return number === 1 ? 'er' : 'ème';
+    },
+    currency: {
+        symbol: '€'
+    }
+});
+
+// switch between locales
+numeral.locale('fr');
+
 function removeCartFunction(btn){
 
   var itemID = btn.getAttribute('data');
@@ -403,37 +425,75 @@ $("#shoppingCart").append('<tr id="'+ itemID +'"><th scope="row">'+ roomType +'<
 }
 
 
+function changeCommission(item){
+
+var itemID = item.getAttribute('data');
+var itemNet = item.getAttribute('net');
+
+var itemCommission =  $(item).find(":selected").val();
+var newPrice = itemNet * itemCommission;
+var formatedPrice = numeral(newPrice).format('0,0');
+$("tr#"+ itemID).find("strong.itemPrice").text(formatedPrice + " ISK");
+
+}
+
+
+
 
 $( "#getRooms" ).submit(function( event ) {
   event.preventDefault();
   $("tbody#listofRooms").html("");
-  var arrival = $("#dpd1").val();
-  var departure = $("#dpd2").val();
-  var startDate = moment(arrival);
-  var endDate = moment(departure);
-  var tripDuration = endDate.diff(startDate, 'days');
+  Ladda.bind( 'button[type=submit]', { timeout: 2000 } );
+
+
+  var start = $("#dpd1").val();
+  var end = $("#dpd2").val();
+
+  var s = moment(start);
+  var e = moment(end);
+  var tripDuration = e.diff(s, 'days');
   tripDuration += 1;
   tripNights = tripDuration - 1;
+
   $("th#tripNights").text("Total Price for "+ tripNights + " nights");
   var selectedSupplierID = $( "#hotels option:selected" ).val();
-  $.get( "/itineraries/get-rooms/"+ selectedSupplierID, function( data ) {
-    var a = $("#dpd1").val();
-    var d = $("#dpd2").val();
-    var startDate = moment(a);
-    var endDate = moment(d);
+  $.get( "/bookings/get-rooms/"+ selectedSupplierID, function( data ) {
     var selectedSupplierID = $( "#hotels option:selected" ).val();
-    for (i = 0; i < data.length; i++) {
-      console.log(startDate);
-      console.log(endDate);
-      var postURL = "/itineraries/get-room-price/"+ selectedSupplierID +"/"+ data[i]._id;
-      console.log(postURL);
-      $.post( postURL, { startDate: startDate, endDate: endDate })
-      .done(function( data ) {
-        console.log(data);
-        $('#listofRooms').append($('<tr id='+  data[i]._id +'><input type="hidden" class="itemId" value='+  data[i]._id +'><input type="hidden" name="roomType"><td>'+  data[i].type +'</td><td>'+  data[i].sleeps +'</td><td><select class="form-control custom-select" name="source" disabled><option value="0">0%</option><option value="11" selected>11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td>87.000 ISK</td><td>'+ data.totalCal +'</td><td class="text-right"><button data='+  data[i]._id +' type="'+  data[i].type +'" sleeps="'+  data[i].sleeps +'" onClick="addCartFunction(this);" class="btn btn-primary addToCart"> + </button></td></tr>'
-        ));
-      })
+
+
+    console.log("Lenght "+ data.length)
+    console.log(selectedSupplierID);
+
+    var startDate = $("#dpd1").val();
+    var endDate = $("#dpd2").val();
+
+
+
+    calculatePrice(0, startDate, endDate);
+
+    function calculatePrice(i, startDate, endDate) {
+      if(i < data.length) {
+
+
+        $.post( "/itineraries/calculate-room-price/"+ selectedSupplierID +"/"+ data[i]._id, { startDate: startDate, endDate: endDate }).done(function( calData ) {
+          var salePrice = calData.totalCal * 1.15;
+
+          $('#listofRooms').append($('<tr id='+  data[i]._id +'><input type="hidden" class="itemId" value='+  data[i]._id +'><input type="hidden" name="roomType"><td>'+  data[i].type +'</td><td>'+  data[i].sleeps +'</td><td><select class="form-control custom-select" name="source" disabled><option value="0">0%</option><option value="11" selected>11%</option><option value="24">24%</option></select></td><td><select net='+ calData.totalCal +' data='+  data[i]._id +' onchange="changeCommission(this);" class="form-control custom-select"><option value="1">0%</option><option value="1.05">5%</option><option value="1.1">10%</option><option value="1.15" selected>15%</option><option value="1.20">20%</option><option value="1.25">25%</option><option value="1.30">30%</option></select></td><td>'+ numeral(calData.totalCal).format('0,0') + ' ISK</td><td><strong class="itemPrice">'+ numeral(salePrice).format('0,0') + ' ISK</strong></td><td class="text-right"><button data='+  data[i]._id +' type="'+  data[i].type +'" sleeps="'+ data[i].sleeps +'" onClick="addCartFunction(this);" class="btn btn-primary addToCart"> + </button></td></tr>'
+
+          ));
+
+        });
+
+
+
+        calculatePrice(i + 1, startDate, endDate);
+
+      } else {
+        console.log("Done");
+      }
     }
+
+
   });
 
 

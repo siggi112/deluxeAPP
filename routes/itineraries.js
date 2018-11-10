@@ -33,8 +33,20 @@ router.get('/get-rooms/:supplier_id', function(req, res, next) {
 
 
 
+
+
+
+
+
+
+
+
+
+
 // GET /single partner
-router.post('/get-room-price/:supplier_id/:room_id', function(req, res, next) {
+router.post('/calculate-room-price/:supplier_id/:room_id', function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'no-cache');
   var startDate = moment(req.body.startDate);
   var getEnd = moment(req.body.endDate);
 
@@ -45,27 +57,33 @@ router.post('/get-room-price/:supplier_id/:room_id', function(req, res, next) {
       console.log(err);
       return res.send("No price found!");
   } else {
-    calculatePrice(0);
+
     var totalPrice = 0;
-    console.log("total loop "+ days.length)
-    console.log(days);
-    function calculatePrice(i) {
+    var priceCount = 0;
+
+    calculatePrice(0, priceCount);
+
+
+    function calculatePrice(i, priceCount) {
       if(i < days.length) {
         Price.findOne({'season': days[i]._id, 'item': req.params.room_id }, function (err, price) {
-          if (err) return handleError(err);
-          console.log(price);
-          if (price.isk){
+          if (typeof price._id !== 'undefined' && price._id ) {
             totalPrice += price.isk
-            calculatePrice(i + 1);
-          } else {
-            return res.send("No price found!");
+            calculatePrice(i + 1, priceCount + 1);
           }
         });
 
 
       } else {
         if (err) return handleError(err);
-        var totalCal = totalPrice;
+        console.log("Price Count"+ priceCount)
+        console.log("Day Count"+ i)
+        if (i === priceCount){
+          console.log("Same Count!");
+          var totalCal = totalPrice;
+        } else {
+          var totalCal = 0;
+        }
         return res.send({totalCal});
       }
     }

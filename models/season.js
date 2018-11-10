@@ -10,5 +10,6 @@ var seasonSchema = new mongoose.Schema({
       type: String
   }
 });
+
 var Season = mongoose.model('Season', seasonSchema);
 module.exports = Season;

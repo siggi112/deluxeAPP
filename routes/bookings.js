@@ -8,6 +8,9 @@ const Transaction = require('../models/transaction');
 const Request = require('../models/request');
 const Supplier = require('../models/supplier');
 const Partner = require('../models/partner');
+const Season = require('../models/season');
+const Price = require('../models/price');
+const Room = require('../models/room');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
@@ -396,6 +399,21 @@ router.post('/payment/update-status/:Payment_id', mid.requiresLogin, function (r
 
   })
 });
+
+
+
+// GET /get prices for every room
+router.get('/get-rooms/:supplier_id', function(req, res, next) {
+
+
+  Room.find({ 'supplier': req.params.supplier_id }, function (err, rooms) {
+
+      res.send(rooms);
+
+  });
+
+});
+
 
 
 
