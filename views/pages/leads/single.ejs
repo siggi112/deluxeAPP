@@ -85,28 +85,13 @@
                         </div>
                         <div class="card-close">
                   <div class="dropdown">
-                    <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeLead" data-lead="<%= lead._id %>" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Delete Lead <i class="fa fa-times"></i></button>
+                    <button data-toggle="modal" data-target="#logActivity" class="btn btn-primary"><span class="fa fa-money"></span> Pricing Details</button>
+                    <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeLead" data-lead="<%= lead._id %>" aria-haspopup="true" aria-expanded="false" class="btn btn-danger">Delete Lead</button>
                     </div>
                 </div>
                         <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
-
       <div class="card lead-single">
-                    <div class="card-header">
-                      <form method="post" action="/leads/new-message">
-                      <div class="input-group">
-                        <input type="hidden" value="<%= lead.id %>" name="owner">
-                        <input type="text" placeholder="Message" name="message" class="form-control lead-type">
-                        <select class="form-control" name="type">
-                              <option value="Email">Email</option>
-                              <option value="Phone Call">Phone Call</option>
-                          </select>
-                        <div class="input-group-append">
-                          <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-send"></i></button>
-                        </div>
-                      </div>
-                    </form>
-                    </div>
                     <div class="list-group card-list-group">
 
                       <% messages.forEach(function(message) { %>
@@ -116,7 +101,7 @@
                           <div class="media">
                           <div class="media-body">
                               <div class="media-heading">
-                                <h5><%= moment(message.created).format('lll') %> - <%= message.type %></h5>
+                                <h5><%= moment(message.created).format('lll') %></h5>
                               </div>
                               <div class="text-muted text-small"><%= message.text %></div>
                             </div>
@@ -124,19 +109,18 @@
                       <div class="dropdown">
                         <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeMessage" data-message="<%= message._id %>" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-times"></i></button>
                         </div>
+                        <br>
                     </div>
                           </div>
                         </div>
 
     <% }); %>
 
-
-
-
-
                     </div>
                   </div>
-
+                  <div class="card-footer text-right">
+                      <button data-toggle="modal" data-target="#logActivity" class="btn btn-primary">Log Activity</button>
+                    </div>
     </div>
                         </div>
                       </div>
@@ -146,6 +130,32 @@
                 </div>
 
             </section>
+
+            <div class="modal fade" id="logActivity" tabindex="-1" role="dialog" aria-labelledby="logActivity" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Log Activity</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/leads/new-message">
+            <input type="hidden" value="<%= lead.id %>" name="owner">
+                        <div class="form-group">
+                          <label class="form-label">Message</label>
+                          <textarea rows="8" class="form-control" name="message"></textarea>
+                        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
 
             <!-- Modal -->
             <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
