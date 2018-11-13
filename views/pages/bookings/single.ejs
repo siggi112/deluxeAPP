@@ -378,7 +378,7 @@
 
 
 
-
+<%- include ../../temp/footer.ejs %>
 
 <script type='text/javascript'>
 
@@ -407,9 +407,28 @@ numeral.locale('fr');
 function removeCartFunction(btn){
 
   var itemID = btn.getAttribute('data');
+  var currentval = $("tr#"+ itemID).find("input.form-control.count").val();
 
-  $( "#shoppingCart" ).find("tr#"+ itemID).remove();
 
+  if(currentval == 1) {
+
+    $( "#shoppingCart" ).find("tr#"+ itemID).remove();
+
+  } else {
+
+    var newVal = parseInt(currentval) - 1;
+    $("tr#"+ itemID).find("input.form-control.count").val(newVal);
+
+  }
+
+}
+
+function updateCartFunction(item){
+
+  var currentval = $("tr#"+ item).find("input.form-control.count").val();
+
+  var newVal = parseInt(currentval) + 1;
+  $("tr#"+ item).find("input.form-control.count").val(newVal);
 
 }
 
@@ -419,8 +438,23 @@ var itemID = btn.getAttribute('data');
 var roomType = btn.getAttribute('type');
 var roomSleeps = btn.getAttribute('sleeps');
 
+checkItem = $("#shoppingCart").find("tr#"+ itemID)
 
-$("#shoppingCart").append('<tr id="'+ itemID +'"><th scope="row">'+ roomType +'</th><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="11">11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td><input value="1" placeholder="QTY" class="form-control"></td><td>87.000 ISK</td><td><button data="'+  itemID+'" onclick="removeCartFunction(this);" class="btn btn-danger"> - </button></td></tr>')
+
+if (checkItem.length > 0) {
+
+  updateCartFunction(itemID);
+
+
+} else {
+
+  $("#shoppingCart").append('<tr id="'+ itemID +'"><th scope="row">'+ roomType +'</th><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="11">11%</option><option value="24">24%</option></select></td><td><select class="form-control custom-select" name="source"><option value="0">0%</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></td><td><input type="number" value="1" placeholder="QTY" class="form-control count"></td><td>87.000 ISK</td><td><button data="'+  itemID+'" onclick="removeCartFunction(this);" class="btn btn-danger"> - </button></td></tr>')
+
+}
+
+
+
+
 
 }
 
