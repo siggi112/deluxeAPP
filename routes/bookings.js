@@ -185,10 +185,14 @@ router.post('/update-status/:Booking_id', mid.requiresLogin, function (req, res)
 /* GET users listing. */
 router.get('/search',  function(req, res, next) {
   var noMatch = null;
+  var status = req.query.status;
+
+  console.log(status);
+  
   if(req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), 'gi');
     console.log(req.query.search);
-    Booking.find({firstname: regex}, function(err, bookings){
+    Booking.find({firstname: regex, status: "On-Hold"}, function(err, bookings){
          if(err){
              console.log(err);
          } else {

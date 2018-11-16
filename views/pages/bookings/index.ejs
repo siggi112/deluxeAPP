@@ -27,9 +27,20 @@
                           <div class="search-form">
                                     <form class="" id="searchForm" action="/bookings" method="get">
                                     <div class="input-group">
-                                    <input type="text" name="search" autocomplete="off" id="searchNow" placeholder="Search for booking..." class="form-control">
+                                        <div class="col-md-8">
+                                        <input type="text" name="search" autocomplete="off" id="searchNow" placeholder="Search for booking..." class="form-control">
+                                        </div>
+                                          <div class="col-md-4">
+                                            <select class="form-control custom-select" name="source">
+                                              <option disabled selected>Status</option>
+                                              <option value="On-Hold">On-Hold</option>
+                                              <option value="Confirmed">Confirmed</option>
+                                              <option value="Completed">Completed</option>
+                                              <option value="Cancelled">Cancelled</option>
+                                            </select>
+                                          </div>
                                     </div>
-                                    </form>
+                                </form>
                           </div>
                         </div>
                             <div class="col-md-4">
@@ -49,8 +60,8 @@
                               <th>Name</th>
                               <th>Email</th>
                               <th>Status</th>
-                              <th>Country</th>
-                              <th>Start day</th>
+                              <th>Status</th>
+                              <th>Arrival day</th>
                             </tr>
                           </thead>
                           <tbody id="leadsResults">
@@ -82,12 +93,14 @@
 
 <%- include ../../temp/footer.ejs %>
 <script type="text/javascript">
-$( "#searchNow" ).keyup(function(e) {
-  var searchQuery = $(this).val();
 
-  $.get( "/bookings/search?search="+ searchQuery, function( data ) {
+function getDataOnUpdate(search, status){
+
+  $.get( "/bookings/search?search="+ search, function( data ) {
   $("#leadsResults").html("");
-    console.log(data);
+
+  console.log(data);
+
   if (0 < data.length) {
     for (var i = 0; i < data.length; i++) {
 
@@ -102,7 +115,17 @@ $( "#searchNow" ).keyup(function(e) {
     $("#leadsResults").append('<tr><td>There are no bookings...</td><td></td><td></td><td></td><td></td></tr>')
 
   }
+});
+}
+
+
+
+$( "#searchNow" ).keyup(function(e) {
+  var searchQuery = $(this).val();
+  getDataOnUpdate(searchQuery);
 
 });
-});
+
+
+
 </script>
