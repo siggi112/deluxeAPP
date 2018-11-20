@@ -276,3 +276,48 @@ button.btn.btn-primary.search-for-service {
     width: 250px;
     margin-left: 15px;
 }
+
+
+.cart-side {
+    background: #f5f5f5;
+}
+
+ul.nav.nav-tabs.nav-justified.serviceTabs li a {
+    border-radius: 0px;
+    border: 0px;
+}
+
+form.addCustom {
+    width: 500px;
+    margin: auto;
+    padding-top: 85px;
+}
+
+button.btn.btn-success.customButto{
+    width: 100%;
+    padding: 10px;
+}
+
+
+p.room-price {
+    font-size: 18px;
+    color: #28a745;
+    font-weight: 600;
+}
+
+p.vat-text {
+    font-size: 14px;
+}
+
+button.btn.btn-success.add-item {
+    float: right;
+    border-radius: 20px;
+    margin-top: 15px;
+    width: 40px;
+}
+
+.calendar-table td.available {
+    border: 2px solid #f3f3f3;
+    font-size: 12px;
+    padding: 5px;
+}
