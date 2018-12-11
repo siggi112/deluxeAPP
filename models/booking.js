@@ -7,8 +7,8 @@ var bookingSchema = new mongoose.Schema({
       type: String
     },
     bookingnumber: {
-      type: String
-    },
+       type: String,
+   },
     cart: [{}],
     email: {
       type: String
@@ -48,12 +48,6 @@ var bookingSchema = new mongoose.Schema({
     },
     finalprice: {
       type: Number
-    },
-    paid: {
-      type: Number
-    },
-    paymentstatus: {
-      type: String
     },
     itinerary: {
       type: String

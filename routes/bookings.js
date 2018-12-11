@@ -41,12 +41,12 @@ numeral.locale('is');
 
 
 /* GET home page. */
-router.get('/new', mid.requiresLogin, function(req, res, next) {
+router.get('/new',function(req, res, next) {
   res.render('pages/bookings/new', { title: 'New Booking', moment: moment});
 });
 
 /* GET home page. */
-router.get('/new-day', mid.requiresLogin, function(req, res, next) {
+router.get('/new-day', function(req, res, next) {
   Booking.find(function(err, bookings){
         if(err){
             console.log(err);
@@ -58,7 +58,7 @@ router.get('/new-day', mid.requiresLogin, function(req, res, next) {
 });
 
 // POST / resister new client
-router.post('/new-message',  mid.requiresLogin, function(req, res, next) {
+router.post('/new-message',   function(req, res, next) {
   if (req.body.message) {
 
 
@@ -85,7 +85,7 @@ router.post('/new-message',  mid.requiresLogin, function(req, res, next) {
 
 
 // POST / resister new client
-router.post('/new-day',  mid.requiresLogin, function(req, res, next) {
+router.post('/new-day',   function(req, res, next) {
   if (req.body.name &&
     req.body.date) {
 
@@ -116,7 +116,7 @@ router.post('/new-day',  mid.requiresLogin, function(req, res, next) {
 
 
 // POST / resister new client
-router.post('/request',  mid.requiresLogin, function(req, res, next) {
+router.post('/request', function(req, res, next) {
   if (req.body.item &&
     req.body.date) {
 
@@ -149,7 +149,7 @@ router.post('/request',  mid.requiresLogin, function(req, res, next) {
 });
 
 // POST / update single item
-router.post('/update-status/:Booking_id', mid.requiresLogin, function (req, res) {
+router.post('/update-status/:Booking_id',  function (req, res) {
   Booking.findById(req.params.Booking_id, function(err, booking) {
     if(req.files.itinerary) {
       let mainItineraryName = sanitize(req.params.Booking_id) + '.pdf';
@@ -188,7 +188,7 @@ router.get('/search',  function(req, res, next) {
   var status = req.query.status;
 
   console.log(status);
-  
+
   if(req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), 'gi');
     console.log(req.query.search);
@@ -229,7 +229,7 @@ router.get('/',  function(req, res, next) {
 
 
 // GET /single client
-router.get('/edit/:booking_id', mid.requiresLogin, function(req, res, next) {
+router.get('/edit/:booking_id', function(req, res, next) {
           Booking.findById(req.params.booking_id, function(err, booking) {
               return res.render('bookings/edit', {title: 'Booking - '+ booking.firstname + ' '+ booking.lastname, booking: booking, moment: moment});
     });
@@ -240,14 +240,33 @@ router.get('/edit/:booking_id', mid.requiresLogin, function(req, res, next) {
 router.get('/:booking_id', function(req, res, next) {
           Booking.findById(req.params.booking_id, function(err, booking) {
               Supplier.find({'type': 'Hotel'}).exec(function(err, hotels) {
-                    return res.render('pages/bookings/single', {title: 'Booking', moment: moment, booking: booking, hotels: hotels});
+
+                Transaction.find({ 'bookingId': req.params.booking_id }, function (err, payments) {
+
+                      var totalPaid = 0;
+
+
+                          for (var i = 0; i < payments.length; i++) {
+
+                            if (payments[i].status === "Paid"){
+                              totalPaid += payments[i].amount;
+
+                            }
+
+                          }
+
+                    var outstanding = booking.finalprice - totalPaid;
+
+
+                    return res.render('pages/bookings/single', {title: 'Booking', moment: moment, booking: booking, hotels: hotels, payments: payments, numeral: numeral, outstanding: outstanding, totalPaid: totalPaid});
+      })
                         });
                   });
 });
 
 
 // POST / update single item
-router.post('/update/:Booking_id', mid.requiresLogin, function (req, res) {
+router.post('/update/:Booking_id', function (req, res) {
   Booking.findById(req.params.Booking_id, function(err, booking) {
       if (err)
         res.send(err);
@@ -259,25 +278,15 @@ router.post('/update/:Booking_id', mid.requiresLogin, function (req, res) {
         booking.zip = sanitize(req.body.zip),
         booking.city = sanitize(req.body.city),
         booking.country = sanitize(req.body.country),
-        booking.arrivaldate = sanitize(req.body.arrivaldate),
-        booking.departuredate = sanitize(req.body.departuredate),
-        booking.travellers = sanitize(req.body.travellers),
-        booking.specialrequest = sanitize(req.body.specialrequest),
-        booking.arrivalflight = sanitize(req.body.arrivalflight),
-        booking.departureflight = sanitize(req.body.departureflight),
-        booking.finalprice = sanitize(req.body.finalprice),
-        booking.paid = sanitize(req.body.paid),
-        booking.paymentstatus = sanitize(req.body.paymentstatus),
-        booking.bookingnumber = sanitize(req.body.bookingnumber),
         booking.save(function(err) {
             if (err)
             res.send(err);
-            res.redirect('/bookings/?message=updated');
+            res.redirect('/bookings/'+ req.params.Booking_id +'?message=updated');
     })
   })
 });
 
-router.post('/delete/:Day_id', mid.requiresLogin, function(req, res, next) {
+router.post('/delete/:Day_id',  function(req, res, next) {
   Day.remove({
         _id: sanitize(req.params.Day_id)
     }, function(err, item) {
@@ -288,7 +297,7 @@ router.post('/delete/:Day_id', mid.requiresLogin, function(req, res, next) {
     })
 });
 
-router.post('/request/:Requst_id', mid.requiresLogin, function(req, res, next) {
+router.post('/request/:Requst_id',  function(req, res, next) {
   Request.remove({
         _id: sanitize(req.params.Requst_id)
     }, function(err, item) {
@@ -300,7 +309,7 @@ router.post('/request/:Requst_id', mid.requiresLogin, function(req, res, next) {
 });
 
 
-router.post('/remove/payments/:Payment_id', mid.requiresLogin, function(req, res, next) {
+router.post('/remove/payments/:Payment_id',  function(req, res, next) {
   Transaction.remove({
         _id: sanitize(req.params.Payment_id)
     }, function(err, item) {
@@ -313,7 +322,7 @@ router.post('/remove/payments/:Payment_id', mid.requiresLogin, function(req, res
 
 
 // POST / resister new client
-router.post('/payment',  mid.requiresLogin, function(req, res, next) {
+router.post('/payment',   function(req, res, next) {
   if (req.body.amount) {
 
     console.log("Before format: "+ req.body.amount);
@@ -346,7 +355,7 @@ router.post('/payment',  mid.requiresLogin, function(req, res, next) {
 });
 
 // POST / resister new client
-router.post('/new',  mid.requiresLogin, function(req, res, next) {
+router.post('/new',   function(req, res, next) {
   if (req.body.email &&
     req.body.firstname) {
 
@@ -392,7 +401,7 @@ router.post('/new',  mid.requiresLogin, function(req, res, next) {
 
 
 // POST / update lead status
-router.post('/payment/update-status/:Payment_id', mid.requiresLogin, function (req, res) {
+router.post('/payment/update-status/:Payment_id', function (req, res) {
   Transaction.findById(req.params.Payment_id, function(err, payment) {
         payment.status = sanitize(req.body.status),
         payment.save(function(err) {

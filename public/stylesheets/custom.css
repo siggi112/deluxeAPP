@@ -321,3 +321,34 @@ button.btn.btn-success.add-item {
     font-size: 12px;
     padding: 5px;
 }
+
+.card-footer.payment-summary {
+    padding: 35px;
+    background: #fff;
+    color: #212121;
+    border-top: 3px solid #eee;
+    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+i.material-icons.flight-icon {
+    font-size: 35px;
+}
+
+button.btn.btn-outline-dark.btn-sm.no-outline {
+    font-size: 12px;
+}
+
+.float-right-actions {
+    float: right;
+    padding: 10px 0px;
+    margin: 0px 5px;
+}
+
+.float-right-actions button#dropdownMenuButton {
+  font-size: 15px;
+}
+
+a.dropdown-item {
+    cursor: default;
+}

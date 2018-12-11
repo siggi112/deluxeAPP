@@ -61,7 +61,13 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.render('error');
 });
+
+app.set('port', process.env.PORT || 3001);
+var server = app.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + server.address().port);
+});
+
 
 module.exports = app;
