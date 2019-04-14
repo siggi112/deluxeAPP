@@ -3,13 +3,16 @@ var travellerSchema = new mongoose.Schema({
     name: {
       type: String
     },
-    type: {
-      type: String
-    },
     bookingid: {
       type: String
     },
-    birthdate: {
+    age: {
+      type: String
+    },
+    height: {
+      type: String
+    },
+    weight: {
       type: String
     },
   created: {

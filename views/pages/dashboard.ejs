@@ -44,7 +44,7 @@
           <div class="col-xl-3 col-sm-6">
             <div class="item d-flex align-items-center">
               <div class="icon bg-orange"><i class="icon-check"></i></div>
-              <div class="title"><span>New<br>Leads</span>
+              <div class="title"><span>Total<br>Leads</span>
               </div>
               <div class="number"><strong>50</strong></div>
             </div>
@@ -62,7 +62,7 @@
       <div class="container-fluid">
         <div class="row">
           <!-- Trending Articles-->
-          <div class="col-lg-5">
+          <div class="col-lg-4">
             <div class="articles card">
               <div class="card-close">
                 <div class="dropdown">
@@ -70,27 +70,17 @@
                 </div>
               </div>
               <div class="card-header d-flex align-items-center">
-                <h2 class="h3">Pending Bookings   </h2>
+                <h2 class="h3">Overview </h2>
               </div>
-              <div class="card-body no-padding">
-                <% if (bookings.length === 0) { %>
-                  <div class="item d-flex align-items-center">
-                    <div class="text">
-                        <h3 class="h5">There are no pending bookings</h3><small></small></div>
-                  </div>
+              <div class="card-body">
 
-      <% } %>
-      <% bookings.forEach(function(booking) { %>
-        <div class="item d-flex align-items-center">
-          <div class="text"><a href="/bookings/<%= booking.id %>">
-              <h3 class="h5"><%= booking.firstname %> <%= booking.lastname %></h3></a><small><%= moment(booking.arrivaldate).format('LL') %> to <%= moment(booking.departuredate).format('LL') %></small></div>
-        </div>
-        <% }); %>
+                  <div id="calendar" class="fc fc-bootstrap3 fc-ltr"></div>
+
               </div>
             </div>
           </div>
           <!-- Trending Articles-->
-          <div class="col-lg-5">
+          <div class="col-lg-8">
             <div class="articles card">
               <div class="card-close">
                 <div class="dropdown">
@@ -98,60 +88,96 @@
                 </div>
               </div>
               <div class="card-header d-flex align-items-center">
-                <h2 class="h3">New Leads</h2>
-              </div>
-              <div class="card-body no-padding">
-
-                <% if (leads.length === 0) { %>
-                  <div class="item d-flex align-items-center">
-                    <div class="text">
-                        <h3 class="h5">There are no new leads</h3><small></small></div>
-                  </div>
-
-      <% } %>
-      <% leads.forEach(function(lead) { %>
-        <div class="item d-flex align-items-center">
-          <div class="text"><a href="/leads/<%= lead.id %>">
-              <h3 class="h5"><%= lead.firstname %></h3></a><small><%= lead.startdate %> - <%= lead.travellers %> PAX with budget per person <%= lead.budget %></small></div>
-        </div>
-        <% }); %>
-
-
+                <h2 class="h3">Upcoming this week - <%= moment().startOf('isoWeek').format('ll'); %> to <%= moment().endOf('isoWeek').format('ll'); %></h2>
               </div>
             </div>
+
+            <% transfers.forEach(function(transfer) { %>
+                <div class="card-cold">
+                  <% if (transfer.status == "Confirmed") { %>
+                    <form class="card card-booking-item" style="border-color: #28a745;">
+                    <% } else if (transfer.status == "Cancelled") { %>
+                      <form class="card card-booking-item" style="border-color: #dc3545;">
+                    <% } else { %>
+                  <form class="card card-booking-item">
+                    <% } %>
+                  <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                          <h3 class="card-title">
+                            <% if (transfer.type == "Arrival Transfer") { %>
+                                    <i class="material-icons">flight_land</i>
+                              <% } else { %>
+
+                                  <i class="material-icons">flight_takeoff</i>
+                                <% } %>
+                                <%= transfer.type %> - <a href="/bookings/<%= transfer.bookingid %>"> <%= transfer.bookingname %></a>
+                        </div>
+                        <div class="col-md-6">
+                          <% if (transfer.status == "Confirmed") { %>
+                            <span class="badge badge-success confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                            <% } else if (transfer.status == "Cancelled") { %>
+                            <span class="badge badge-danger confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                            <% } else { %>
+                            <span class="badge badge-warning confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                            <% } %>
+                        </div>
+                    </div>
+                  </div>
+
+              <div class="card-body" style="padding: 0px;">
+                <div class="item booking-item-details">
+                  <div class="row">
+                    <div class="col-md-4 booking-item-detail-col">
+                      <div class="title">
+                        <h5><%= moment(transfer.date).format('LL') %></h5>
+                        <% if (transfer.extraInfo) { %>
+                            <p><%= transfer.people %> PAX <a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="<%= transfer.extraInfo %>"><i class="fa fa-info-circle"></i> Extra Information</a></p>
+                          <% } else { %>
+                          <p><%= transfer.people %> PAX</p>
+                          <% } %>
+                      </div>
+                    </div>
+                    <div class="col-md-6 booking-item-detail-col">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p>Flight: <br><%= transfer.flightnumber %> at <%= transfer.flighttime %></p>
+                        </div>
+                        <div class="col-md-6">
+                          <p>Pick-up: <br><%= transfer.location %> at <%= transfer.pickuptime %></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-2 float-right booking-item-detail-col">
+                      <div class="row">
+                        <div class="col-12">
+                          <% if (transfer.status == "Confirmed"){ %>
+                            <p>Driver: </br> <%= transfer.driver %></p>
+
+                            <% } else { %>
+                              <p></p>
+
+<% } %>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+            </form>
+            </div>
+
+
+            <% }); %>
+
+
+
+
+
           </div>
 
 
-                    <!-- Recent Activities -->
-                    <div class="col-lg-2">
-                      <div class="recent-activities card">
-                        <div class="card-close">
-                          <div class="dropdown">
-                            <div aria-labelledby="closeCard8" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
-                          </div>
-                        </div>
-                        <div class="card-header">
-                          <h3 class="h4">Currency Converter</h3>
-                        </div>
-                        <div class="card-body">
-                      <form>
-                          <input type="hidden" class="form-control" id="OneUSD">
-                        <div class="form-group">
-                              <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">ISK</span></div>
-                                <input type="text" name="totalISK" id="iskconvert" class="form-control">
-                              </div>
-                            </div>
-                            <div class="form-group">
-                                    <div class="input-group">
-                                      <div class="input-group-prepend"><span class="input-group-text">USD</span></div>
-                                      <input type="text" name="totalUSD" id="usdValue" value="$1" class="form-control" disabled>
-                                    </div>
-                                  </div>
-                      </form>
-                    </div>
-                      </div>
-                    </div>
+
 
         </div>
       </div>

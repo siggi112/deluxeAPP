@@ -6,7 +6,7 @@
           <!-- Page Header-->
           <header class="page-header">
                       <div class="container-fluid">
-                        <h2 class="no-margin-bottom"><%= booking.firstname %> <%= booking.lastname %> - #<%= booking.bookingnumber %> - <%= booking.status %></h2>
+                        <h2 class="no-margin-bottom"><%= booking.firstname %> <%= booking.lastname %> - <%= booking.status %></h2>
                       </div>
           </header>
 
@@ -26,108 +26,130 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="editBooking">
             <a class="dropdown-item" data-toggle="modal" data-target="#editModal">Edit Contact details</a>
-            <a class="dropdown-item" data-toggle="modal" data-target="#editTravellers">Edit Travellers List</a>
+            <a class="dropdown-item" data-toggle="modal" data-target="#editTraveller">Edit Travellers List</a>
           </div>
         </div>
                   </div>
                   <div class="float-right-actions">
                     <div class="dropdown">
-          <button class="btn btn-outline-dark btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-success btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-plus"></span> Add
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" data-toggle="modal" data-target="#newPayment">New Payment</a>
+            <a class="dropdown-item" data-toggle="modal" data-target="#newTraveller">New Traveller</a>
             <a class="dropdown-item" data-toggle="modal" data-target="#newPackage">New Package</a>
+            <a class="dropdown-item" data-toggle="modal" data-target="#newTransfer">New Transfer</a>
+              <a class="dropdown-item" data-toggle="modal" data-target="#changeBookingModal">Test</a>
           </div>
         </div>
+                  </div>
+                  <div class="float-right-actions">
+                    <% if(booking.itinerary){ %>
+                        <a class="btn btn-primary btn-sm" role="button" href="<%= booking.itinerary %>" target="_blank">
+                          <span class="fa fa-file"></span> View Itinerary
+                        </a>
+    <% } else { %>
+
+  <% } %>
+
                   </div>
                 </div>
             </div>
           </div>
 
-          <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="editTravellers" tabindex="-1" role="dialog" aria-labelledby="editTravellers" aria-hidden="true">
-  <div class="modal-dialog bd-example-modal-lg" role="document">
+
+
+<!-- Modal -->
+<div class="modal fade" id="newTransfer" tabindex="-1" role="dialog" aria-labelledby="newBooking" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Add new Transfer</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+  <form action="/bookings/new-transfer" method="post">
+  <div class="form-group">
+    <label for="recipient-name" class="col-form-label">Type:</label>
+    <select class="form-control custom-select payment-status" name="type">
+    <option value="Arrival Transfer">Arrival Transfer</option>
+    <option value="Departure Transfer">Departure Transfer</option>
+    </select>
+  </div>
+<div class="form-group">
+    <label for="recipient-name" class="col-form-label">Date:</label>
+    <input type="text" class="form-control datePicker" autocomplete="off" name="date">
+</div>
+<hr>
+<p><strong>Flight Information</strong></p>
+<div class="form-group">
+    <label for="recipient-name" class="col-form-label">Flight Number:</label>
+    <input type="text" class="form-control" name="flightnumber">
+</div>
+<div class="form-group">
+    <label for="recipient-name" class="col-form-label">Flight Time:</label>
+    <input type="time" class="form-control" name="flighttime">
+</div>
+<hr>
+<p><strong>Pick-up Information</strong></p>
+<div class="form-group">
+<label for="recipient-name" class="col-form-label">Time</label>
+<input type="time" class="form-control" name="pickuptime">
+</div>
+<div class="form-group">
+<label for="recipient-name" class="col-form-label">Location</label>
+<input type="text" class="form-control" name="location">
+</div>
+<div class="form-group">
+<label for="recipient-name" class="col-form-label">Number of People</label>
+<input type="number" class="form-control" name="people" value="<%= travellers.length %>">
+</div>
+<hr>
+<div class="form-group">
+<label for="exampleFormControlTextarea1">Extra Information</label>
+<textarea class="form-control" id="exampleFormControlTextarea1" name="extraInfo" rows="3"></textarea>
+</div>
+</div>
+<div class="modal-footer">
+<input type="hidden" name="bookingid" value="<%= booking.id %>">
+<input type="hidden" name="bookingname" value="<%= booking.firstname %> <%= booking.lastname %>">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary">Create</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="modal fade" id="changeStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Travellers</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Change Status</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="row" id="TravellersList">
-          <div class="traveller col-md-12">
-            <p>Traveller 1</p>
-            <div class="row">
-            <div class="col-md-3 col-xs-12">
-              <div class="form-group">
-                                  <label for="exampleInputEmail1">Title</label>
-                                  <select class="form-control custom-select" name="travellers">
-                                    <option value="Mr">Mr</option>
-                                    <option value="Mrs">Mrs</option>
-                                      <option value="Miss">Miss</option>
-                                        <option value="Ms">Ms</option>
-                                      </select>  </div>
-            </div>
-            <div class="col-md-5 col-xs-12">
-              <div class="form-group">
-        <label>Name</label>
-        <input type="text" placeholder="e.g. John Smith" autocomplete="off" class="form-control">
-        </div>
-            </div>
-            <div class="col-md-4 col-xs-12">
-              <div class="form-group">
-                <label>Date of Birth</label>
-                <input type="text" placeholder="e.g. 12/24/1980" autocomplete="off" class="form-control">
-                <small class="help-block-none">MM/DD/YYYY</small>
-                </div>
+      <div class="modal-body main-statusChange">
 
-            </div>
-          </div>
-
-        </div>
-        <div class="traveller col-md-12">
-          <p>Traveller 2</p>
-          <div class="row">
-          <div class="col-md-3 col-xs-12">
-            <div class="form-group">
-                                <label for="exampleInputEmail1">Title</label>
-                                <select class="form-control custom-select" name="travellers">
-                                  <option value="Mr">Mr</option>
-                                  <option value="Mrs">Mrs</option>
-                                    <option value="Miss">Miss</option>
-                                      <option value="Ms">Ms</option>
-                                    </select>  </div>
-          </div>
-          <div class="col-md-5 col-xs-12">
-            <div class="form-group">
-      <label>Name</label>
-      <input type="text" placeholder="e.g. John Smith" autocomplete="off" class="form-control">
-      </div>
-          </div>
-          <div class="col-md-4 col-xs-12">
-            <div class="form-group">
-              <label>Date of Birth</label>
-              <input type="text" placeholder="e.g. 12/24/1980" autocomplete="off" class="form-control">
-              <small class="help-block-none">MM/DD/YYYY</small>
-              </div>
-
-          </div>
-        </div>
+        <form method="post" action="">
+          <!-- <input type="hidden" id="messageDelete" name="messageID" value=""> -->
 
       </div>
-        </div>
+      <div class="modal-action">
+
       </div>
       <div class="modal-footer">
-        <input type="hidden" name="bookingid" value="<%= booking.id %>">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-      </form>
       </div>
     </div>
   </div>
 </div>
+
+
 
           <!-- Modal -->
 <div class="modal fade" id="newPackage" tabindex="-1" role="dialog" aria-labelledby="newBooking" aria-hidden="true">
@@ -142,11 +164,11 @@
       <div class="modal-body">
         <div class="form-group">
               <label for="recipient-name" class="col-form-label">Arrival date:</label>
-              <input type="text" class="form-control datePicker" name="date">
+              <input type="text" class="form-control datePicker" name="date" autocomplete="off">
         </div>
         <div class="form-group">
               <label for="recipient-name" class="col-form-label">Departure date:</label>
-              <input type="text" class="form-control datePicker" name="date">
+              <input type="text" class="form-control datePicker" autocomplete="off" name="date">
         </div>
         <div class="form-group">
               <label for="recipient-name" class="col-form-label">Arrival flight:</label>
@@ -171,6 +193,98 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editTraveller" tabindex="-1" role="dialog" aria-labelledby="newTraveller" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Edit Travellers</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+  <p><strong>Travellers - <%= travellers.length %> PAX:</strong></p>
+  <% travellers.forEach(function(traveller) { %>
+    <div class="row">
+        <div class="traveller-list" id="<%= traveller.id %>">
+      <div class="col-md-5 no-padding left-padding">
+        <div class="form-group">
+        <label for="recipient-name" class="col-form-label">Name:</label>
+        <input type="text" class="form-control traveller-change <%= traveller.id %>" name="name" value="<%= traveller.name %>">
+      </div>
+      </div>
+      <div class="col-md-2 no-padding">
+          <label for="recipient-name" class="col-form-label">Age:</label>
+          <input type="text" class="form-control traveller-change <%= traveller.id %>" name="age" value="<%= traveller.age %>">
+      </div>
+      <div class="col-md-2 no-padding">
+          <label for="recipient-name" class="col-form-label">Height:</label>
+          <input type="text" class="form-control traveller-change <%= traveller.id %>" name="height" value="<%= traveller.height %>">
+      </div>
+      <div class="col-md-2 no-padding">
+          <label for="recipient-name" class="col-form-label">Weight:</label>
+          <input type="text" class="form-control traveller-change <%= traveller.id %>" name="weight" value="<%= traveller.weight %>">
+      </div>
+      <div class="col-md-1 no-padding right-padding">
+          <label for="recipient-name" class="col-form-label"></label>
+        <input class="btn btn-danger" type="submit" value="x">
+      </div>
+      <input type="hidden" name="bookingid" value="<%= booking.id %>">
+    </div>
+    </div>
+  <% }); %>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="newTraveller" tabindex="-1" role="dialog" aria-labelledby="newTraveller" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Add new Traveller</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<form action="/bookings/traveller" method="post" encType="multipart/form-data">
+<div class="form-group">
+    <label for="recipient-name" class="col-form-label">Name:</label>
+    <input type="text" class="form-control" name="name">
+  </div>
+  <div class="form-group">
+    <label for="recipient-name" class="col-form-label">Age:</label>
+    <input type="text" class="form-control" name="age">
+</div>
+<div class="form-group">
+  <label for="recipient-name" class="col-form-label">Height:</label>
+  <input type="text" class="form-control" name="height">
+</div>
+<div class="form-group">
+  <label for="recipient-name" class="col-form-label">Weight:</label>
+  <input type="text" class="form-control" name="weight">
+</div>
+</div>
+<div class="modal-footer">
+<input type="hidden" name="bookingid" value="<%= booking.id %>">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary">Save</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+
+
 
           <!-- Modal -->
 <div class="modal fade" id="newPayment" tabindex="-1" role="dialog" aria-labelledby="newPayment" aria-hidden="true">
@@ -218,7 +332,7 @@
 
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Contact details</h3>
+                      <h3 class="card-title">Client details</h3>
                     </div>
                     <div class="card-body client">
                       <div class="media">
@@ -227,37 +341,62 @@
                           <div class="row">
                             <div class="col-lg-6 col-md-12">
                               <h4><%= booking.firstname %> <%= booking.lastname %></h4>
-
                               <i class="fa fa-phone"></i> <%= booking.phonenumber %><br>
-
                               <i class="fa fa-envelope"></i> <%= booking.email %><br>
 
                             </div><div class="col-lg-6 col-md-12">
+                            <p class="text-muted mb-0">Address: <%= booking.address %></p>
+                            <p class="text-muted mb-0">Zip Code: <%= booking.zip %></p>
+                            <p class="text-muted mb-0">City: <%= booking.city %></p>
+                            <p class="text-muted mb-0">Country: <%= booking.country %></p>
+                            </div>
+                          </div>
 
-                                                        <p class="text-muted mb-0">Address: <%= booking.address %></p>
-                                                        <p class="text-muted mb-0">Post/Zip Code: <%= booking.zip %></p>
-                                                        <p class="text-muted mb-0">City/Town: <%= booking.city %></p>
-                                                        <p class="text-muted mb-0">Country: <%= booking.country %></p>
+                          <hr>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <p><strong>Travellers - <%= travellers.length %> PAX:</strong></p>
+                              <% travellers.forEach(function(traveller) { %>
+                                <div class="travel-detail-one">
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <% if (traveller.height) { %>
+                                          <p><%= traveller.name %> <a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="Height: <%= traveller.height %> - Weight: <%= traveller.weight %>"><i class="fa fa-info-circle"></i></a></p>
+                                      <% } else { %>
+                                        <p><%= traveller.name %></p>
+                                      <% } %>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <p><%= traveller.age %></p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </tr>
+                              <% }); %>
+
                             </div>
                           </div>
 
 
-                          <hr>
 
-
-                          <div class="client-info">
-                        <div class="row">
-                          <div class="col-4">
-                            <i class="material-icons flight">flight_land</i>
-                            <br>
-                            <strong>Arrival Flight</strong><br><small><%= booking.arrivalflight %></small></div>
-                          <div class="col-4"></div>
-                          <div class="col-4">
-                            <i class="material-icons flight">flight_takeoff</i>
-                            <br>
-                            <strong>Departure Flight</strong><br><small><%= booking.departureflight %></small></div>
                         </div>
+
                       </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Emails</h3>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+
+
+
+
+
+
 
                         </div>
 
@@ -372,15 +511,20 @@
                       </div>
                       <div class="card-footer payment-summary">
                         <div class="row">
-                          <div class="col-md-6 col-xs-12">
+                          <div class="col-md-4 col-xs-12">
                             <i class="material-icons flight-icon">money_off</i>
                             <p>Outstanding</p>
         <p><strong><%= numeral(outstanding).format('0,0') %> ISK</strong></p>
                           </div>
-                          <div class="col-md-6 col-xs-12">
+                          <div class="col-md-4 col-xs-12">
           <i class="material-icons flight-icon">check</i>
-          <p>Total Paid</p>
+          <p>Paid</p>
           <p><strong><%= numeral(totalPaid).format('0,0') %> ISK</strong></p>
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <i class="material-icons flight-icon">attach_money</i>
+          <p>Total</p>
+          <p><strong><%= numeral(booking.finalprice).format('0,0') %> ISK</strong></p>
         </div>
                         </div>
                     </div>
@@ -390,27 +534,127 @@
 
                   <!-- Inline Form-->
                   <div class="col-lg-8">
-                    <form class="card">
-                    <div class="card-header">
-                      <h3 class="card-title">Booking</h3>
-                    </div>
-                    <div class="card-body">
-                      <div class="item d-flex justify-content-between">
-                        <div class="info d-flex">
-                          <div class="title">
-                            <h5>Lorem ipsum dolor sit amet. <span class="badge badge-secondary">Combo Tours</span></h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed.</p>
+
+                      <% transfers.forEach(function(transfer) { %>
+                          <div class="card-cold">
+                            <% if (transfer.status == "Confirmed") { %>
+                              <form class="card card-booking-item" style="border-color: #28a745;">
+                              <% } else if (transfer.status == "Cancelled") { %>
+                                <form class="card card-booking-item" style="border-color: #dc3545;">
+                              <% } else { %>
+                            <form class="card card-booking-item">
+                              <% } %>
+                            <div class="card-header">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                    <h3 class="card-title">
+                                      <% if (transfer.type == "Arrival Transfer") { %>
+                                              <i class="material-icons">flight_land</i>
+                                        <% } else { %>
+
+                                            <i class="material-icons">flight_takeoff</i>
+                                          <% } %>
+                                          <%= transfer.type %>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <% if (transfer.status == "Confirmed") { %>
+                                      <span class="badge badge-success confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                                      <% } else if (transfer.status == "Cancelled") { %>
+                                      <span class="badge badge-danger confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                                      <% } else { %>
+                                      <span class="badge badge-warning confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                                      <% } %>
+                                  </div>
+                              </div>
+                            </div>
+
+                        <div class="card-body" style="padding: 0px;">
+                          <div class="item booking-item-details">
+                            <div class="row">
+                              <div class="col-md-4 booking-item-detail-col">
+                                <div class="title">
+                                  <h5><%= moment(transfer.date).format('LL') %></h5>
+                                  <% if (transfer.extraInfo) { %>
+                                      <p><%= transfer.people %> PAX <a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="<%= transfer.extraInfo %>"><i class="fa fa-info-circle"></i> Extra Information</a></p>
+                                    <% } else { %>
+                                    <p><%= transfer.people %> PAX</p>
+                                    <% } %>
+                                </div>
+                              </div>
+                              <div class="col-md-6 booking-item-detail-col">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <p>Flight: <br><%= transfer.flightnumber %> at <%= transfer.flighttime %></p>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <p>Pick-up: <br><%= transfer.location %> at <%= transfer.pickuptime %></p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2 float-right booking-item-detail-col">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <% if (transfer.status == "Confirmed"){ %>
+                                      <p>Driver: </br> <%= transfer.driver %></p>
+
+                                      <% } else { %>
+                                        <p></p>
+
+<% } %>
+                                  </div>
+                                </div>
+                              </div>
                           </div>
                         </div>
-                        <div class="date text-right"><strong>24</strong><span>May</span></div>
+
+                      </form>
                       </div>
+
+
+                      <% }); %>
+
+<!--
+                    <div class="card-cold">
+                      <form class="card card-booking-item">
+                      <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6">
+                              <h3 class="card-title"><a href="">#DI1547656597</a></h3>
+                            </div>
+                            <div class="col-md-6">
+                                                      <span class="badge badge-secondary confirmed-tour-item">Not Confirmed</span>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="card-body" style="padding: 0px;">
+                        <div class="item booking-item-details">
+                          <div class="row">
+                            <div class="col-md-4 booking-item-detail-col">
+                              <div class="title">
+                                <h5>20 July, 2019 <span class="badge badge-secondary">Day Tour</span></h5>
+                                <p>1 days / 8 Pax</p>
+                              </div>
+                            </div>
+                            <div class="col-md-6 booking-item-detail-col">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <p>Tour: <br>The Golden Circle & Langjökull</p>
+                                </div>
+                                <div class="col-md-6">
+                                  <p>Pick-up: <br>Hotel Borg at 10:00 AM</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-2 float-right booking-item-detail-col">
+                              <p class="item-booking-price">2.800.000 ISK</p>
+                              <span class="badge badge-secondary confirmed-tour-item">Not Paid</span>
+                            </div>
+                        </div>
+                      </div>
+
+                    </form>
                     </div>
-
-                  </form>
-
-
-
-                      </div>
+                      </div> -->
                     </div>
 
 
@@ -428,25 +672,59 @@
                             </button>
                         </div>
                         <div class="modal-body" id="result">
+                          <!-- Modal -->
+<div class="modal fade" id="dayDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
                           <div class="row justify-content-center h-100">
                               <div class="col-md-12 col-xl-5 col-sm-12 no-padding cart-side" style="height: 95vh">
-                                <div class="table-responsive">
-                              <table class="table table-striped table-hover">
-                                <thead>
-                                  <tr>
-                                    <th>Item</th>
-                                    <th>VAT</th>
-                                    <th>Commission</th>
-                                    <th>QTY</th>
-                                    <th>Net</th>
-                                    <th>Total</th>
-                                  </tr>
-                                </thead>
-                                <tbody id="shoppingCart">
-
-                                </tbody>
-                              </table>
-                            </div>
+                                <table class="table table-striped table-hover">
+                            <thead>
+                              <tr>
+                                <th>Day</th>
+                                <th></th>
+                                <th>Date</th>
+                                <th>Accommodation</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">1</th>
+                                <td>Arrival</td>
+                                <td>23 Apri, 2019</td>
+                                <td><button type="button" class="btn btn-link"  data-toggle="modal" data-target="#dayDetails"><span class="fa fa-eye"></span></button></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter                            </td>
+                              </tr>
+                            </tbody>
+                          </table>
                               </div>
                               <div class="col-md-12 col-xl-7 col-sm-12 no-padding h-100" style="height: 95vh">
                                 <ul class="nav nav-tabs nav-justified serviceTabs">
@@ -508,7 +786,6 @@
                           <div class="form-group">
                           <label for="inlineFormInput" class="sr-only">Commission</label>
                           <select class="form-control custom-select">
-                            <option value="0">0%</option>
                             <option value="5">5%</option>
                             <option value="10">10%</option>
                             <option value="15" selected>15%</option>
@@ -549,7 +826,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="/bookings/update/<%= booking.id %>">
+        <form method="post" action="/bookings/update/<%= booking.id %>" enctype="multipart/form-data">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">First Name:</label>
             <input type="text" class="form-control" name="firstname" value="<%= booking.firstname %>" required>
@@ -822,6 +1099,20 @@
                    <option value="Zimbabwe">Zimbabwe</option>
                           </select>
           </div>
+          <div class="form-group">
+              <label>Final Itinerary</label>
+              <input type="file" class="form-control" name="itinerary"/>
+          </div>
+          <% if (travellers.length > 0 ||  booking.itinerary || booking.status != "Confirmed") { %>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" name="bookingconfirmed" id="bookingconfirmed">
+              <label class="form-check-label" for="exampleCheck1">Booking is fully confirmed.</label>
+      </div>
+<% } else { %>
+    <p>Hey terra!</p>
+<% } %>
+
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -833,6 +1124,16 @@
 </div>
 
 
+            <% drivers.forEach(function(driver) { %>
+
+            <input type="hidden" class="driver" value="<%= driver.name %>" data-id="<%= driver._id %>">
+
+
+            <% }); %>
+
+
+
+            <input type="hidden" name="" id="BookingEmail" value="<%= booking.email %>">
 
             <% hotels.forEach(function(hotel) { %>
 
@@ -846,6 +1147,41 @@
 <%- include ../../temp/footer.ejs %>
 
 <script type='text/javascript'>
+
+
+$( "input.form-control.traveller-change" ).keyup(function() {
+
+  var travellerID = $(this).closest('.traveller-list').attr('id');
+  var Selectname = $("input.form-control.traveller-change."+ travellerID).attr('name');
+  var name = $(Selectname).val();
+  // var name = $(traveller-list).att('name');
+  // var age = $(traveller-list).att('age');
+  // var weight = $(traveller-list).att('weight');
+  // var height = $(traveller-list).att('height');
+
+  console.log(name)
+
+
+});
+
+
+
+
+
+
+
+
+var BookingEmail = $("#BookingEmail").val();
+
+
+$.ajax({
+  url: "https://api.postmarkapp.com/messages/outbound?count=500&offset=0&recipient=sigurdur%40deluxeiceland.is",
+  headers: {"Accept": "application/json", "X-Postmark-Server-Token": "06e91cdb-7bf5-4b2d-9b96-fd201221dbdd"}
+}).done(function(data) {
+  console.log(data);
+});
+
+
 
 var BookingCountry = $("#bookingCountry").val();
 
@@ -1078,6 +1414,7 @@ function getRoomList(start, end) {
 
 
 
+
     $('input.datepicker').daterangepicker({
     "autoApply": true,
     "startDate": "11/14/2018",
@@ -1094,5 +1431,41 @@ $(".js-example-placeholder-single").select2({
     allowClear: true
 });
 
+
+
+
+$('#changeStatus').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var id = button.data('id')
+  var type = button.data('type')
+  var date = button.data('date')
+  var pickuptime = button.data('pickuptime')
+  var pickupLocation = button.data('pickuplocation')
+  var people = button.data('people')
+  var getStatus = button.data('getstatus')
+  var modal = $(this)
+  modal.find('.modal-title').html('<p>Change status for ' + type +'</p>')
+  modal.find('.modal-body.main-statusChange').html('<p>Date: '+ date +' at '+ pickuptime +'</p><p>Pick-up: '+ pickupLocation +' for '+ people +' PAX')
+  console.log(getStatus)
+  if (getStatus === "Not Confirmed") {
+    modal.find('.modal-action').html('<form action="/bookings/confirm/'+ id +'" method="post"><div class="form-group"><label for="recipient-name" class="col-form-label">Choose Driver:</label><select class="form-control custom-select payment-status" id="driverList" name="driver" required></select></div><div class="row"><div class="col-md-6"><button type="submit" class="btn btn-success status-confirm">Confirm</button></form></div><div class="col-md-6"><form action="/bookings/cancel/'+ id +'" method="post"><button type="submit" class="btn btn-danger status-confirm">Cancel</button></form></div></div>');
+
+    $( ".driver" ).each(function() {
+      var driverName = $(this).val();
+      var driverID = $(this).attr("data-id");
+      $('select#driverList').append($('<option>', {
+          value: driverID,
+          text: driverName
+      }));
+    });
+
+
+  } else if (getStatus == "Confirmed") {
+    modal.find('.modal-action').html('<div class="row"><div class="col-md-12"><form action="/bookings/cancel/'+ id +'" method="post"><button type="submit" class="btn btn-danger status-confirm">Cancel</button></form></div></div>');
+  } else {
+    modal.find('.modal-action').html('<form action="/bookings/delete/'+ id +'" method="post"><input type="hidden" name="bookingID" value="<%= booking._id %>"><button type="submit" class="btn btn-danger status-confirm">Delete</button></form></form>');
+  }
+
+})
 
 </script>

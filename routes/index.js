@@ -6,17 +6,26 @@ const Lead = require('../models/lead');
 const sanitize = require('mongo-sanitize');
 const numeral = require('numeral');
 const Booking = require('../models/booking');
+const User = require('../models/user');
 const Message = require('../models/message');
 const Transaction = require('../models/transaction');
+const Transfer = require('../models/transfer');
 const fs = require('fs');
 const mail = require('../services/mail');
 const pdf = require('html-pdf');
+const mid = require('../middleware');
+const nodemailer = require('nodemailer');
+const async = require("async");
 var options = { format: 'Letter' };
 let moment = require('moment');
 
 
 
-router.get('/create-quote',  function(req, res, next) {
+
+
+
+
+router.get('/create-quote',  mid.requiresLogin, function(req, res, next) {
   Partner.find(function(err, partners){
         if(err){
             console.log(err);
@@ -78,7 +87,7 @@ router.post('/new-lead',  function(req, res, next) {
 
 
 
-router.get('/partnerList/:partner_id', function(req, res, next) {
+router.get('/partnerList/:partner_id', mid.requiresLogin, function(req, res, next) {
   Partner.findById(req.params.partner_id, function(err, partner) {
           if (err) {
             console.log(err);
@@ -92,7 +101,7 @@ router.get('/partnerList/:partner_id', function(req, res, next) {
 });
 
 
-router.post('/create-quote', function(req, res, next) {
+router.post('/create-quote', mid.requiresLogin, function(req, res, next) {
 
   pdf.create(priceQuote, options).toFile('./pdf/'+ req.body.name +'.pdf', function(err, res) {
     if (err) return console.log(err);
@@ -110,12 +119,80 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Deluxe Iceland', message: message });
 });
 
-// Get booking details and instert for client
-router.get('/confirm-booking', function(req, res, next) {
+/* GET home page. */
+router.get('/forgot-password', function(req, res, next) {
+    var message = req.query.message;
 
-    res.render('pages/bookings/confirm', { title: 'Confirm your booking'});
+    res.render('reset', { title: 'Deluxe Iceland', message: message });
+});
 
 
+/* GET home page. */
+router.post('/forgot', function(req, res, next) {
+
+  var userEmail = req.body.email;
+
+  mid.resetPassword(req, res, next, userEmail);
+
+});
+
+
+router.get('/forgot-password/:token', function(req, res) {
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+  var message = req.query.message;
+  if (!user) {
+
+    return res.redirect('/forgot-password?message=error');
+
+  }
+
+  res.render('reset-password', { token: req.params.token , message: message});
+
+  });
+});
+
+router.post('/forgot-password/:token', function(req, res) {
+  async.waterfall([
+    function(done) {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        if (!user) {
+
+          return res.redirect('back');
+
+        }
+
+        user.password = req.body.password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+
+        user.save(function(err) {
+          res.redirect('/');
+          });
+        });
+      },
+    function(user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'info@deluxeiceland.is',
+          pass: 'Iceland230@ssM'
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'info@deluxeiceland.is',
+        subject: 'Your password has been changed',
+        text: 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        req.flash('success', 'Success! Your password has been changed.');
+        done(err);
+      });
+    }
+  ], function(err) {
+    res.redirect('/dashboard');
+  });
 });
 
 
@@ -123,7 +200,7 @@ router.get('/confirm-booking', function(req, res, next) {
 
 
 /* GET settings */
-router.get('/settings',  function(req, res, next) {
+router.get('/settings', mid.requiresLogin,  function(req, res, next) {
   User.findById(req.session.userId, function (err, user){
     if (err) {
       console.log(err);
@@ -135,7 +212,7 @@ router.get('/settings',  function(req, res, next) {
 });
 
 // POST / update single item
-router.post('/settings/:User_id',  function (req, res) {
+router.post('/settings/:User_id',  mid.requiresLogin, function (req, res) {
   User.findById(req.params.User_id, function(err, user) {
       if (err)
         res.send(err);
@@ -150,14 +227,25 @@ router.post('/settings/:User_id',  function (req, res) {
 });
 
 
+
+
 /* GET home page. */
-router.get('/dashboard',  function(req, res, next) {
+router.get('/dashboard',  mid.requiresLogin, function(req, res, next) {
+
+        var weekstart = moment().startOf('isoWeek');
+        var weekend = moment().endOf('isoWeek');
+        Transfer.find({created: {
+              $gte: weekstart,
+              $lt: weekend
+          }}).sort([['created', 'descending']]).exec(function(err, transfers) {
         Booking.count({}, function (err, totalBookings) {
         Booking.count({status: 'Completed'}, function (err, totalCompleted) {
         Booking.count({status: 'Confirmed'}, function (err, totalConfirmed) {
-          Booking.find({"status": "Pending"}).sort({arrivaldate: 'asc'}).exec(function(err, bookings) {
-          Lead.find({"status": "New"}).sort({arrivaldate: 'asc'}).exec(function(err, leads) {
-            res.render('pages/dashboard', { title: 'Dashboard', moment: moment, totalBookings: totalBookings, leads: leads, totalCompleted: totalCompleted, totalConfirmed: totalConfirmed, bookings: bookings});
+        Booking.find({"status": "Pending"}).sort({arrivaldate: 'asc'}).exec(function(err, bookings) {
+        Lead.find({"status": "New"}).sort({arrivaldate: 'asc'}).exec(function(err, leads) {
+            res.render('pages/dashboard', { title: 'Dashboard', moment: moment, totalBookings: totalBookings, leads: leads, totalCompleted: totalCompleted, totalConfirmed: totalConfirmed, bookings: bookings, transfers: transfers});
+              });
+
         })});
     });
     });
@@ -176,6 +264,8 @@ router.post('/login', function(req, res, next) {
         res.redirect('/?message=error');
       }  else {
         req.session.userId = user._id;
+        req.session.userName = user.name;
+        req.session.access = user.access;
         return res.redirect('/dashboard');
       }
     });
@@ -202,7 +292,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/new-admin',  function(req, res, next) {
+router.get('/new-admin',  mid.requiresLogin, function(req, res, next) {
   res.render('new-user', { title: 'Dashboard' });
 });
 
@@ -210,7 +300,7 @@ router.get('/new-admin',  function(req, res, next) {
 
 
 // POST / resister new partner
-router.post('/add/new-user',  function(req, res, next) {
+router.post('/add/new-user',  mid.requiresLogin, function(req, res, next) {
   if (req.body.email &&
     req.body.name) {
 

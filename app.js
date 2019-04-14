@@ -6,6 +6,11 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');''
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const mail = require('./services/mail');
+const payment = require('./services/payment');
+const reminder = require('./services/reminder');
+const CronJob = require('cron').CronJob;
+const session = require('express-session');
 
 // Routes
 const index = require('./routes/index');
@@ -14,10 +19,48 @@ const leads = require('./routes/leads');
 const itineraries = require('./routes/itineraries');
 const operations = require('./routes/operations');
 const bookings = require('./routes/bookings');
+const search = require('./routes/search');
+const details = require('./routes/details');
 
 var app = express();
 
+
+// use sessions for tracking logins
+app.use(session({
+  secret: 'Deluxe loves you',
+  resave: true,
+  saveUninitialized: false
+}));
+
+
+// make user ID available in templates
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.session.userId;
+  res.locals.currentUserName = req.session.userName;
+  res.locals.accessControl = req.session.access;
+  next();
+});
+
+
+
+
 app.use(fileUpload());
+
+
+reminder.paymentCheck();
+
+reminder.arrivalCheck();
+
+// Check Every Day
+const job = new CronJob('00 00 08 * * *', function() {
+
+  reminder.arrivalCheck();
+
+});
+
+job.start();
+
+
 
 
 
@@ -44,7 +87,8 @@ app.use('/leads', leads );
 app.use('/itineraries', itineraries );
 app.use('/operations', operations );
 app.use('/bookings', bookings );
-
+app.use('/search', search );
+app.use('/details', details );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -53,20 +97,10 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-app.set('port', process.env.PORT || 3001);
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+// listen on port 3000
+app.listen(3006, function () {
+  console.log('Express app listening on port 3006');
 });
 
 

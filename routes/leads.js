@@ -8,6 +8,8 @@ const Booking = require('../models/booking');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
+const mail = require('../services/mail');
+const Transaction = require('../models/transaction');
 
 escapeRegex = function (str) {
   return (str+'').replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
@@ -127,44 +129,54 @@ router.post('/update-status/:Lead_id',  function (req, res) {
   })
 });
 
-// POST / update lead status
-router.post('/mark-sold/:Lead_id',  function (req, res) {
+// POST / Send Booking info to confirm the booking
+router.post('/send-info/:Lead_id',  function (req, res) {
   Lead.findById(req.params.Lead_id, function(err, lead) {
-  lead.total = sanitize(req.body.total),
-  lead.status = "Sold",
+  var totalAmount = String(req.body.total).split('.').join("");
+  lead.total = sanitize(totalAmount),
+  lead.status = "Waiting for confirmation",
+  lead.pax = sanitize(req.body.pax)
+  lead.arrivaldate = sanitize(req.body.arrival)
+  lead.departuredate = sanitize(req.body.departure)
   lead.save(function(err) {
       if (err) {
+
         console.log(err);
+
       } else { 
 
 
-    if (req.body.createBooking){
-      var bookingData = {
-
-        firstname: sanitize(req.body.firstname),
-        email: sanitize(req.body.email),
-        phonenumber: sanitize(req.body.phonenumber),
-        arrivaldate: sanitize(req.body.arrivaldate),
-        departuredate: sanitize(req.body.departuredate),
-        finalprice: sanitize(req.body.total),
-
-      };
-
-      Booking.create(bookingData, function (error, user) {
-        if (error) {
-          return next(error);
-        } else {
-          res.redirect('/leads/'+ req.params.Lead_id);
-        }
-      });
-
-    } else {
-      res.redirect('/leads/'+ req.params.Lead_id);
-    }
 
 
+
+
+              var transactionData = {
+
+                bookingId: sanitize(req.params.Lead_id),
+                amount: sanitize(totalAmount),
+                bookingname: sanitize(lead.firstname),
+                status: "Unpaid",
+                date: sanitize(currentDate)
+
+              };
+
+              Transaction.create(transactionData, function (error, user) {
+                if (error) {
+
+                  return next(error);
+
+                } else {
+                  mail.sendDetails(lead._id);
+                  res.redirect('/leads/'+ req.params.Lead_id);
+                }
+              });
+
+
+          console.log("Full Payment!")
 
       }
+
+
     })
   })
 });
@@ -250,7 +262,7 @@ router.post('/new-lead',  function(req, res, next) {
         }
       });
 
-    
+
 
 });
 

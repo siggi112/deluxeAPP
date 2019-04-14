@@ -56,7 +56,7 @@
                         <div class="media-body">
                           <p class="text-muted mb-0">Number of travellers: <%= lead.travellers %> PAX</p>
                           <p class="text-muted mb-0">Budget per person: <%= lead.budget %></p>
-                          <p class="text-muted mb-0">Desired arrival month: <%= lead.startdate %></p>
+                          <p class="text-muted mb-0">Desired arrival date: <%= lead.startdate %></p>
                           <hr>
                           <% if(lead.trip){ %>
                             <p><strong>Requested trip:</strong></p>
@@ -66,7 +66,7 @@
                           <% if(lead.status === "Sold"){ %>
                               <button type="button" class="btn btn-success" disabled><span class="fa fa-check"></span> Marked as sold!</button>
                           <% } else { %>
-                          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#markSold">Mark as sold</button>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#markSold"><i class="fa fa-paper-plane"></i> Send Confirmation Email</button>
                           <% } %>
                         </div>
                       </div>
@@ -191,7 +191,7 @@
                       <input type="text" class="form-control" name="budget" value="<%= lead.budget %>">
                     </div>
                     <div class="form-group">
-                      <label for="recipient-name" class="col-form-label">Desired arrival month</label>
+                      <label for="recipient-name" class="col-form-label">Desired arrival date</label>
                       <input type="text" class="form-control" name="startdate" value="<%= lead.startdate %>">
                     </div>
                     <div class="form-group">
@@ -206,7 +206,11 @@
                               <option value="Follow-up">Follow-up</option>
                           <% }  %> <% if(lead.status === "Follow-up"){ %>
                               <option value="Follow-up" selected>Follow-up</option>
+                              <option value="Waiting for confirmation">Waiting for confirmation</option>
                               <option value="Inactive">Inactive</option>
+                          <% } %>
+                          <% if(lead.status === "Waiting for confirmation"){ %>
+                              <option value="Inactive" selected>Inactive</option>
                           <% } %>
                       </select>
                     </div>
@@ -224,32 +228,43 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mark lead as sold</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Send Confirmation Email</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <form method="post" action="/leads/mark-sold/<%= lead.id %>">
+          <form method="post" action="/leads/send-info/<%= lead.id %>">
               <input type="hidden" class="form-control" name="firstname" value="<%= lead.firstname %>">
               <input type="hidden" class="form-control" name="email" value="<%= lead.email %>">
                 <input type="hidden" class="form-control" name="phonenumber" value="<%= lead.phone %>">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Total ISK</label>
-            <input type="text" class="form-control" name="total" id="recipient-name">
+            <input type="text" class="form-control total-isk" autocomplete="off" name="total"  value="<%= lead.total %>" required id="total-isk">
           </div>
+          <div class="row">
+                      <div class="input-group input-daterange">
+            <div class="col">
+              <div class="form-group">
+              <label for="recipient-name" class="col-form-label">Arrival date</label>
+              <input type="text" class="input-sm form-control" name="arrival" value="<%= lead.arrivaldate %>" required autocomplete="off" />
+            </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Departure date</label>
+              <input type="text" class="input-sm form-control" name="departure" value="<%= lead.departuredate %>" required autocomplete="off" />
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Arrival date</label>
-            <input type="text" class="form-control" name="arrivalDate" id="recipient-name">
+            <label for="recipient-name" class="col-form-label">Number of Travellers</label>
+            <input type="number" class="form-control" name="pax" id="recipient-name"  value="<%= lead.pax %>" required autocomplete="off">
           </div>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Departure date</label>
-            <input type="text" class="form-control" name="departureDate" id="recipient-name">
-          </div>
-          <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" name="createBooking" id="createBooking">
-    <label class="form-check-label" for="exampleCheck1">Create New Booking.</label>
-      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -311,6 +326,20 @@
 
 <script type="text/javascript">
 
+$('input#total-isk').maskNumber({
+   integer: true,
+   decimal: '',
+   thousands: '.'
+
+ });
+
+ $('.input-daterange').datepicker({
+     orientation: "bottom right",
+     autoclose: true,
+     todayHighlight: true,
+ });
+
+
 $('#removeMessage').on('show.bs.modal', function (event) {
 
 var button = $(event.relatedTarget) // Button that triggered the modal
@@ -340,6 +369,8 @@ modal.find('input#leadID').val(message)
   message: 'New Message created!',
   type: 'success'
   });
+
+
   </script>
 
 <% } %>

@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
             console.log(err);
           } else {
               var message = req.query.message;
-              return res.render('/pages/suppliers', { title: 'Suppliers', suppliers: suppliers, message: message});
+              return res.render('pages/suppliers', { title: 'Suppliers', suppliers: suppliers, message: message});
 
         }
   });

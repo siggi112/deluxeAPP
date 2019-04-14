@@ -2,6 +2,7 @@
 <nav class="side-navbar shrinked">
   <ul class="list-unstyled">
             <li class="active"><a href="/dashboard"> <i class="icon-home"></i>Dashboard </a></li>
+            <%if (accessControl  === "Admin") {%>
             <li><a href="#tablesDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-grid"></i>Finance </a>
               <ul id="tablesDropdown" class="collapse list-unstyled ">
                 <li><a href="/finance/payments">Payments</a></li>
@@ -9,6 +10,7 @@
                 <li><a href="tables-datatable.html">Reports</a></li>
               </ul>
             </li>
+            <%}%>
             <li><a href="#chartsDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fa fa-bar-chart"></i>Suppliers </a>
               <ul id="chartsDropdown" class="collapse list-unstyled ">
                 <li><a href="/suppliers">View All</a></li>
@@ -21,12 +23,6 @@
                 <li><a href="/bookings/new">New booking</a></li>
               </ul>
             </li>
-            <li><a href="#Itineraries" aria-expanded="false" data-toggle="collapse"> <i class="icon-padnote"></i>Itineraries </a>
-              <ul id="Itineraries" class="collapse list-unstyled ">
-                <li><a href="">Pre-Made Templates</a></li>
-                <li><a href="/itineraries/new">New Itinerary</a></li>
-              </ul>
-            </li>
             <li><a href="#pagesDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-interface-windows"></i>Leads </a>
               <ul id="pagesDropdown" class="collapse list-unstyled ">
                 <li><a href="/leads">View All</a></li>
@@ -36,7 +32,7 @@
             <li><a href="#componentsDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-page"></i>Operations </a>
               <ul id="componentsDropdown" class="collapse list-unstyled ">
                 <li><a href="/operations">Overview</a></li>
-                <li><a href="/operations/fleet">Drivers</a></li>
+                <li><a href="/operations/drivers">Drivers</a></li>
                 <li><a href="/operations/fleet">Fleet</a></li>
               </ul>
             </li>

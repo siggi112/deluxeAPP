@@ -12,8 +12,17 @@ var leadSchema = new mongoose.Schema({
   travellers: {
     type: String
   },
+  pax: {
+    type: Number
+  },
   budget: {
     type: String
+  },
+  arrivaldate: {
+    type: Date
+  },
+  departuredate: {
+    type: Date
   },
   startdate: [{}],
   trip: {
