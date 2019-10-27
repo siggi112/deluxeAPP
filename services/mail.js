@@ -3,11 +3,20 @@ const Lead = require('../models/lead');
 const moment = require('moment');
 const cron = require('node-cron');
 const Booking = require('../models/booking');
+const Detail = require('../models/detail');
 const postmark = require("postmark");
 
 
 
+
 var exports = module.exports = {};
+
+
+
+
+
+
+
 
 
 exports.newLeadMail = function (name, pax, traveldate, budget) {
@@ -28,7 +37,7 @@ exports.newLeadMail = function (name, pax, traveldate, budget) {
   const mailOptions = {
 
     from: 'info@deluxeiceland.is', // sender address
-    to: 'sigurdur@deluxeiceland.is', // list of receivers
+    to: 'info@deluxeiceland.is', // list of receivers
     subject: 'New Lead for '+ name, // Subject line
     html: '<p>New lead submitted by '+ name +' for '+ pax +' Travellers, desired travel month: '+ traveldate +' with the budget per person '+ budget +'.</p>'// plain text body
 
@@ -56,8 +65,7 @@ exports.newLeadMail = function (name, pax, traveldate, budget) {
 // Send booking details email to client
 exports.sendDetails = function (leadID) {
 
-
-  Lead.findById(leadID, function(err, lead) {
+Lead.findById(leadID, function(err, lead) {
 
     // Send an email:
 var client = new postmark.ServerClient("06e91cdb-7bf5-4b2d-9b96-fd201221dbdd");
@@ -68,7 +76,140 @@ client.sendEmailWithTemplate({
   "TemplateAlias": "welcome-20190411115353",
   "TemplateModel": {
     "name": lead.firstname,
-    "booking_url": "http:localhost:3000/details/"+ lead._id,
+    "bookingnumber": "#"+ lead.referencenumber,
+    "booking_url": "http://dashboard.deluxeiceland.is/bookings/confirm-booking/"+ lead._id,
+  }
+});
+
+
+  })
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+// Send deposit has been received email to client
+exports.sendDepositConfirmation = function (leadID) {
+
+
+  Lead.findById(leadID, function(err, lead) {
+
+    // Send an email:
+var client = new postmark.ServerClient("06e91cdb-7bf5-4b2d-9b96-fd201221dbdd");
+
+client.sendEmailWithTemplate({
+  "From": "info@deluxeiceland.is",
+  "To": lead.email,
+  "TemplateAlias": "welcome-20190620181702",
+  "TemplateModel": {
+    "name": lead.firstname,
+    "bookingnumber": "#"+ lead.referencenumber
+  }
+});
+
+
+  })
+
+
+
+
+}
+
+
+// Send booking details email to client
+exports.sendFinalPayment = function (bookingID) {
+
+  Booking.findById(bookingID, function(err, booking) {
+  Detail.findOne({bookingnumber: booking.bookingnumber}, function(err, detail) {
+
+    // Send an email:
+var client = new postmark.ServerClient("06e91cdb-7bf5-4b2d-9b96-fd201221dbdd");
+console.log("Rubds!");
+client.sendEmailWithTemplate({
+  "From": "info@deluxeiceland.is",
+  "To": detail.email,
+  "TemplateAlias": "welcome-20190430133512",
+  "TemplateModel": {
+    "name": booking.firstname,
+    "bookingnumber": "#"+ booking.bookingnumber,
+    "booking_url": "http://dashboard.deluxeiceland.is/bookings/final-payment/"+ booking._id,
+  }
+});
+});
+
+
+  })
+
+
+
+
+
+
+
+
+}
+
+
+exports.sendFinalPaymentReminder = function (bookingID) {
+
+Booking.findById(bookingID, function(err, booking) {
+Detail.findOne({bookingnumber: booking.bookingnumber}, function(err, detail) {
+
+    // Send an email:
+var client = new postmark.ServerClient("06e91cdb-7bf5-4b2d-9b96-fd201221dbdd");
+
+client.sendEmailWithTemplate({
+  "From": "info@deluxeiceland.is",
+  "To": detail.email,
+  "TemplateAlias": "welcome-20190625123720",
+  "TemplateModel": {
+    "name": booking.firstname,
+    "bookingnumber": "#"+ booking.bookingnumber,
+    "booking_url": "http://dashboard.deluxeiceland.is/bookings/final-payment/"+ booking._id,
+  }
+});
+});
+
+
+  })
+
+
+
+
+
+
+
+
+}
+
+
+exports.sendFeedback = function (bookingID) {
+
+Booking.findById(bookingID, function(err, booking) {
+
+
+
+
+    // Send an email:
+var client = new postmark.ServerClient("06e91cdb-7bf5-4b2d-9b96-fd201221dbdd");
+
+client.sendEmailWithTemplate({
+  "From": "info@deluxeiceland.is",
+  "To": booking.email,
+  "TemplateAlias": "welcome-20190430133512-1",
+  "TemplateModel": {
+    "name": booking.firstname,
+    "bookingnumber": "#"+ booking.bookingnumber,
+    "booking_url": "http://dashboard.deluxeiceland.is/bookings/final-payment/"+ booking._id,
   }
 });
 

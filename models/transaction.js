@@ -6,6 +6,9 @@ var transactionSchema = new mongoose.Schema({
   bookingname: {
     type: String
   },
+  referencenumber: {
+    type: String
+  },
   amount: {
     type: Number
   },
@@ -14,6 +17,16 @@ var transactionSchema = new mongoose.Schema({
   },
   date: {
     type: Date
+  },
+  orderhash: {
+    type: String
+  },
+  reason: {
+    type: String
+  },
+  method: {
+    type: String,
+    default: "Credit Card"
   },
   created: {
     type: Date,

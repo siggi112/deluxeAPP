@@ -8,6 +8,7 @@ var bookingSchema = new mongoose.Schema({
     },
     bookingnumber: {
        type: String,
+       unique: true,
    },
     cart: [{}],
     email: {
@@ -29,7 +30,7 @@ var bookingSchema = new mongoose.Schema({
       type: String
     },
     arrivaldate: {
-      type: String
+      type: Date
     },
     departuredate: {
       type: String
@@ -58,7 +59,7 @@ var bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "On-Hold"
+    default: "Pending"
   }
 });
 var Booking = mongoose.model('Booking', bookingSchema);

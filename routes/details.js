@@ -1,64 +1,146 @@
-const express = require('express');
+var express = require('express');
+var router = express();
 const Lead = require('../models/lead');
-const router = express();
+const Detail = require('../models/detail');
 const crypto = require('crypto-js');
 const moment = require('moment');
 const Transaction = require('../models/transaction');
-
-// Get Lead
-router.get('/:lead_id',  function (req, res) {
-
-  Lead.findById(req.params.lead_id, function(err, lead) {
-            console.log(err);
-
-            if (lead.status == 'Waiting for confirmation') {
+const numeral = require('numeral');
+const sanitize = require('mongo-sanitize');
+const Traveller = require('../models/traveller');
+const Booking = require('../models/booking');
 
 
 
-              Transaction.find({ 'bookingId': req.params.lead_id, 'status' : 'Unpaid' }, function (err, payments) {
 
-                var totalAmount = 0;
+// POST / create traveller
+router.post('/add/traveller',   function(req, res, next) {
 
+  var travellerData = {
 
-                for (var i = 0; i < payments.length; i++) {
-
-                  totalAmount += payments[i].amount;
-
-                }
-
-                if (totalAmount === lead.total) {
-
-                  var itemDec = "Trip to Iceland - Full Payment"
-
-                } else {
-
-                  var itemDec = "Trip to Iceland - 30% Deposit"
-
-                }
-
-                var message = req.query.message;
+        name: sanitize(req.body.name),
+        age: sanitize(req.body.age),
+        gender: sanitize(req.body.gender),
+        bookingid: sanitize(req.body.bookingid),
 
 
-                var secret_key = 'a1b90991942a4ffc8c1fe72deadbbefa';
-
-                var message = '9000060|http://borgun.is/ReturnPageSuccess|http://borgun.is/ReturnPageSuccessServer|TEST00000001|'+ totalAmount +'|ISK';
-
-                var checkhash_data = crypto.HmacSHA256(message, secret_key);
-                var checkhash = crypto.enc.Hex.stringify(checkhash_data);
+  };
 
 
-                return res.render('pages/details/confirm.ejs', {title: 'Deluxe Iceland - ' + lead.firstname + " "+ lead.lastname, lead: lead, message: message, checkhash: checkhash, totalAmount: totalAmount, itemDec: itemDec});
+  Traveller.findById(req.body.travellerID, function(err, traveller){
+       if(err){
+           console.log(err);
+       } else {
+          if(!traveller) {
+            Traveller.create(travellerData, function (error, user) {
+              if (error) {
+                return next(error);
+              } else {
+                return;
+              }
+            });
+          } else {
+            Traveller.findOneAndUpdate({ _id: req.body.travellerID }, { $set: {
+              name: sanitize(req.body.name),
+              age: sanitize(req.body.age),
+              gender: sanitize(req.body.gender),
+              bookingid: sanitize(req.body.bookingid),
 
 
-              });
+            } }, function(err, doc) {
+                console.log("Updated");
+            })
+
+          }
+       }
+    });
+
+  res.send(travellerData);
 
 
 
-            } else {
-              res.send("Sorry, we could not find what you are looking for!")
-            }
-    })
+
 });
+
+
+
+
+router.post('/:lead_id',  function (req, res, next) {
+
+
+  if (req.body.phonenumber) {
+
+    var phoneNumber = req.body.phonenumber;
+
+
+
+      var detailData = {
+
+            phonenumber: sanitize(req.body.phonenumber),
+            address: sanitize(req.body.address),
+            zip: sanitize(req.body.zip),
+            city: sanitize(req.body.city),
+            country: sanitize(req.body.country),
+            arrivaldate: sanitize(req.body.arrivaldate),
+            departuredate: sanitize(req.body.departuredate),
+            bookingnumber: sanitize(req.body.bookingnumber),
+            arrivalflight: sanitize(req.body.arrivalflight),
+            departureflight: sanitize(req.body.departureflight),
+            email: sanitize(req.body.email),
+            pax: sanitize(req.body.pax),
+            specialrequest: sanitize(req.body.sepecialdetails)
+
+
+          };
+
+          Detail.find({bookingnumber: req.body.bookingnumber}, function(err, detail){
+               if(err){
+                   console.log(err);
+               } else {
+                  if(detail.length < 1) {
+                    Detail.create(detailData, function (error, user) {
+                      if (error) {
+                        return next(error);
+                      } else {
+                        return;
+                      }
+                    });
+                  } else {
+                    Detail.findOneAndUpdate({ bookingnumber: req.body.bookingnumber }, { $set: {
+
+                      phonenumber: sanitize(req.body.phonenumber),
+                      address: sanitize(req.body.address),
+                      zip: sanitize(req.body.zip),
+                      city: sanitize(req.body.city),
+                      country: sanitize(req.body.country),
+                      arrivaldate: sanitize(req.body.arrivaldate),
+                      departuredate: sanitize(req.body.departuredate),
+                      bookingnumber: sanitize(req.body.bookingnumber),
+                      arrivalflight: sanitize(req.body.arrivalflight),
+                      departureflight: sanitize(req.body.departureflight),
+                      specialrequest: sanitize(req.body.sepecialdetails)
+
+
+                    } }, function(err, doc) {
+
+                    })
+
+                  }
+               }
+            });
+
+
+  } else {
+
+    res.send("Provide details please!");
+
+  }
+
+
+
+
+});
+
 
 
 

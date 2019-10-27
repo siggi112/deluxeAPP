@@ -15,6 +15,9 @@ var travellerSchema = new mongoose.Schema({
     weight: {
       type: String
     },
+    gender: {
+      type: String
+    },
   created: {
     type: Date,
     default: Date.now

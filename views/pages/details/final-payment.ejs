@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>View My Booking - Deluxe Iceland</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="/stylesheets/fontastic.css">
+    <!-- Google fonts - Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="/stylesheets/style.default.premium.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="/stylesheets/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid px-3">
+          <div class="row min-vh-100" style="min-height: 100vh!important;">
+            <div class="col-12 col-md-8 col-lg-6 col-xs-12 d-flex align-items-center">
+              <div class="w-100 py-5">
+                <div class="text-center"><img src="/img/main-logo.png" alt="..."  style="width: 50%; padding-bottom: 50px;" class="img-fluid mb-4">
+                  <h1 class="display-4 mb-3">View My Booking</h1>
+                  <h2 class="no-bold">Here below is information about your booking with us.</h2>
+                </div>
+                <br>
+                <form class="form-validate" id="confirmDetails" novalidate="novalidate" method="post">
+                  <div class="form-group">
+                    <h2><%= booking.firstname %> <%= booking.lastname %> #<%= booking.bookingnumber %></h2>
+                  </div>
+                  <div class="form-group final-itinerary">
+                    <a href="<%= detail.itinerary %>" target="_blank"><i class="fa fa-file"></i> View Final Itinerary</a>  |
+                    <a href="https://deluxeiceland.is/wp-content/uploads/2019/04/General-Information-about-Iceland-24.pdf" target="_blank"><i class="fa fa-file"></i> View Useful Information</a> | 
+                      <a href="https://deluxeiceland.is/wp-content/uploads/2019/06/Wining-Dining-56.pdf" target="_blank"><i class="fa fa-file"></i> List of Restaurants</a>
+                  </div>
+
+
+</body>
+
+
+                  <% if (totalUnpaid === 0) { %>
+
+
+
+                    <% } else { %>
+                      <input type="hidden" name="bookingnumber" id="bookingnumber" value="<%= booking.bookingnumber %>">
+                        <label>*By proceeding to payment you are agreeing to <a target="_blank" href="https://deluxeiceland.is/terms-conditions/">Deluxe Iceland Booking Conditions</a></label>
+                      <!-- Submit-->
+  <footer class="action-buttons">
+                      <button class="btn btn-lg btn-block btn-success mb-3">Proceed to payment <%= numeral(payNow).format('0,0'); %> ISK</button>
+                      <p class="card-warnings">We don't accept American Express and Diners Club Cards</p>
+  </footer>
+
+                    <% } %>
+
+                </form>
+                <form id="PaymentAction" novalidate="novalidate" action="https://securepay.borgun.is/securepay/default.aspx" method="post">
+                  <input type="hidden" name="merchantid" value="9000060" />
+                  <input type="hidden" name="paymentgatewayid" value="6983" />
+                  <input type="hidden" name="checkhash" value="<%= checkhash %>" />
+                  <input type="hidden" name="orderid" value="<%= booking.bookingnumber %>" />
+                  <input type="hidden" name="currency" value="ISK" />
+                  <input type="hidden" name="language" value="EN" />
+                  <input type="hidden" name="buyername" value="<%= booking.firstname %>" />
+                  <input type="hidden" name="buyeremail" value="<%= booking.email %>" />
+                  <input type="hidden" name="returnurlsuccess" value="http://dashboard.deluxeiceland.is/bookings/payment-received/" />
+                  <input type="hidden" name="returnurlsuccessserver" value="http://dashboard.deluxeiceland.is/bookings/payment-server/" />
+                  <input type="hidden" name="returnurlcancel" value="http://dashboard.deluxeiceland.is/bookings/final-payment/<%= booking._id %>/" />
+                  <input type="hidden" ame="returnurlerror" value="http://borgun.is/ReturnUrlError.aspx" />
+                  <input type="hidden" name="itemdescription_0" value="<%= itemDec %>" />
+                  <input type="hidden" name="itemcount_0" value="1" />
+                  <input type="hidden" name="itemunitamount_0" value="<%= payNow  %>" />
+                  <input type="hidden" name="itemamount_0" value="<%= payNow  %>" />
+                  <input type="hidden" name="amount" value="<%= payNow  %>" />
+                  <input type="hidden" name=" pagetype " value="0" />
+                  <input type="hidden" name="skipreceiptpage " value="1" />
+                  <input type="hidden" name="merchantemail" value="info@deluxeiceland.is" />
+                </form>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 col-md-4 d-none d-lg-block" style="padding-right: 0px; background-color: #f3f3f3;">
+              <!-- Image-->
+              <div style="background-color: #f3f3f3; background-size: cover; background-repeat: no-repeat;" class="bg-cover mr-n3"></div>
+              <div class="container">
+                <div class="payment-overview my-auto" style="padding-top: 100px;">
+                  <h2 class="no-bold"><i class="fa fa-credit-card payment-icon"></i> Payment Overview</h2>
+                  <br>
+                  <table class="table text-sm table-compact table-bordered table-bordered-o text-right" style="background-color: #fff;">
+                  <thead>
+                    <tr>
+                      <th class="text-left"></th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tfoot style="background: #fff; color: #666;">
+                    <tr  style="border-top: solid 10px #f3f3f3;">
+                      <th style="text-align: left; font-weight: lighter;">Total Unpaid:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-unpaid" isk="<%= totalUnpaid %>"><span class="small-usd-unpaid"></span> <%= numeral(totalUnpaid).format('0,0'); %> ISK</th>
+                    </tr>
+                    <tr>
+                      <th style="text-align: left; font-weight: lighter;">Total Paid:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-paid" isk="<%= totalPaid %>"><span class="small-usd-paid"></span> <%= numeral(totalPaid).format('0,0'); %> ISK</th>
+                    </tr>
+                    <tr style="border-top: solid 10px #f3f3f3;">
+                      <th style="text-align: left; font-weight: bold;">Total:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-payment" isk="<%= totalPayment %>"><span class="small-usd-total-payment"></span> <%= numeral(totalPayment).format('0,0'); %> ISK</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <% payments.forEach(function(payment) { %>
+
+                      <tr class="text-stronger each-payment">
+                          <td class="text-left">Amount in ISK</td>
+                          <td><%= moment(payment.date).format("LL") %></td>
+                          <% if (payment.status === "Paid") { %>
+
+                            <td><span class="badge badge-success"><%= payment.status %></td>
+
+
+                          <% } else { %>
+
+                        <td><span class="badge badge-danger"><%= payment.status %></span></td>
+
+
+
+                          <% } %>
+                        <td class="text-success" isk="<%= payment.amount %>"><span class="small-usd"></span><strong><%= numeral(payment.amount).format('0,0'); %> ISK</strong></td>
+                        </tr>
+
+
+                    <% }); %>
+
+
+                                  </tbody>
+                </table>
+                <br>
+                <p>*All transactions are processed in Icelandic Króna. </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    <!-- JavaScript files-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="/vendor/chart.js/Chart.min.js"></script>
+    <script src="/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <!-- Main File-->
+    <script src="/javascripts/front.js"></script>
+
+    <script type="text/javascript">
+
+
+  $( "#confirmDetails" ).submit(function( event ) {
+
+
+    if($(this).valid()) {
+    event.preventDefault();
+
+
+        var form = $(this);
+      var url = form.attr('action');
+
+      $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(data)
+            {
+
+            }
+          });
+
+
+
+
+
+          $( "#PaymentAction" ).submit();
+
+
+
+    }
+
+});
+
+
+
+    </script>
+
+
+    <script type="text/javascript">
+  jQuery.ajax({
+    url: "https://data.fixer.io/api/latest?access_key=5a0566d5c1ab490698f36a8f9d72bcc3&base=USD",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+      var currencyNew = response.rates.ISK;
+      var formatedCuv = numeral(currencyNew).format('000');
+
+      var totalUnpaid = $("th.total-unpaid").attr('isk');
+      var totalUnpaidUSD = parseInt(totalUnpaid) / parseInt(formatedCuv);
+      var totalUnpaidUSDformat = numeral(totalUnpaidUSD).format('0,0');
+
+      var totalPaid = $("th.total-paid").attr('isk');
+      var totalPaidUSD = parseInt(totalPaid) / parseInt(formatedCuv);
+      var totalPaidUSDformat = numeral(totalPaidUSD).format('0,0');
+
+      var totalPayment = $("th.total-payment").attr('isk');
+      var totalPaymentUSD = parseInt(totalPayment) / parseInt(formatedCuv);
+      var totalPaymentUSDformat = numeral(totalPaymentUSD).format('0,0');
+
+      $("span.small-usd-unpaid").html("$"+ totalUnpaidUSDformat + " ~ ")
+      $("span.small-usd-paid").html("$"+ totalPaidUSDformat + " ~ ")
+      $("span.small-usd-total-payment").html("$"+ totalPaymentUSDformat + " ~ ")
+
+      console.log(totalUnpaidUSDformat);
+      console.log(totalPaidUSDformat);
+      console.log(totalPaymentUSDformat);
+      $( "tr.text-stronger.each-payment" ).each(function() {
+
+        var iskValue = $(this).find("td.text-success").attr('isk');
+        var usdValue = parseInt(iskValue) / parseInt(formatedCuv);
+        var usdNumber = numeral(usdValue).format('0,0');
+        $(this).find("td.text-success span.small-usd").html("$"+ usdNumber + " ~ ");
+
+
+      });
+
+    }
+});
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+  </body>
+</html>

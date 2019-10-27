@@ -9,7 +9,7 @@ const Room = require('../models/room');
 const mid = require('../middleware');
 
 /* GET users listing. */
-router.get('/new',  function(req, res, next) {
+router.get('/new',  mid.requiresLogin, function(req, res, next) {
   Supplier.find({'type': 'Hotel'}).exec(function(err, hotels) {
         if(err){
             console.log(err);
@@ -22,7 +22,7 @@ router.get('/new',  function(req, res, next) {
 
 
 // GET /single partner
-router.get('/get-rooms/:supplier_id', function(req, res, next) {
+router.get('/get-rooms/:supplier_id', mid.requiresLogin,  function(req, res, next) {
 
     Room.find({ 'supplier': req.params.supplier_id }, function (err, rooms) {
 

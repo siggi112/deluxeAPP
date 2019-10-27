@@ -5,7 +5,7 @@ const cron = require('node-cron');
 const Booking = require('../models/booking');
 const Transfer = require('../models/transfer');
 const Transacation = require('../models/transaction');
-
+const Detail = require('../models/detail');
 // Require:
 const postmark = require("postmark");
 
@@ -27,7 +27,6 @@ exports.arrivalCheck = function () {
   Transfer.find({date: { $gte: moment(currentTomorrow).format("MM-DD-YYYY"), $lte: moment(currentTomorrow).format("MM-DD-YYYY"), }, status: "Confirmed"}, function(err, transfer) {
     for (var i = 0; i < transfer.length; i++) {
       totalTransfers++;
-      console.log(transfer);
       transfers.push(transfer[i]);
 
 
@@ -125,7 +124,6 @@ exports.welcomeCheck = function () {
     for (var i = 0; i < transfer.length; i++) {
       totalWelcome++;
       transfers.push(transfer[i]);
-      console.log(transfers);
     } checkArrival(0, transfers);
 
   });
@@ -175,7 +173,6 @@ exports.paymentCheck = function () {
 
     for (var i = 0; i < transfer.length; i++) {
       totalTransfers++;
-      console.log(transfer);
       transfers.push(transfer[i]);
 
 
@@ -185,15 +182,14 @@ exports.paymentCheck = function () {
 
     function checkArrival(i, transfers) {
 
-        console.log(i);
-        console.log(transfers);
+
         if(transfers.length > 0) {
 
           client.sendEmail({
             "From": "info@deluxeiceland.is",
-            "To": "sigurdur@ssm.is",
+            "To": "sigurdur@deluxeiceland.is",
             "Subject": "Payment Reminder - There is an outstanding payment",
-            "TextBody": "Halló Halló!"
+            "TextBody": "There is an outstanding payment"
             });
 
             console.log("Sent!");
@@ -204,5 +200,58 @@ exports.paymentCheck = function () {
         }
 
     }
+
+}
+
+
+// Check for bookings that are in progress
+exports.bookingCheck = function () {
+
+  var currentDate = moment();
+
+  console.log(currentDate);
+
+  Detail.find({arrivaldate: {  $lte: currentDate } }, function(err, detail) {
+
+  for (var i = 0; i < detail.length; i++) {
+
+    Booking.findOneAndUpdate({ bookingnumber: detail[i].bookingnumber, status: "Confirmed" }, { $set: {status: "In Progress",  } }, function(err, booking) {
+
+    if(!booking) {
+
+    } else {
+                console.log(booking)
+    }
+
+      });
+
+  }
+
+
+  });
+
+  
+    Detail.find({departuredate: {  $lt: currentDate } }, function(err, detail) {
+
+
+      for (var i = 0; i < detail.length; i++) {
+
+
+        Booking.findOneAndUpdate({ bookingnumber: detail[i].bookingnumber, status: "In Progress" }, { $set: {status: "Completed",  } }, function(err, bookingNew) {
+
+
+        if(!bookingNew) {
+
+        } else {
+                    console.log(bookingNew)
+        }
+
+          });
+
+      }
+
+
+
+    });
 
 }

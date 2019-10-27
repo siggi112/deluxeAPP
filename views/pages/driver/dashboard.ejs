@@ -1,0 +1,47 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+  <div class="content-inner active">
+    <header class="page-header">
+      <div class="container-fluid">
+        <h2 class="no-margin-bottom">Dashboard - Today is <%= moment().format("LL") %></h2>
+      </div>
+    </header>
+
+
+    <section class="dashboard-counts no-padding-bottom">
+      <div class="container-fluid">
+            <div class="row">
+
+
+              <!-- <% cars.forEach(function(car) { %>
+
+                <div class="col-md-6 col-xl-4 col-xs-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="media align-items-center">
+                        <div class="media-body overflow-hidden">
+                          <h5 class="card-text mb-0"><%= car.make %> <%= car.model %></h5>
+                          <p class="card-text text-uppercase text-muted"><%= car.number %></p>
+                          <p class="card-text">
+                            <button type="button" class="btn btn-success">Start Cleaning</button>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+                  <% }); %> -->
+
+
+
+              </section>
+
+
+
+  <%- include ../../temp/footer.ejs %>

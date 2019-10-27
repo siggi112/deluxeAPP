@@ -1,3 +1,4 @@
+#!/usr/bin/env nodejs
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -21,6 +22,18 @@ const operations = require('./routes/operations');
 const bookings = require('./routes/bookings');
 const search = require('./routes/search');
 const details = require('./routes/details');
+const finance = require('./routes/finance');
+const driver = require('./routes/driver');
+
+
+
+
+// Error System
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://593f0249ded14219895452c873bac263@sentry.io/1455359' });
+
+
+
 
 var app = express();
 
@@ -37,7 +50,7 @@ app.use(session({
 app.use(function (req, res, next) {
   res.locals.currentUser = req.session.userId;
   res.locals.currentUserName = req.session.userName;
-  res.locals.accessControl = req.session.access;
+  res.locals.accessControl = req.session.type;
   next();
 });
 
@@ -47,27 +60,53 @@ app.use(function (req, res, next) {
 app.use(fileUpload());
 
 
-reminder.paymentCheck();
+// reminder.markCompleted();
+//
+// reminder.paymentCheck();
+//
+// reminder.arrivalCheck();
 
-reminder.arrivalCheck();
 
-// Check Every Day
-const job = new CronJob('00 00 08 * * *', function() {
+// Check every Friday for bookings next week
+const newJob = new CronJob('00 00 00 * * 5', function() {
 
-  reminder.arrivalCheck();
+  const d = new Date();
+
+  console.log("Check every Friday!")
 
 });
 
+
+
+// Check every day
+const job = new CronJob('00 00 00 * * *', function() {
+
+  const d = new Date();
+
+  reminder.paymentCheck();
+  reminder.bookingCheck();
+
+});
+
+
+
+
 job.start();
+newJob.start();
+
+
 
 
 
 
 
 // mongodb connection
-mongoose.connect('mongodb://ssm:1504942309ssM@ds127864.mlab.com:27864/deluxeiceland');
+mongoose.connect('mongodb://ssm:1504942309ssM@ds127864.mlab.com:27864/deluxeiceland', { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -89,19 +128,30 @@ app.use('/operations', operations );
 app.use('/bookings', bookings );
 app.use('/search', search );
 app.use('/details', details );
+app.use('/finance', finance );
+app.use('/driver', driver );
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  res.send("Error!");
   err.status = 404;
-  next(err);
+  next();
 });
+
+
+
 
 
 // listen on port 3000
-app.listen(3006, function () {
-  console.log('Express app listening on port 3006');
+app.listen(3000, function () {
+
+  console.log('Express app listening on port 3000');
+
 });
+
 
 
 module.exports = app;

@@ -28,35 +28,64 @@
   <body>
     <div class="container-fluid px-3">
           <div class="row min-vh-100" style="min-height: 100vh!important;">
-            <div class="col-md-5 col-lg-6 col-xl-4 px-lg-5 d-flex align-items-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xs-12 d-flex align-items-center">
               <div class="w-100 py-5">
                 <div class="text-center"><img src="/img/main-logo.png" alt="..."  style="width: 50%; padding-bottom: 50px;" class="img-fluid mb-4">
                   <h1 class="display-4 mb-3">Booking details</h1>
                   <h2 class="no-bold">Please fill in the following information below</h2>
                 </div>
                 <br>
-                <form method="get" class="form-validate" novalidate="novalidate" id="BookingDetails">
+                <form class="form-validate" id="confirmDetails" novalidate="novalidate" action="http://dashboard.deluxeiceland.is/details/<%= lead._id %>" method="post">
                   <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" name="name" autocomplete="off" required="" value="<%= lead.firstname %> <%= lead.lastname %>" class="form-control" autocomplete="no">
+                    <h2><%= lead.firstname %> <%= lead.lastname %></h2>
+                    <input type="hidden" name="name" autocomplete="off" required="" value="<%= lead.firstname %> <%= lead.lastname %>" class="form-control" autocomplete="no" disabled>
                   </div>
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <p>Start Date:</p>
+                      <%= moment(lead.arrivaldate).format('LL') %>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <p>End Date:</p>
+                      <%= moment(lead.departuredate).format('LL') %>
+                </div></div>
+                <br>
+                  <input type="hidden" name="email" value="<%= lead.email %>">
+                  <input type="hidden" name="pax" value="<%= lead.pax %>">
+                  <input type="hidden" name="arrivaldate" value="<%= lead.arrivaldate %>">
+                  <input type="hidden" name="departuredate" value="<%= lead.departuredate %>">
+                  <input type="hidden" name="bookingnumber" id="bookingnumber" value="<%= lead.referencenumber %>">
+                  <input type="hidden" name="travellersCount" value="<%= lead.pax %>">
                   <div class="form-group">
                     <label>Address</label>
-                    <input  name="address" type="text" autocomplete="off" required="" class="form-control">
+                      <% if(detail){ %>
+                    <input  name="address" type="text" autocomplete="off" required="" value="<%= detail.address %>" class="form-control">
+                      <% } else { %>
+                        <input  name="address" type="text" autocomplete="off" required="" class="form-control">
+                    <% } %>
                   </div>
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label>City / Town</label>
-                      <input name="city" type="text" autocomplete="off" required="" class="form-control">
+                      <% if(detail){ %>
+                      <input name="city" type="text" autocomplete="off" required="" value="<%= detail.city %>" class="form-control">
+                      <% } else { %>
+                        <input name="city" type="text" autocomplete="off" required="" class="form-control">
+                      <% } %>
                     </div>
                     <div class="form-group col-md-6">
                       <label>Zip Code</label>
-                      <input name="zip" type="text" autocomplete="off" required="" class="form-control">
+                      <% if(detail){ %>
+                      <input name="zip" type="text" autocomplete="off" value="<%= detail.zip %>" required="" class="form-control">
+                      <% } else { %>
+                        <input name="zip" type="text" autocomplete="off" required="" class="form-control">
+                      <% } %>
                     </div>
                   </div>
                   <div class="form-group">
                     <label>Country</label>
-                    <select id="selectedCountry" class="form-control" name="country" required="">
+                    <select id="selectedCountry" class="form-control custom-select" name="country" required="">
                   <option value="Afghanistan">Afghanistan</option>
                    <option value="Albania">Albania</option>
                    <option value="Algeria">Algeria</option>
@@ -306,16 +335,28 @@
                         <label>Phone Number</label>
                       </div>
                     </div>
-                    <input name="phonenumber" type="text" required=""class="form-control">
+                    <% if(detail){ %>
+                    <input name="phonenumber" value="<%= detail.phonenumber %>" type="text" required=""class="form-control">
+                    <% } else { %>
+                    <input name="phonenumber"  type="text" required=""class="form-control">
+                    <% } %>
                   </div>
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label>Arrival Flight</label>
-                      <input name="arrivalflight" id="arrivalFlight" type="text" autocomplete="off" required="" placeholder="Flight number - Date - Arrival Time" class="form-control">
+                      <% if(detail){ %>
+                      <input name="arrivalflight" id="arrivalFlight" type="text" value="<%= detail.arrivalflight %>" autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Arrival Time" class="form-control">
+                      <% } else { %>
+                      <input name="arrivalflight" id="arrivalFlight" type="text"  autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Arrival Time" class="form-control">
+                      <% } %>
                     </div>
                     <div class="form-group col-md-6">
                       <label>Departure Flight</label>
-                      <input name="departureflight" type="text" id="departureFlight" autocomplete="off" required="" placeholder="Flight number - Date - Departure Time" class="form-control">
+                        <% if(detail){ %>
+                      <input name="departureflight" type="text" id="departureFlight" value="<%= detail.departureflight %>" autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Departure Time" class="form-control">
+                        <% } else { %>
+                      <input name="departureflight" type="text" id="departureFlight"  autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Departure Time" class="form-control">
+                          <% } %>
                     </div>
                   </div>
                   <div class="i-checks">
@@ -324,61 +365,194 @@
                   </div>
                   <hr>
                   <br>
-                  <p>Travellers - <%= lead.pax %> PAX</p>
-                  <div class="row">
 
-                    <% for(var i=0; i< lead.pax ; i++) {%>
-                      <div class="form-group col-md-8">
-                        <label>Name</label>
-                        <input name="travellers-name-<%= i %>" type="text" autocomplete="off" required="" class="form-control">
-                      </div>
-                      <div class="form-group col-md-4">
-                        <label>Age</label>
-                        <input name="travellers-age-<%= i %>" type="number" autocomplete="off" required=""  placeholder="40" class="form-control">
+                  <% if(1 < travellers.length){ %>
+
+
+                    <p>Travellers - <%= lead.pax %> Persons</p>
+                    <div class="row">
+
+                      <% for(var i=0; i< travellers.length; i++) {%>
+
+                        <div class="traveller-detail">
+                        <div class="form-group col-md-8">
+                          <label>Name</label>
+                          <input name="travellers<%= i %>" type="text" autocomplete="off" required="" value="<%= travellers[i].name %>" class="form-control name">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Age</label>
+                          <input name="travellersage<%= i %>" type="number" autocomplete="off" required=""  value="<%= travellers[i].age %>"  placeholder="40" class="form-control age">
+                          <input type="hidden" name="" value="<%= travellers[i]._id %>" class="form-control travellerID">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Gender</label>
+                          <select class="form-control custom-select gender"  required name="gender">
+                            <% if (travellers[i].gender == "Male") { %>
+
+                                  <option value="Male" selected>Male</option>
+                                  <option value="Female">Female</option>
+
+                            <% } else { %>
+
+                          <option value="Female" selected>Female</option>
+                          <option value="Male">Male</option>
+
+
+
+                            <% } %>
+                            </select>
+                        </div>
                       </div>
 
                       <% } %>
 
 
-                  </div>
+                    </div>
+
+
+                  <% } else { %>
+
+                    <p>Travellers - <%= lead.pax %> PAX</p>
+                    <div class="row">
+
+                      <% for(var i=0; i< lead.pax ; i++) {%>
+                        <div class="traveller-detail">
+                        <div class="form-group col-md-8">
+                          <label>Name</label>
+                          <input name="travellers<%= i %>" type="text" autocomplete="off" required="" class="form-control name">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Age</label>
+                          <input name="travellersage<%= i %>" type="number" autocomplete="off" required=""  placeholder="40" class="form-control age">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Gender</label>
+                          <select class="form-control custom-select gender"  required name="gender">
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                            </select>
+                        </div>
+                      </div>
+                        <% } %>
+
+
+                    </div>
+
+
+                    <% } %>
+
                   <hr>
                   <br>
                   <div class="form-group">
                     <label>Special details</label>
-                    <textarea name="sepecialdetails" rows="5" cols="100" class="form-control"></textarea>
+                      <% if(detail){ %>
+                    <textarea name="sepecialdetails" rows="5" cols="100" class="form-control"><%= detail.specialrequest %></textarea>
+                      <% } else { %>
+                      <textarea name="sepecialdetails" rows="5" cols="100" class="form-control"></textarea>
+                      <% } %>
                   </div>
+                    <label>*By proceeding to payment you are agreeing to <a target="_blank" href="https://deluxeiceland.is/terms-conditions/">Deluxe Iceland Booking Conditions</a></label>
                   <!-- Submit-->
-                  <button class="btn btn-lg btn-block btn-primary mb-3">Confirm</button>
-                </form>
-                <form id="paymentForm" action="https://securepay.borgun.is/securepay/default.aspx" method="post">
-<input type="hidden" name="merchantid" value="9000060" /><br>
-<input type="hidden" name="paymentgatewayid" value="6983" /><br>
-<input type="hidden" size=100 name="checkhash" value="<%= checkhash %>" /><br>
-<input type="hidden" name="orderid" value="TEST00000001" /><br>
-<input type="hidden" name="currency" value="ISK" /><br>
-<input type="hidden" name="language" value="EN" /><br>
-<input type="hidden" name="buyername" value="<%= lead.firstname %>" /><br>
-<input type="hidden" name="buyeremail" value="<%= lead.email %>" /><br>
-<input type="hidden" size=100 name="returnurlsuccess" value="http://borgun.is/ReturnPageSuccess" /><br>
-<input type="hidden" size=100 name="returnurlsuccessserver" value="http://borgun.is/ReturnPageSuccessServer" /><br>
-<input type="hidden" size=100 name="returnurlcancel" value="http://borgun.is/ReturnPageCancel.aspx" /><br>
-<input type="hidden" size=100 name="returnurlerror" value="http://borgun.is/ReturnUrlError.aspx" /><br>
-<input type="hidden" name="itemdescription_0" value="<%= itemDec %>" /><br>
-<input type="hidden" name="itemcount_0" value="1" /><br>
-<input type="hidden" name="itemunitamount_0" value="<%= totalAmount %>" /><br>
-<input type="hidden" name="itemamount_0" value="<%= totalAmount %>" /><br>
-<input type="hidden" name="amount" value="<%= totalAmount %>" /><br>
-<input type="hidden" name=" pagetype " value="0" /><br>
-<input type="hidden" name="skipreceiptpage " value="0" /><br>
-<input type="hidden" name="merchantemail" value="test@borgun.is" /><br>
-  <input type="hidden" name="PostButton" />
-</form>
+
 </body>
+<footer class="action-buttons">
+                    <button class="btn btn-lg btn-block btn-success mb-3">Proceed to payment <%= numeral(payNow).format('0,0'); %> ISK</button>
+                    <p class="card-warnings">We don't accept American Express and Diners Club Cards</p>
+</footer>
+                </form>
+                <form id="PaymentAction" novalidate="novalidate" action="https://securepay.borgun.is/securepay/default.aspx" method="post">
+                  <input type="hidden" name="merchantid" value="9000060" />
+                  <input type="hidden" name="paymentgatewayid" value="6983" />
+                  <input type="hidden" name="checkhash" value="<%= checkhash %>" />
+                  <input type="hidden" name="orderid" value="<%= lead.referencenumber %>" />
+                  <input type="hidden" name="currency" value="ISK" />
+                  <input type="hidden" name="language" value="EN" />
+                  <input type="hidden" name="buyername" value="<%= lead.firstname %>" />
+                  <input type="hidden" name="buyeremail" value="<%= lead.email %>" />
+                  <input type="hidden" name="returnurlsuccess" value="http://dashboard.deluxeiceland.is/bookings/payment-received/" />
+                  <input type="hidden" name="returnurlsuccessserver" value="http://dashboard.deluxeiceland.is/bookings/payment-server/" />
+                  <input type="hidden" name="returnurlcancel" value="http://dashboard.deluxeiceland.is/bookings/confirm-booking/<%= lead._id %>/" />
+                  <input type="hidden" ame="returnurlerror" value="http://borgun.is/ReturnUrlError.aspx" />
+                  <input type="hidden" name="itemdescription_0" value="<%= itemDec %>" />
+                  <input type="hidden" name="itemcount_0" value="1" />
+                  <input type="hidden" name="itemunitamount_0" value="<%= payNow  %>" />
+                  <input type="hidden" name="itemamount_0" value="<%= payNow  %>" />
+                  <input type="hidden" name="amount" value="<%= payNow  %>" />
+                  <input type="hidden" name=" pagetype " value="0" />
+                  <input type="hidden" name="skipreceiptpage " value="1" />
+                  <input type="hidden" name="merchantemail" value="info@deluxeiceland.is" />
+                </form>
               </div>
             </div>
-            <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block" style="padding-right: 0px;">
+            <div class="col-12 col-lg-6 col-md-4 d-none d-lg-block" style="padding-right: 0px; background-color: #f3f3f3;">
               <!-- Image-->
-              <div style="background-color: #f3f3f3; background-size: cover; background-repeat: no-repeat;" class="bg-cover h-100 mr-n3"></div>
+              <div style="background-color: #f3f3f3; background-size: cover; background-repeat: no-repeat;" class="bg-cover mr-n3"></div>
+              <div class="container">
+                <div class="payment-overview my-auto" style="padding-top: 100px;">
+                  <h2 class="no-bold"><i class="fa fa-credit-card payment-icon"></i> Payment Overview</h2>
+                  <br>
+                  <table class="table text-sm table-compact table-bordered table-bordered-o text-right" style="background-color: #fff;">
+                  <thead>
+                    <tr>
+                      <th class="text-left"></th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tfoot style="background: #fff; color: #666;">
+                    <tr  style="border-top: solid 10px #f3f3f3;">
+                      <th style="text-align: left; font-weight: lighter;">Total Unpaid:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-unpaid" isk="<%= totalUnpaid %>"><span class="small-usd-unpaid"></span> <%= numeral(totalUnpaid).format('0,0'); %> ISK</th>
+                    </tr>
+                    <tr>
+                      <th style="text-align: left; font-weight: lighter;">Total Paid:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-paid" isk="<%= totalPaid %>"><span class="small-usd-paid"></span> <%= numeral(totalPaid).format('0,0'); %> ISK</th>
+                    </tr>
+                    <tr style="border-top: solid 10px #f3f3f3;">
+                      <th style="text-align: left; font-weight: bold;">Total:</th>
+                      <th></th>
+                      <th></th>
+                      <th class="total-payment" isk="<%= totalPayment %>"><span class="small-usd-total-payment"></span> <%= numeral(totalPayment).format('0,0'); %> ISK</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+
+
+                    <% payments.forEach(function(payment) { %>
+
+                      <tr class="text-stronger each-payment">
+                          <td class="text-left">Amount in ISK</td>
+                          <td><%= moment(payment.date).format("LL") %></td>
+                          <% if (payment.status === "Paid") { %>
+
+                            <td><span class="badge badge-success"><%= payment.status %></td>
+
+
+                          <% } else { %>
+
+                        <td><span class="badge badge-danger"><%= payment.status %></span></td>
+
+
+
+                          <% } %>
+                        <td class="text-success" isk="<%= payment.amount %>"><strong><span class="small-usd"></span><%= numeral(payment.amount).format('0,0'); %> ISK</strong></td>
+                        </tr>
+
+
+                    <% }); %>
+
+
+                                  </tbody>
+                </table>
+                <br>
+                <p>*All transactions are processed in Icelandic Króna. </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -391,6 +565,8 @@
     <script src="/vendor/jquery-validation/jquery.validate.min.js"></script>
     <!-- Main File-->
     <script src="/javascripts/front.js"></script>
+
+
 
     <script type="text/javascript">
   $( "input#noFlight" ).change(function() {
@@ -409,11 +585,96 @@
 
   });
 
-  $( "#BookingDetails" ).submit(function( event ) {
-  event.preventDefault();
-  $( "#paymentForm" ).submit();
+  $( "#confirmDetails" ).submit(function( event ) {
+
+
+    if($(this).valid()) {
+    event.preventDefault();
+
+
+        var form = $(this);
+      var url = form.attr('action');
+
+      $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(data)
+            {
+
+            }
+          });
+
+
+      $( ".traveller-detail" ).each(function() {
+
+        var travellerName = $(this).find("input.form-control.name").val();
+        var travellerAge = $(this).find("input.form-control.age").val();
+        var travellerGender = $(this).find("select.form-control.gender").val();
+        var travellerID = $(this).find("input.form-control.travellerID").val();
+        console.log("Gender "+ travellerGender);
+        var bookingID = $("#bookingnumber").val();
+        $.post( "http://dashboard.deluxeiceland.is/details/add/traveller", { name: travellerName, age: travellerAge,  gender: travellerGender, bookingid: bookingID, travellerID: travellerID} );
+
+
+
+
+
+      });
+
+
+          $( "#PaymentAction" ).submit();
+
+
+
+    }
+
 });
 
+
+
     </script>
+    <script type="text/javascript">
+  jQuery.ajax({
+    url: "https://data.fixer.io/api/latest?access_key=5a0566d5c1ab490698f36a8f9d72bcc3&base=USD",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+      var currencyNew = response.rates.ISK;
+      var formatedCuv = numeral(currencyNew).format('000');
+
+      var totalUnpaid = $("th.total-unpaid").attr('isk');
+      var totalUnpaidUSD = parseInt(totalUnpaid) / parseInt(formatedCuv);
+      var totalUnpaidUSDformat = numeral(totalUnpaidUSD).format('0,0');
+
+      var totalPaid = $("th.total-paid").attr('isk');
+      var totalPaidUSD = parseInt(totalPaid) / parseInt(formatedCuv);
+      var totalPaidUSDformat = numeral(totalPaidUSD).format('0,0');
+
+      var totalPayment = $("th.total-payment").attr('isk');
+      var totalPaymentUSD = parseInt(totalPayment) / parseInt(formatedCuv);
+      var totalPaymentUSDformat = numeral(totalPaymentUSD).format('0,0');
+
+      $("span.small-usd-unpaid").html("$"+ totalUnpaidUSDformat + " ~ ")
+      $("span.small-usd-paid").html("$"+ totalPaidUSDformat + " ~ ")
+      $("span.small-usd-total-payment").html("$"+ totalPaymentUSDformat + " ~ ")
+
+      console.log(totalUnpaidUSDformat);
+      console.log(totalPaidUSDformat);
+      console.log(totalPaymentUSDformat);
+      $( "tr.text-stronger.each-payment" ).each(function() {
+
+        var iskValue = $(this).find("td.text-success").attr('isk');
+        var usdValue = parseInt(iskValue) / parseInt(formatedCuv);
+        var usdNumber = numeral(usdValue).format('0,0');
+        $(this).find("td.text-success span.small-usd").html("$"+ usdNumber + " ~ ");
+
+
+      });
+
+    }
+});
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
   </body>
 </html>

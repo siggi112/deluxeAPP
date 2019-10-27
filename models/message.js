@@ -10,6 +10,9 @@ var messageSchema = new mongoose.Schema({
   type: {
     type: String,
   },
+  by: {
+    type: String,
+  },
   owner: {
     type: String,
   },

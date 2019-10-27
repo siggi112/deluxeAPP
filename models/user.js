@@ -13,13 +13,23 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  phone: {
+    type: String
+  },
   password: {
     type: String,
     required: true
   },
-  access: {
+  type: {
     type: String,
   },
+  lastlogin: {
+    type: Date,
+  },
+  created: {
+  type: Date,
+  default: Date.now
+},
   resetPasswordToken: {
     type: String
   },

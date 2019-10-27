@@ -6,57 +6,61 @@
           <!-- Page Header-->
           <header class="page-header">
                       <div class="container-fluid">
-                        <h2 class="no-margin-bottom"><%= booking.firstname %> <%= booking.lastname %> - <%= booking.status %></h2>
+                        <div class="breadcrumb-holder container-fluid">
+                          <div class="row">
+                            <div class="col-md-6 col-xs-12">
+                              <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/bookings">Bookings</a></li>
+                                <li class="breadcrumb-item active"><%= booking.firstname %></li>
+                              </ul>
+                            </div>
+                              <div class="col-md-6 col-xs-12">
+                                  <%if (accessControl  === "Admin" || accessControl  === "Supervisor") {%>
+                                <div class="float-right-actions">
+                                  <div class="dropdown">
+                        <button class="btn btn-outline-dark btn-sm" type="button" id="editBooking" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           Actions <span class="fa fa-chevron-down"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="editBooking">
+                          <a class="dropdown-item" data-toggle="modal" data-target="#changeBookingModal">Edit Booking details</a>
+                          <a class="dropdown-item" data-toggle="modal" data-target="#newPayment">New Payment</a>
+                          <hr><a class="dropdown-item" href="#"><strong><i class="fa fa-envelope"></i> Email</strong></a>
+                          <% if(booking.status == "Confirmed" || booking.status == "In Progress" ){ %>
+                                <a class="dropdown-item" href="/bookings/send-final-payment/<%= booking._id %>">Send Booking details</a>
+                            <% } %>
+                            <% if(outstanding > 0 && booking.status == "Confirmed"){ %>
+                                  <a class="dropdown-item" href="/bookings/send-final-payment-reminder/<%= booking._id %>">Send Payment Reminder</a>
+                              <% } %>
+                              <% if(booking.status == "Completed"){ %>
+                                    <a class="dropdown-item" href="/bookings/send-feedback/<%= booking._id %>">Send Feedback</a>
+                                <% } %>
+                        </div>
+                      </div>
+                                </div>
+                                <div class="float-right-actions">
+                                  <div class="dropdown">
+                                    <% if(booking.status == "Pending"){ %>
+
+                                      <button class="btn btn-outline-dark btn-sm <%= booking.status %>" data-toggle="modal" data-target="#changeStatus" aria-expanded="false">
+                                        <%= booking.status %> <span class="fa fa-chevron-down"></span>
+                                      </button>
+
+                                        <% } else { %>
+
+                                          <button class="btn btn-outline-dark btn-sm <%= booking.status %>" data-toggle="modal" data-target="#changeStatus"aria-haspopup="true" aria-expanded="false">
+                                             <%= booking.status %> <span class="fa fa-chevron-down"></span>
+                                          </button>
+
+                                        <% } %>
+                      </div>
+                                </div>
+
+                                    <%}%>
+                              </div>
+                          </div>
+                        </div>
                       </div>
           </header>
-
-          <div class="breadcrumb-holder container-fluid">
-            <div class="row">
-              <div class="col-md-6 col-xs-12">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="/bookings">Bookings</a></li>
-                  <li class="breadcrumb-item active"><%= booking.firstname %> <%= booking.lastname %></li>
-                </ul>
-              </div>
-                <div class="col-md-6 col-xs-12">
-                  <div class="float-right-actions">
-                    <div class="dropdown">
-          <button class="btn btn-outline-dark btn-sm" type="button" id="editBooking" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-pencil"></span> Edit
-          </button>
-          <div class="dropdown-menu" aria-labelledby="editBooking">
-            <a class="dropdown-item" data-toggle="modal" data-target="#editModal">Edit Contact details</a>
-            <a class="dropdown-item" data-toggle="modal" data-target="#editTraveller">Edit Travellers List</a>
-          </div>
-        </div>
-                  </div>
-                  <div class="float-right-actions">
-                    <div class="dropdown">
-          <button class="btn btn-success btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-plus"></span> Add
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" data-toggle="modal" data-target="#newPayment">New Payment</a>
-            <a class="dropdown-item" data-toggle="modal" data-target="#newTraveller">New Traveller</a>
-            <a class="dropdown-item" data-toggle="modal" data-target="#newPackage">New Package</a>
-            <a class="dropdown-item" data-toggle="modal" data-target="#newTransfer">New Transfer</a>
-              <a class="dropdown-item" data-toggle="modal" data-target="#changeBookingModal">Test</a>
-          </div>
-        </div>
-                  </div>
-                  <div class="float-right-actions">
-                    <% if(booking.itinerary){ %>
-                        <a class="btn btn-primary btn-sm" role="button" href="<%= booking.itinerary %>" target="_blank">
-                          <span class="fa fa-file"></span> View Itinerary
-                        </a>
-    <% } else { %>
-
-  <% } %>
-
-                  </div>
-                </div>
-            </div>
-          </div>
 
 
 
@@ -125,26 +129,56 @@
 </div>
 
 
-<div class="modal fade" id="changeStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="uploadItinerary" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Change Status</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Upload Itinerary</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body main-statusChange">
-
-        <form method="post" action="">
-          <!-- <input type="hidden" id="messageDelete" name="messageID" value=""> -->
-
-      </div>
-      <div class="modal-action">
-
+        <form action="/bookings/upload-itinerary/<%= booking._id %>/<%= booking.bookingnumber %>" method="post" encType="multipart/form-data">
+<div class="form-group">
+<label for="exampleFormControlSelect1">Itinerary</label>
+<input id="fileInput" type="file" name="itinerary" class="form-control-file">
+</div>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Upload</button>
       </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="changeStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Change Booking Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body main-statusChange">
+        <form action="/bookings/update-status/<%= booking._id %>" method="post">
+<div class="form-group">
+<label for="exampleFormControlSelect1">Status</label>
+<select class="form-control" id="exampleFormControlSelect1" name="status">
+<option value="Completed">Completed</option>
+<option value="Confirmed">Confirmed</option>
+<option value="Cancelled">Cancelled</option>
+<option value="Pending">Pending</option>
+</select>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+    </form>
     </div>
   </div>
 </div>
@@ -262,7 +296,14 @@
   </div>
   <div class="form-group">
     <label for="recipient-name" class="col-form-label">Age:</label>
-    <input type="text" class="form-control" name="age">
+    <input type="number" class="form-control" name="age">
+</div>
+<label>Gender</label>
+<div class="form-group">
+<select class="form-control custom-select gender"  required name="gender">
+  <option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
 </div>
 <div class="form-group">
   <label for="recipient-name" class="col-form-label">Height:</label>
@@ -274,7 +315,7 @@
 </div>
 </div>
 <div class="modal-footer">
-<input type="hidden" name="bookingid" value="<%= booking.id %>">
+<input type="hidden" name="bookingid" value="<%= booking.bookingnumber %>">
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 <button type="submit" class="btn btn-primary">Save</button>
 </form>
@@ -306,12 +347,23 @@
                   <label for="recipient-name" class="col-form-label">Amount:</label>
                   <input type="text" class="form-control format-isk" name="amount">
           </div>
-          <div class="form-group">
+          <div class="form-group display-none">
             <label for="recipient-name" class="col-form-label">Payment Status:</label>
             <select class="form-control custom-select payment-status" name="status">
-                              <option value="Paid">Paid</option>
-                              <option value="Unpaid">Unpaid</option>
+                              <option value="Unpaid" selected>Unpaid</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Method:</label>
+            <select class="form-control custom-select payment-method" name="method">
+                              <option value="Credit Card">Credit Card</option>
+                              <option value="Bank Transfer">Bank Transfer</option>
+                              <option value="Refund">Refund</option>
                             </select>
+          </div>
+          <div class="form-group display-none" id="refund-reason">
+            <label for="recipient-name" class="col-form-label">Reason for refund:</label>
+            <input type="text" class="form-control" name="description">
           </div>
       </div>
       <div class="modal-footer">
@@ -329,28 +381,45 @@
               <div class="container-fluid">
                 <div class="row">
                   <div class="col-lg-4">
-
                   <div class="card">
-                    <div class="card-header">
-                      <h3 class="card-title">Client details</h3>
-                    </div>
+                    <h2 class="main-card-heading"><%= booking.firstname %>  #<%= booking.bookingnumber %></h2>
                     <div class="card-body client">
                       <div class="media">
+
+
                         <div class="media-body">
 
-                          <div class="row">
-                            <div class="col-lg-6 col-md-12">
-                              <h4><%= booking.firstname %> <%= booking.lastname %></h4>
-                              <i class="fa fa-phone"></i> <%= booking.phonenumber %><br>
-                              <i class="fa fa-envelope"></i> <%= booking.email %><br>
 
-                            </div><div class="col-lg-6 col-md-12">
-                            <p class="text-muted mb-0">Address: <%= booking.address %></p>
-                            <p class="text-muted mb-0">Zip Code: <%= booking.zip %></p>
-                            <p class="text-muted mb-0">City: <%= booking.city %></p>
-                            <p class="text-muted mb-0">Country: <%= booking.country %></p>
+                          <% if(detail){ %>
+                            <div class="row">
+                              <div class="col-lg-6 col-md-12">
+                                <i class="fa fa-phone"></i> <%= detail.phonenumber %><br>
+                                  <%if (accessControl  === "Admin" || accessControl  === "Supervisor") {%>
+                                <i class="fa fa-envelope"></i> <%= detail.email %><br>
+                              </div><div class="col-lg-6 col-md-12">
+                              <p class="text-muted mb-0">Address: <%= detail.address %></p>
+                              <p class="text-muted mb-0">Zip Code: <%= detail.zip %></p>
+                              <p class="text-muted mb-0">City: <%= detail.city %></p>
+                                                                  <% } %>
+                              <p class="text-muted mb-0">Country: <%= detail.country %></p>
+                              </div>
                             </div>
-                          </div>
+
+                          <% } else { %>
+                            <div class="row">
+                              <div class="col-lg-6 col-md-12">
+                                <i class="fa fa-phone"></i> <%= booking.phonenumber %><br>
+                                <i class="fa fa-envelope"></i> <%= booking.email %><br>
+
+                              </div><div class="col-lg-6 col-md-12">
+                              <p class="text-muted mb-0">Address: <%= booking.address %></p>
+                              <p class="text-muted mb-0">Zip Code: <%= booking.zip %></p>
+                              <p class="text-muted mb-0">City: <%= booking.city %></p>
+                              <p class="text-muted mb-0">Country: <%= booking.country %></p>
+                              </div>
+                            </div>
+
+                          <% } %>
 
                           <hr>
                           <div class="row">
@@ -359,15 +428,12 @@
                               <% travellers.forEach(function(traveller) { %>
                                 <div class="travel-detail-one">
                                   <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                       <% if (traveller.height) { %>
-                                          <p><%= traveller.name %> <a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="Height: <%= traveller.height %> - Weight: <%= traveller.weight %>"><i class="fa fa-info-circle"></i></a></p>
+                                          <p><i class="fa fa-user" aria-hidden="true"></i> <%= traveller.name %> - <%= traveller.age %> Yrs - <%= traveller.gender %><a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="Height: <%= traveller.height %> - Weight: <%= traveller.weight %>"><i class="fa fa-info-circle"></i></a></p>
                                       <% } else { %>
-                                        <p><%= traveller.name %></p>
+                                        <p><i class="fa fa-user" aria-hidden="true"></i> <%= traveller.name %> - <%= traveller.age %> Yrs - <%= traveller.gender %></p>
                                       <% } %>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <p><%= traveller.age %></p>
                                     </div>
                                   </div>
                                 </div>
@@ -375,26 +441,47 @@
                               <% }); %>
 
                             </div>
+                            <% if (detail) { %>
+                            <% if (detail.specialrequest) { %>
+                            <div class="col-md-12">
+                              <hr>
+                              <p><strong>Special Request:</strong></p>
+                              <p><%= detail.specialrequest %></p>
+                            </div>
+                              <% } %>
+                              <% } %>
                           </div>
-
-
-
                         </div>
 
                       </div>
                     </div>
                   </div>
                   <div class="card">
-                    <div class="card-header">
-                      <h3 class="card-title">Emails</h3>
-                    </div>
+
+                      <%if (accessControl  === "Admin" || accessControl  === "Supervisor") {%>
+                      <h2 class="main-card-heading">Emails</h2>
                     <div class="card-body client">
                       <div class="media">
                         <div class="media-body">
 
+                          <% if(emails.length === 0){ %>
+
+                              <p>No emails have been sent...</p>
 
 
+                              <% } else { %>
 
+                                <% emails.forEach(function(email) { %>
+
+                                <div class="email-holder">
+                                  <p><a target="_blank" href="https://account.postmarkapp.com/servers/4603770/messages/<%= email.MessageID %>?from=outbound"><%= email.Subject %></a></p>
+                                  <p><%= moment(email.ReceivedAt).format("LL") %> -  <span class="badge badge-success"><%= email.Status %></span></p>
+                                </div>
+
+                                  <% }); %>
+
+
+                              <% } %>
 
 
 
@@ -402,22 +489,27 @@
 
                       </div>
                     </div>
-                  </div>
-
-                  <div class="recent-updates card">
-                      <div class="card-header">
-                        <h3 class="h4">Payments</h3>
-                        <div class="card-close">
-                        <% if(outstanding === 0){ %>
-                          <span class="badge badge-success">PAID IN FULL</span>
-
-                          <% } else{ %>
-
-                            <span class="badge badge-danger">Not Paid in Full</span>
-
                           <% } %>
-                          </div>
+                  </div>
+                      <%if (accessControl  === "Admin" || accessControl  === "Supervisor") {%>
+                  <div class="recent-updates card">
+                    <div class="payment-info" style="padding-bottom: 15px;">
+                      <div class="row">
+                        <div class="col-md-6">
+                        <h2 class="main-card-heading">Payments</h2>
+                        </div>
+                            <div class="col-md-6 payment-stat">
+                            <% if(outstanding === 0){ %>
+                              <span class="badge badge-success float-right">PAID IN FULL</span>
+
+                              <% } else{ %>
+
+                                <span class="badge badge-danger float-right">Not Paid in Full</span>
+
+                              <% } %>
+                            </div>
                       </div>
+                    </div>
                       <div class="card-body no-padding">
 
                         <% payments.forEach(function(payment) { %>
@@ -425,8 +517,19 @@
                           <div class="item d-flex justify-content-between">
                             <div class="info d-flex">
                               <div class="title">
-                                <h5><%= moment(payment.date).format('LL') %></h5>
-                                <p><strong><%= numeral(payment.amount).format('0,0'); %> ISK</strong>
+                                <h5><%= moment(payment.date).format('LL') %> - via <%= payment.method %></h5>
+
+
+                                  <% if (payment.method === "Refund") { %>
+
+                                      <p class="<%= payment.method %>"><strong><%= numeral(payment.amount).format('0,0'); %> ISK<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="<%= payment.reason %>"></i></strong>
+
+                                  <% } else { %>
+
+                                      <p><strong><%= numeral(payment.amount).format('0,0'); %> ISK</strong>
+
+
+                                  <% } %>
                                 <% if (payment.status === "Paid") { %>
 
                                   <span class="badge badge-success"><%= payment.status %></span>
@@ -444,9 +547,20 @@
 
                               </div>
                             </div>
-                            <div class="payment-action">
+                              <% if (payment.status === "Paid") { %>
+
+
+
+
+                              <% } else { %>
+
+                              <div class="payment-action">
+
                               <button class="btn btn-outline-dark btn-sm no-outline" type="button" data-toggle="modal" data-target="#editPayment" data-date="<%= moment(payment.date).format('LL') %>" data-status="<%= payment.status %>" data-id="<%= payment.id %>" data-amount="<%= numeral(payment.amount).format('0,0'); %>"><span class="fa fa-pencil"></span></button>
-                            </div>
+
+                                                  </div>
+                              <% } %>
+
                           </div>
                         <!-- Item-->
 
@@ -511,17 +625,25 @@
                       </div>
                       <div class="card-footer payment-summary">
                         <div class="row">
-                          <div class="col-md-4 col-xs-12">
+                          <div class="col-md-3 col-xs-12">
                             <i class="material-icons flight-icon">money_off</i>
                             <p>Outstanding</p>
-        <p><strong><%= numeral(outstanding).format('0,0') %> ISK</strong></p>
+                            <p><strong><%= numeral(outstanding).format('0,0') %> ISK</strong></p>
                           </div>
-                          <div class="col-md-4 col-xs-12">
+                          <div class="col-md-3 col-xs-12">
           <i class="material-icons flight-icon">check</i>
           <p>Paid</p>
           <p><strong><%= numeral(totalPaid).format('0,0') %> ISK</strong></p>
         </div>
-        <div class="col-md-4 col-xs-12">
+          <% if (totalRefunded) { %>
+        <div class="col-md-3 col-xs-12">
+          <i class="material-icons flight-icon">clear</i>
+          <p>Refunded</p>
+          <p class="Refund"><strong><%= numeral(totalRefunded).format('0,0') %> ISK</strong></p>
+        </div>
+        <% } %>
+
+        <div class="col-md-3 col-xs-12">
           <i class="material-icons flight-icon">attach_money</i>
           <p>Total</p>
           <p><strong><%= numeral(booking.finalprice).format('0,0') %> ISK</strong></p>
@@ -529,13 +651,13 @@
                         </div>
                     </div>
                     </div>
-
+                        <%}%>
                 </div>
 
                   <!-- Inline Form-->
                   <div class="col-lg-8">
 
-                      <% transfers.forEach(function(transfer) { %>
+                      <!-- <% transfers.forEach(function(transfer) { %>
                           <div class="card-cold">
                             <% if (transfer.status == "Confirmed") { %>
                               <form class="card card-booking-item" style="border-color: #28a745;">
@@ -558,7 +680,7 @@
                                   </div>
                                   <div class="col-md-6">
                                     <% if (transfer.status == "Confirmed") { %>
-                                      <span class="badge badge-success confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
+                                      <span class="badge badge-success confirmed-tour-item" data-toggle="modal" data-target="#" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
                                       <% } else if (transfer.status == "Cancelled") { %>
                                       <span class="badge badge-danger confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
                                       <% } else { %>
@@ -566,9 +688,9 @@
                                       <% } %>
                                   </div>
                               </div>
-                            </div>
+                            </div> -->
 
-                        <div class="card-body" style="padding: 0px;">
+                        <!-- <div class="card-body" style="padding: 0px;">
                           <div class="item booking-item-details">
                             <div class="row">
                               <div class="col-md-4 booking-item-detail-col">
@@ -608,53 +730,88 @@
                         </div>
 
                       </form>
-                      </div>
-
-
-                      <% }); %>
-
-<!--
-                    <div class="card-cold">
-                      <form class="card card-booking-item">
-                      <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-6">
-                              <h3 class="card-title"><a href="">#DI1547656597</a></h3>
-                            </div>
-                            <div class="col-md-6">
-                                                      <span class="badge badge-secondary confirmed-tour-item">Not Confirmed</span>
-                            </div>
-                        </div>
-                      </div>
-                      <div class="card-body" style="padding: 0px;">
-                        <div class="item booking-item-details">
-                          <div class="row">
-                            <div class="col-md-4 booking-item-detail-col">
-                              <div class="title">
-                                <h5>20 July, 2019 <span class="badge badge-secondary">Day Tour</span></h5>
-                                <p>1 days / 8 Pax</p>
-                              </div>
-                            </div>
-                            <div class="col-md-6 booking-item-detail-col">
-                              <div class="row">
-                                <div class="col-md-6">
-                                  <p>Tour: <br>The Golden Circle & Langjökull</p>
-                                </div>
-                                <div class="col-md-6">
-                                  <p>Pick-up: <br>Hotel Borg at 10:00 AM</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-2 float-right booking-item-detail-col">
-                              <p class="item-booking-price">2.800.000 ISK</p>
-                              <span class="badge badge-secondary confirmed-tour-item">Not Paid</span>
-                            </div>
-                        </div>
-                      </div>
-
-                    </form>
-                    </div>
                       </div> -->
+
+
+                      <!-- <% }); %> -->
+
+                      <% if(detail){ %>
+                          <h2 class="main-card-heading">Details</h2>
+                                            <div class="card-cold">
+                                              <form class="card card-booking-item">
+                                              <div class="card-header">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                      <h3 class="card-title"><%= moment(detail.arrivaldate).format("LL") %> - <%= moment(detail.departuredate).format("LL") %></h3>
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                      <% if ( booking.status == "Confirmed" || booking.status == "In Progress") { %>
+                                                      <a class="btn btn-primary btn-sm float-right create-arrival-sign" href="/bookings/create-card/<%= booking._id %>" target="_blank" role="button">Arrival Sign <i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                                                            <% }  %>
+                                                      <% if(detail.itinerary){ %>
+                                                        <a class="btn btn-primary btn-sm float-right create-arrival-sign"  target="_blank" role="button">Trip Planner <i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                                          <%if (accessControl  === "Admin" || accessControl  === "Supervisor") {%>
+                                                        <div class="dropdown">
+                                                          <button class="btn btn-primary btn-sm float-right view-itinerary" type="button" id="editItinerary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            View Itinerary <span class="fa fa-chevron-down"></span>
+                                                          </button>
+                                                          <div class="dropdown-menu" aria-labelledby="editItinerary">
+                                                            <a class="dropdown-item"  href="<%= detail.itinerary %>" target="_blank">View Itinerary</a>
+                                                            <a class="dropdown-item" data-toggle="modal" data-target="#uploadItinerary">Upload Itinerary</a>
+                                                          </div>
+
+                                                              <% } else { %>
+
+                                                                <a class="btn btn-primary btn-sm float-right view-itinerary" href="<%= detail.itinerary %>" target="_blank">
+                                                                  View Itinerary </a>
+                                                                  <% }  %>
+
+                                                                        </div>
+
+                              <% } else { %>
+                                                          <a class="btn btn-primary btn-sm float-right create-arrival-sign" target="_blank" role="button">Trip Planner <i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                                          <button type="button" class="btn btn-secondary float-right view-itinerary" data-toggle="modal" data-target="#uploadItinerary">Upload Itinerary</button>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                              <div class="card-body" style="padding: 0px;">
+                                                <div class="item booking-item-details">
+                                                  <div class="row">
+                                                    <div class="col-md-4 booking-item-detail-col">
+                                                      <p>Duration: <br><%= totalDuration %></p>
+                                                    </div>
+                                                    <div class="col-md-4 booking-item-detail-col">
+                                                      <div class="row">
+                                                            <div class="col-md-2">
+                                                              <i class="material-icons flight-icon">flight_land</i>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                              <p>Arrival flight: <br><%= detail.arrivalflight %></p>
+                                                            </div>
+                                                      </div>
+                                                    </div>
+                                                    <div class="col-md-4 booking-item-detail-col">
+                                                      <div class="row">
+                                                            <div class="col-md-2">
+                                                              <i class="material-icons flight-icon">flight_takeoff</i>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                              <p>Departure flight: <br><%= detail.departureflight %></p>
+                                                            </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+
+                                            </form>
+                                            </div>
+                                              </div>
+
+                      <% }  %>
+
+
                     </div>
 
 
@@ -667,150 +824,247 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Booking - <%= booking.firstname %> <%= booking.lastname %></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                         <div class="modal-body" id="result">
-                          <!-- Modal -->
-<div class="modal fade" id="dayDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-                          <div class="row justify-content-center h-100">
-                              <div class="col-md-12 col-xl-5 col-sm-12 no-padding cart-side" style="height: 95vh">
-                                <table class="table table-striped table-hover">
-                            <thead>
-                              <tr>
-                                <th>Day</th>
-                                <th></th>
-                                <th>Date</th>
-                                <th>Accommodation</th>
-                                <th></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>Arrival</td>
-                                <td>23 Apri, 2019</td>
-                                <td><button type="button" class="btn btn-link"  data-toggle="modal" data-target="#dayDetails"><span class="fa fa-eye"></span></button></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter                            </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                          <div class="row h-100  change-book-details">
+                              <div class="col-md-6 col-xl-6 col-sm-12">
+                                <form class="form-validate" novalidate="novalidate" id="bookingsDetailsUpdate" action="/bookings/update/<%= booking._id %>" method="post">
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                                      <label>Full Name</label>
+                                      <input type="text" name="name" autocomplete="off" required="" value="<%= booking.firstname %>" class="form-control" autocomplete="no">
+                                    </div>
+                                      <div class="form-group col-md-6">
+                                        <label>Total Amount</label>
+                                        <input type="number" name="totalamount" autocomplete="off" required="" value="<%= booking.finalprice %>" class="form-control" autocomplete="no">
+                                      </div>
+                                    </div>
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                                      <div class="row">
+                                        <div class="col">
+                                          <label>Phone Number</label>
+                                        </div>
+                                      </div>
+                                      <% if(detail){ %>
+                                      <input name="phonenumber" value="<%= detail.phonenumber %>" type="text" required=""class="form-control">
+                                      <% } else { %>
+                                      <input name="phonenumber"  type="text" required=""class="form-control">
+                                      <% } %>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <div class="row">
+                                        <div class="col">
+                                          <label>Email</label>
+                                        </div>
+                                      </div>
+                                      <% if(detail){ %>
+                                      <input name="email" value="<%= detail.email %>" type="email" required=""class="form-control">
+                                      <% } else { %>
+                                      <input name="email"  type="email" required=""class="form-control">
+                                      <% } %>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                                      <label>City / Town</label>
+                                      <% if(detail){ %>
+                                      <input name="city" type="text" autocomplete="off" required="" value="<%= detail.city %>" class="form-control">
+                                      <% } else { %>
+                                        <input name="city" type="text" autocomplete="off" required="" class="form-control">
+                                      <% } %>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label>Zip Code</label>
+                                      <% if(detail){ %>
+                                      <input name="zip" type="text" autocomplete="off" value="<%= detail.zip %>" required="" class="form-control">
+                                      <% } else { %>
+                                        <input name="zip" type="text" autocomplete="off" required="" class="form-control">
+                                      <% } %>
+                                    </div>
+                                  </div>
+                                    <div class="row">
+                                  <div class="form-group col-md-6">
+                                    <label>Country</label>
+                                    <select id="selectedCountry" class="form-control custom-select" name="country" required="">
+    <% var options = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
+	,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
+	,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"
+	,"Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea"
+	,"Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana"
+	,"Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India"
+	,"Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia"
+	,"Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania"
+	,"Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia"
+	,"New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal"
+	,"Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles"
+	,"Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan"
+	,"Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia"
+	,"Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay"
+	,"Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];%>
+    <% for(var i = 0; i < options.length; i++) { %>
+      <% if(detail){ %>
+      <% var selected = ( detail.country == options[ i ] ) ? "selected" : ""; %>
+      <% } else { %>
+        <% var selected = ""; %>
+      <% } %>
+      <option value='<%=options[ i ] %>' <%=selected %>><%=options[ i ] %></option>
+    <% } %>
+  </select>
+
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label>Address</label>
+                                      <% if(detail){ %>
+                                    <input  name="address" type="text" autocomplete="off" required="" value="<%= detail.address %>" class="form-control">
+                                      <% } else { %>
+                                        <input  name="address" type="text" autocomplete="off" required="" class="form-control">
+                                    <% } %>
+                                  </div>
+
+                                </div>
+                                <div class="row">
+                                            <div class="input-group input-daterange">
+                                  <div class="col">
+                                    <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Arrival date</label>
+                                    <% if(detail){ %>
+                                    <input name="arrivaldate" id="arrivaldate" type="text" value="<%= moment(detail.arrivaldate).format("LL") %>" autocomplete="off" required=""  class="form-control">
+                                    <% } else { %>
+                                    <input name="arrivaldate" id="arrivaldate" type="text"  autocomplete="off" required="" class="form-control">
+                                    <% } %>
+                                  </div>
+                                  </div>
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label for="recipient-name" class="col-form-label">Departure date</label>
+                                        <% if(detail){ %>
+                                      <input name="departuredate" type="text" id="departuredate" value="<%= moment(detail.departuredate).format("LL") %>" autocomplete="off" required=""  class="form-control">
+                                        <% } else { %>
+                                      <input name="departuredate" type="text" id="departuredate"  autocomplete="off" required="" class="form-control">
+                                          <% } %>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                                  <div class="row">
+                                    <div class="form-group col-md-6">
+                                      <label>Arrival Flight</label>
+                                      <% if(detail){ %>
+                                      <input name="arrivalflight" id="arrivalFlight" type="text" value="<%= detail.arrivalflight %>" autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Arrival Time" class="form-control">
+                                      <% } else { %>
+                                      <input name="arrivalflight" id="arrivalFlight" type="text"  autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Arrival Time" class="form-control">
+                                      <% } %>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <label>Departure Flight</label>
+                                        <% if(detail){ %>
+                                      <input name="departureflight" type="text" id="departureFlight" value="<%= detail.departureflight %>" autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Departure Time" class="form-control">
+                                        <% } else { %>
+                                      <input name="departureflight" type="text" id="departureFlight"  autocomplete="off" required="" placeholder="Flight number - MM/DD/YYYY - Departure Time" class="form-control">
+                                          <% } %>
+                                    </div>
+                                  </div>
+                                  <br>
+                                </div>
+                                  <input type="hidden" id="bookingnumber" name="bookingnumber" value="<%= booking.bookingnumber %>">
+                                    <div class="col-md-6 col-xl-6 col-sm-12">
+                                      <div class="form-group">
+                                      <label>Number of Travellers</label>
+                                        <% if(1 < travellers.length){ %>
+                                      <input name="pax" type="number" autocomplete="off" value="<%= travellers.length %>" required="" class="form-control">
+
+                                        <% } else { %>
+
+                                          <input name="pax" type="number" autocomplete="off" v required="" class="form-control">
+
+                                        <% } %>
+                                        <% if(detail){ %>
+                                    </div>
+                                  <% if(travellers.length == detail.pax){ %>
+                                    <div class="row">
+
+                                      <% for(var i=0; i< travellers.length; i++) {%>
+
+                                        <div class="traveller-detail">
+                                        <div class="form-group col-md-6">
+                                          <label>Name</label>
+                                          <input name="travellers<%= i %>" type="text" autocomplete="off" required="" value="<%= travellers[i].name %>" class="form-control name">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label>Age</label>
+                                          <input name="travellersage<%= i %>" type="number" autocomplete="off" required=""  value="<%= travellers[i].age %>"  placeholder="40" class="form-control age">
+                                          <input type="hidden" name="" value="<%= travellers[i]._id %>" class="form-control travellerID">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label>Gender</label>
+                                          <select class="form-control custom-select gender"  required name="gender">
+                                            <% if (travellers[i].gender == "Male") { %>
+
+                                                  <option value="Male" selected>Male</option>
+                                                  <option value="Female">Female</option>
+
+                                            <% } else { %>
+
+                                          <option value="Female" selected>Female</option>
+                                          <option value="Male">Male</option>
+
+
+
+                                            <% } %>
+                                            </select>
+                                        </div>
+                                      </div>
+
+                                      <% } %>
+
+
+                                    </div>
+
+
+                                  <% } else { %>
+
+                                    <div class="row">
+
+                                      <% for(var i=0; i< detail.pax ; i++) {%>
+                                        <div class="traveller-detail">
+                                        <div class="form-group col-md-8">
+                                          <label>Name</label>
+                                          <input name="travellers<%= i %>" type="text" autocomplete="off" required="" class="form-control name">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                          <label>Age</label>
+                                          <input name="travellersage<%= i %>" type="number" autocomplete="off" required=""  placeholder="40" class="form-control age">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                          <label>Gender</label>
+                                          <select class="form-control custom-select gender"  required name="gender">
+                                              <option value="Male">Male</option>
+                                              <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                      </div>
+                                        <% } %>
+
+
+                                    </div>
+                                      <% }  %>
+
+
+                                    <% } %>
+                                  <div class="form-group">
+                                    <label>Special details</label>
+                                      <% if(detail){ %>
+                                    <textarea name="sepecialdetails" rows="8" cols="100" class="form-control"><%= detail.specialrequest %></textarea>
+                                      <% } else { %>
+                                      <textarea name="sepecialdetails" rows="8" cols="100" class="form-control"></textarea>
+                                      <% } %>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary float-right">Save Changes</button>
+                                </form>
                               </div>
-                              <div class="col-md-12 col-xl-7 col-sm-12 no-padding h-100" style="height: 95vh">
-                                <ul class="nav nav-tabs nav-justified serviceTabs">
-                          <li class="nav-item">
-                          <a class="nav-link active" data-toggle="tab" href="#home">Accommodation</a>
-                          </li>
-                          <li class="nav-item">
-                          <a class="nav-link" data-toggle="tab" href="#menu1">Activities</a>
-                          </li>
-                          <li class="nav-item">
-                          <a class="nav-link" data-toggle="tab" href="#menu2">Driving Guidance</a>
-                          </li>
-                          <li class="nav-item">
-                          <a class="nav-link" data-toggle="tab" href="#menu3">Custom</a>
-                          </li>
-                          </ul>
-
-                          <!-- Tab panes -->
-                          <div class="tab-content">
-                          <div class="tab-pane active serviceHolder" id="home">
-                          <div class="service-search">
-                          <form id="getRooms">
-                          <div class="row">
-                            <div class="col-md-4">
-                            <select class="js-example-placeholder-single hotelselect" id="hotels"><option disabled="" selected="">Select Hotel</option></select>
-                            </div>
-                            <div class="col-md-4">
-                                                        <input type="text" class="input-sm form-control datepicker datepickerHotel" id="dpd1" autocomplete="false" name="startDate" placeholder="Check-in" required/>
-                            </div>
-                            <div class="col-md-4">
-
-                            </div>
-                          </div>
-                          </form>
-
-                          </div>
-                          <div class="service-items-holder">
-                          <ul class="list-group" id="roomList"></ul>
-                          </div>
-
-
-                          </div>
-                          <div class="tab-pane container fade serviceHolder" id="menu1">2...</div>
-                          <div class="tab-pane container fade serviceHolder" id="menu2">3...</div>
-                          <div class="tab-pane  fade serviceHolder" id="menu3">
-                            <div class="container">
-                          <form class="addCustom">
-                            <p>Add custom item</p>
-                          <div class="form-group">
-                            <input type="email" placeholder="Item" class="form-control">
-                          </div>
-                          <div class="form-group">
-                          <select class="form-control custom-select">
-                            <option value="11">0%</option>
-                            <option value="11" selected>11%</option>
-                            <option value="24">24%</option>
-                          </select>
-                          </div>
-                          <div class="form-group">
-                          <label for="inlineFormInput" class="sr-only">Commission</label>
-                          <select class="form-control custom-select">
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                            <option value="15" selected>15%</option>
-                            <option value="20">20%</option>
-                            <option value="25">25%</option>
-                            <option value="30">30%</option>
-                          </select>
-                          </div>
-                          <div class="form-group">
-                            <input type="password" placeholder="Total" class="form-control">
-                          </div>
-                          <div class="form-group">
-                            <button type="submit" name="button" class="btn btn-success customButto">Add <span class="fa fa-plus"></span></button>
-                          </div>
-                        </form>
-                            </div>
-                          </div>
-                          </div>
-
                               </div>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Save Changes</button>
                         </div>
                     </div>
                 </div>
@@ -826,7 +1080,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="/bookings/update/<%= booking.id %>" enctype="multipart/form-data">
+        <form method="post" action="/bookings/update/<%= booking.id %>" enctype="multipart-data">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">First Name:</label>
             <input type="text" class="form-control" name="firstname" value="<%= booking.firstname %>" required>
@@ -1183,9 +1437,6 @@ $.ajax({
 
 
 
-var BookingCountry = $("#bookingCountry").val();
-
-$('select#selectedCountry').val(BookingCountry);
 
 $('#removePayment').on('show.bs.modal', function (event) {
 
@@ -1415,16 +1666,7 @@ function getRoomList(start, end) {
 
 
 
-    $('input.datepicker').daterangepicker({
-    "autoApply": true,
-    "startDate": "11/14/2018",
-    "endDate": "11/15/2018",
-    "opens": "left"
-}, function(start, end, label) {
 
-  getRoomList(start, end);
-
-});
 
 $(".js-example-placeholder-single").select2({
     placeholder: "Select a state",
@@ -1432,40 +1674,76 @@ $(".js-example-placeholder-single").select2({
 });
 
 
+ $('.input-daterange').datepicker({
+     orientation: "bottom right",
+     autoclose: true,
+     todayHighlight: true,
+ });
 
 
-$('#changeStatus').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var id = button.data('id')
-  var type = button.data('type')
-  var date = button.data('date')
-  var pickuptime = button.data('pickuptime')
-  var pickupLocation = button.data('pickuplocation')
-  var people = button.data('people')
-  var getStatus = button.data('getstatus')
-  var modal = $(this)
-  modal.find('.modal-title').html('<p>Change status for ' + type +'</p>')
-  modal.find('.modal-body.main-statusChange').html('<p>Date: '+ date +' at '+ pickuptime +'</p><p>Pick-up: '+ pickupLocation +' for '+ people +' PAX')
-  console.log(getStatus)
-  if (getStatus === "Not Confirmed") {
-    modal.find('.modal-action').html('<form action="/bookings/confirm/'+ id +'" method="post"><div class="form-group"><label for="recipient-name" class="col-form-label">Choose Driver:</label><select class="form-control custom-select payment-status" id="driverList" name="driver" required></select></div><div class="row"><div class="col-md-6"><button type="submit" class="btn btn-success status-confirm">Confirm</button></form></div><div class="col-md-6"><form action="/bookings/cancel/'+ id +'" method="post"><button type="submit" class="btn btn-danger status-confirm">Cancel</button></form></div></div>');
-
-    $( ".driver" ).each(function() {
-      var driverName = $(this).val();
-      var driverID = $(this).attr("data-id");
-      $('select#driverList').append($('<option>', {
-          value: driverID,
-          text: driverName
-      }));
-    });
+ $( "#bookingsDetailsUpdate" ).submit(function( event ) {
 
 
-  } else if (getStatus == "Confirmed") {
-    modal.find('.modal-action').html('<div class="row"><div class="col-md-12"><form action="/bookings/cancel/'+ id +'" method="post"><button type="submit" class="btn btn-danger status-confirm">Cancel</button></form></div></div>');
-  } else {
-    modal.find('.modal-action').html('<form action="/bookings/delete/'+ id +'" method="post"><input type="hidden" name="bookingID" value="<%= booking._id %>"><button type="submit" class="btn btn-danger status-confirm">Delete</button></form></form>');
-  }
+   if($(this).valid()) {
 
-})
+
+     var form = $(this);
+     var url = form.attr('action');
+
+     $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(),
+           success: function(data)
+           {
+
+           }
+         });
+
+
+     $( ".traveller-detail" ).each(function() {
+
+       var travellerName = $(this).find("input.form-control.name").val();
+       var travellerAge = $(this).find("input.form-control.age").val();
+       var travellerGender = $(this).find("select.form-control.gender").val();
+       var travellerID = $(this).find("input.form-control.travellerID").val();
+       console.log("Gender "+ travellerGender);
+       var bookingID = $("#bookingnumber").val();
+       $.post( "http://dashboard.deluxeiceland.is/details/add/traveller", { name: travellerName, age: travellerAge,  gender: travellerGender, bookingid: bookingID, travellerID: travellerID} );
+
+
+
+
+
+     });
+
+
+
+
+   }
+
+});
+
+<% if (message === "Emailsent") { %>
+
+  <script type="text/javascript">
+    toastr.success('Email has been sent to client!')
+  </script>
+
+<% } %>
+
+
+$(".payment-method").change(function(){
+  var cur_value = $('option:selected',this).text();
+
+  if (cur_value == "Refund") {
+    $("#refund-reason").css( "display", "block" );
+  }   else {
+      $("#refund-reason").css( "display", "none" );
+    }
+
+});
+
+
 
 </script>

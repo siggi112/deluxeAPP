@@ -12,175 +12,183 @@
     <!-- Dashboard Counts Section-->
     <section class="dashboard-counts no-padding-bottom">
       <div class="container-fluid">
-        <div class="row bg-white has-shadow">
+        <div class="row bg-white">
           <!-- Item -->
           <div class="col-xl-3 col-sm-6">
             <div class="item d-flex align-items-center">
               <div class="icon bg-violet"><i class="icon-user"></i></div>
-              <div class="title"><span>Total<br>Bookings</span>
+              <div class="title"><span>Confirmed<br>Bookings</span>
               </div>
-              <div class="number"><strong><%= totalBookings %></strong></div>
+              <div class="number"><strong><%= totalConfirmed %></strong></div>
             </div>
           </div>
           <!-- Item -->
           <div class="col-xl-3 col-sm-6">
             <div class="item d-flex align-items-center">
               <div class="icon bg-red"><i class="icon-padnote"></i></div>
-              <div class="title"><span>Total<br>Completed</span>
+              <div class="title"><span>Pending<br>Bookings</span>
               </div>
-              <div class="number"><strong><%= totalCompleted %></strong></div>
+              <div class="number"><strong><%= totalPending.length %></strong></div>
             </div>
           </div>
           <!-- Item -->
           <div class="col-xl-3 col-sm-6">
             <div class="item d-flex align-items-center">
               <div class="icon bg-green"><i class="icon-bill"></i></div>
-              <div class="title"><span>Unpaid<br>Invoices</span>
+              <div class="title"><span>New<br>Leads</span>
               </div>
-              <div class="number"><strong>40</strong></div>
+              <div class="number"><strong><%= newLeads.length %></strong></div>
             </div>
           </div>
           <!-- Item -->
           <div class="col-xl-3 col-sm-6">
             <div class="item d-flex align-items-center">
               <div class="icon bg-orange"><i class="icon-check"></i></div>
-              <div class="title"><span>Total<br>Leads</span>
+              <div class="title"><span>Follow-Up<br>Leads</span>
               </div>
-              <div class="number"><strong>50</strong></div>
+              <div class="number"><strong><%= followLeads %></strong></div>
             </div>
           </div>
         </div>
       </div>
     </section>
     <!-- Dashboard Header Section    -->
-    <section class="dashboard-header">
+    <section class="dashboard-header new">
 
     </section>
 
-    <!-- Feeds Section-->
-    <section class="feeds no-padding-top">
-      <div class="container-fluid">
-        <div class="row">
-          <!-- Trending Articles-->
-          <div class="col-lg-4">
-            <div class="articles card">
-              <div class="card-close">
-                <div class="dropdown">
-<div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
-                </div>
-              </div>
-              <div class="card-header d-flex align-items-center">
-                <h2 class="h3">Overview </h2>
-              </div>
-              <div class="card-body">
+    <section class="updates no-padding-top" style="background-color: transparent;">
+                <div class="container-fluid">
+                  <div class="row">
+                    <!-- Recent Updates-->
+                    <div class="col-lg-4">
+                      <div class="recent-activities card">
+                        <div class="card-header">
+                          <h3 class="h4 main">Bookings this month <span class="badge badge-secondary pull-right total"><%= detailsthisWeek.length %></span></h3>
+                        </div>
+                        <div class="card-body no-padding">
 
-                  <div id="calendar" class="fc fc-bootstrap3 fc-ltr"></div>
 
-              </div>
-            </div>
-          </div>
-          <!-- Trending Articles-->
-          <div class="col-lg-8">
-            <div class="articles card">
-              <div class="card-close">
-                <div class="dropdown">
-                <div aria-labelledby="closeCard4" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
-                </div>
-              </div>
-              <div class="card-header d-flex align-items-center">
-                <h2 class="h3">Upcoming this week - <%= moment().startOf('isoWeek').format('ll'); %> to <%= moment().endOf('isoWeek').format('ll'); %></h2>
-              </div>
-            </div>
+                                                    <% if (detailsthisWeek.length === 0) { %>
+                                                      <div class="item d-flex align-items-center">
+                                                        <div class="text empty">
+                                                            <h3 class="h5">There are no pending bookings.</h3><small></small></div>
+                                                      </div>
 
-            <% transfers.forEach(function(transfer) { %>
-                <div class="card-cold">
-                  <% if (transfer.status == "Confirmed") { %>
-                    <form class="card card-booking-item" style="border-color: #28a745;">
-                    <% } else if (transfer.status == "Cancelled") { %>
-                      <form class="card card-booking-item" style="border-color: #dc3545;">
-                    <% } else { %>
-                  <form class="card card-booking-item">
-                    <% } %>
-                  <div class="card-header">
+                                          <% } %>
+                                          <% detailsthisWeek.forEach(function(detail) { %>
+
+                          <div class="item booking-month">
+                            <div class="row">
+                              <div class="col-4 date-holder text-right">
+                                <div class="icon"><i class="fa fa-calendar"></i></div>
+                                <div class="date"><h5><%= detail.bookingnumber %></h5></br><span><%= moment(detail.arrivaldate).format("ll") %> - <%= moment(detail.departuredate).format("ll") %> </span></div>
+                              </div>
+                              <div class="col-8 content">
+                                <input type="hidden" class="bookingNumber" name="" value="<%= detail.bookingnumber %>">
+                                <a id="<%= detail.bookingnumber %>" href="#"><h5 id="booking-name-<%= detail.bookingnumber %>"></h5></a>
+                                <p><%= detail.pax %> Persons - <%= detail.country %></p>
+                                <div id="booking-status-<%= detail.bookingnumber %>" class="pull-right badge badge-rounded bg-green"></div>
+                              </div>
+                            </div>
+                          </div>
+                                            <% }); %>
+
+
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Daily Feeds -->
+                    <div class="col-lg-4">
+                      <div class="articles card">
+                        <div class="card-header">
+                          <h3 class="h4">Pending Bookings</h3>
+                        </div>
+                        <div class="card-body no-padding">
+
+                          <% if (totalPending.length === 0) { %>
+                            <div class="item d-flex align-items-center">
+                              <div class="text empty">
+                                  <h3 class="h5">There are no pending bookings.</h3><small></small></div>
+                            </div>
+
+                <% } %>
+                <% totalPending.forEach(function(booking) { %>
+                  <div class="item">
                     <div class="row">
-                        <div class="col-md-6">
-                          <h3 class="card-title">
-                            <% if (transfer.type == "Arrival Transfer") { %>
-                                    <i class="material-icons">flight_land</i>
-                              <% } else { %>
+                      <div class="col-md-12">
+                        <a href="/bookings/<%= booking.id %>">
+                            <h3 class="h5"><%= booking.firstname %></h3></a>
+                            <div class="pull-right badge badge-rounded bg-green <%= booking.status %>"><%= booking.status %></div>
+                          </div>
+                      </div>
+                    </div>
+                  <% }); %>
 
-                                  <i class="material-icons">flight_takeoff</i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Recent Activities -->
+                    <div class="col-lg-4">
+                      <div class="articles card">
+                        <div class="card-header">
+                          <h3 class="h4">New Leads</h3>
+                        </div>
+                        <div class="card-body no-padding">
+
+
+
+
+                                          <% if (newLeads.length === 0) { %>
+                                            <div class="item d-flex align-items-center">
+                                              <div class="text empty">
+                                                  <h3 class="h5">There are no new leads.</h3><small></small></div>
+                                            </div>
+
                                 <% } %>
-                                <%= transfer.type %> - <a href="/bookings/<%= transfer.bookingid %>"> <%= transfer.bookingname %></a>
+                                <% newLeads.forEach(function(lead) { %>
+                                  <div class="item d-flex align-items-center">
+                                    <div class="text"><a href="/leads/<%= lead.id %>">
+                                        <h3 class="h5"><%= lead.firstname %> <div class="badge badge-rounded bg-green <%= lead.status %>"><%= lead.status %></div> </h3></a><small><%= lead.startdate %> - <%= lead.travellers %> PAX with budget per person <%= lead.budget %></small></div>
+                                  </div>
+                                  <% }); %>
+
+
                         </div>
-                        <div class="col-md-6">
-                          <% if (transfer.status == "Confirmed") { %>
-                            <span class="badge badge-success confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
-                            <% } else if (transfer.status == "Cancelled") { %>
-                            <span class="badge badge-danger confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
-                            <% } else { %>
-                            <span class="badge badge-warning confirmed-tour-item" data-toggle="modal" data-target="#changeStatus" data-id="<%= transfer.id %>" data-type="<%= transfer.type %>" data-date="<%= moment(transfer.date).format('LL') %>" data-pickuptime="<%= transfer.pickuptime %>" data-pickupLocation="<%= transfer.location %>" data-people="<%= transfer.people %>" data-getStatus="<%= transfer.status %>"><%= transfer.status %></span>
-                            <% } %>
-                        </div>
+                      </div>
                     </div>
                   </div>
-
-              <div class="card-body" style="padding: 0px;">
-                <div class="item booking-item-details">
-                  <div class="row">
-                    <div class="col-md-4 booking-item-detail-col">
-                      <div class="title">
-                        <h5><%= moment(transfer.date).format('LL') %></h5>
-                        <% if (transfer.extraInfo) { %>
-                            <p><%= transfer.people %> PAX <a class="extra-info" data-container="body" data-toggle="popover" data-placement="top" data-content="<%= transfer.extraInfo %>"><i class="fa fa-info-circle"></i> Extra Information</a></p>
-                          <% } else { %>
-                          <p><%= transfer.people %> PAX</p>
-                          <% } %>
-                      </div>
-                    </div>
-                    <div class="col-md-6 booking-item-detail-col">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <p>Flight: <br><%= transfer.flightnumber %> at <%= transfer.flighttime %></p>
-                        </div>
-                        <div class="col-md-6">
-                          <p>Pick-up: <br><%= transfer.location %> at <%= transfer.pickuptime %></p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-2 float-right booking-item-detail-col">
-                      <div class="row">
-                        <div class="col-12">
-                          <% if (transfer.status == "Confirmed"){ %>
-                            <p>Driver: </br> <%= transfer.driver %></p>
-
-                            <% } else { %>
-                              <p></p>
-
-<% } %>
-                        </div>
-                      </div>
-                    </div>
                 </div>
-              </div>
-
-            </form>
-            </div>
-
-
-            <% }); %>
-
-
-
-
-
-          </div>
-
-
-
-
-        </div>
-      </div>
-    </section>
+              </section>
 
   <%- include ../temp/footer.ejs %>
+
+
+  <script type="text/javascript">
+
+  $( ".booking-month" ).each(function( index ) {
+
+  var bookingNumber = $( this ).find("input.bookingNumber").val();
+
+  $.ajax({
+
+  url: "/bookings/look-up/"+ bookingNumber,
+
+  }) .done(function( html ) {
+
+
+
+    $("div#booking-status-"+ bookingNumber).addClass(html[0].status)
+    $("div#booking-status-"+ bookingNumber).html(html[0].status)
+    $("#booking-name-"+ bookingNumber).html(html[0].firstname);
+    $("#"+ bookingNumber).attr("href", "/bookings/"+ html[0]._id);
+
+
+
+  });
+  });
+
+
+  </script>

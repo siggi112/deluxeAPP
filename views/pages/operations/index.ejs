@@ -6,15 +6,26 @@
           <!-- Page Header-->
           <header class="page-header">
             <div class="container-fluid">
-              <h2 class="no-margin-bottom">Drivers</h2>
+              <h2 class="no-margin-bottom">Users</h2>
             </div>
           </header>
           <!-- Breadcrumb-->
           <div class="breadcrumb-holder container-fluid">
-            <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-              <li class="breadcrumb-item active">Drivers            </li>
-            </ul>
+            <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                      <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Users            </li>
+                      </ul>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="float-right-actions">
+                      <button class="btn btn-success btn-sm new-lead-t" type="submit" data-toggle="modal" data-target="#newDriver"><span class="fa fa-plus"></span> New User</button>
+
+                    </div>
+                              </div>
+
+            </div>
           </div>
           <section class="tables">
             <div class="container-fluid">
@@ -25,11 +36,7 @@
                       <div class="row">
                         <div class="col-md-8">
                         </div>
-                            <div class="col-md-4">
-                              <div class="float-right">
-                                    <button class="btn btn-success btn-sm new-lead-t" type="submit" data-toggle="modal" data-target="#newDriver"><span class="fa fa-plus"></span> New Driver</button>
-                              </div>
-                          </div>
+
                       </div>
                     </div>
                     <div class="card-body">
@@ -40,20 +47,22 @@
                               <th>Name</th>
                               <th>Phone</th>
                               <th>Email</th>
-                              <th>Status</th>
+                              <th>Type</th>
+                              <th>Last login</th>
                             </tr>
                           </thead>
                           <tbody id="leadsResults">
 
 
 
-<% drivers.forEach(function(driver) { %>
+<% users.forEach(function(user) { %>
 
   <tr>
-    <th scope="row"><a href="/bookings/<%= driver.id %>"><%= driver.name %></a></th>
-    <td><%= driver.phone %></td>
-    <td><%= driver.email %></td>
-    <td><%= driver.status %></td>
+    <th scope="row"><a href="/operations/users/<%= user._id %>"><%= user.name %></a></th>
+    <td><%= user.phone %></td>
+    <td><%= user.email %></td>
+    <td><%= user.type %></td>
+    <td><%= moment(user.lastlogin).calendar(); %></td>
 
 </tr>
       <% }); %>
@@ -73,25 +82,37 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Add new Driver</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Add new User</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="/operations/drivers" method="post" encType="multipart/form-data">
+                  <form action="/operations/users" method="post" encType="multipart/form-data">
                   <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Name:</label>
                         <input type="text" class="form-control" name="name" autocomplete="off">
                       </div>
                       <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Phone:</label>
-                            <input type="text" class="form-control datePicker" name="phone"  autocomplete="off">
+                            <input type="text" class="form-control" name="phone"  autocomplete="off">
                           </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Email:</label>
-                          <input type="email" class="form-control datePicker" name="email" autocomplete="off">
+                          <input type="email" class="form-control" name="email" autocomplete="off">
                       </div>
+                      <div class="form-group">
+                          <label for="recipient-name" class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" name="password" autocomplete="off">
+                    </div>
+                      <div class="form-group">
+                            <label class="form-control-label">User Type</label>
+                            <select class="form-control custom-select" name="type">
+                              <option value="Admin">Admin</option>
+                              <option value="Driver" selected>Driver</option>
+                              <option value="Supervisor">Supervisor</option>
+                            </select>
+                          </div>
                 </div>
                 <div class="modal-footer">
 

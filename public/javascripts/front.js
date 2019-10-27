@@ -42,12 +42,12 @@ $(document).ready(function () {
     // ------------------------------------------------------- //
     // Sidebar Functionality
     // ------------------------------------------------------ //
-    $('.side-navbar').hover(function (e) {
+    $('#toggle-btn').on('click', function (e) {
         e.preventDefault();
         $(this).toggleClass('active');
 
-        $('.side-navbar').removeClass('shrinked');
-        $('.content-inner').removeClass('active');
+        $('.side-navbar').toggleClass('shrinked');
+        $('.content-inner').toggleClass('active');
         $(document).trigger('sidebarChanged');
 
         if ($(window).outerWidth() > 1183) {
@@ -63,10 +63,13 @@ $(document).ready(function () {
         if ($(window).outerWidth() < 1183) {
             $('.navbar-header .brand-small').show();
         }
-    },function() {
-      $( this ).addClass( "shrinked" );
-      $('.content-inner').addClass('active');
     });
+
+    if ($(window).width() < 960) {
+      $('.side-navbar').toggleClass('shrinked');
+      $('.content-inner').toggleClass('active');
+      }
+
     // ------------------------------------------------------- //
     // Universal Form Validation
     // ------------------------------------------------------ //

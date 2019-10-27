@@ -1,0 +1,15 @@
+{
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "134.209.30.33",
+  "target": "/root/Bakendi",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "root",
+  "password": "e214f52da62efd46451ae61a95",
+  "watch": [],
+  "transport": "scp"
+}

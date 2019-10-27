@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Item = require('../models/item');
+const Detail = require('../models/detail');
 const Partner = require('../models/partner');
 const Lead = require('../models/lead');
 const sanitize = require('mongo-sanitize');
@@ -9,7 +10,6 @@ const Booking = require('../models/booking');
 const User = require('../models/user');
 const Message = require('../models/message');
 const Transaction = require('../models/transaction');
-const Transfer = require('../models/transfer');
 const fs = require('fs');
 const mail = require('../services/mail');
 const pdf = require('html-pdf');
@@ -37,9 +37,39 @@ router.get('/create-quote',  mid.requiresLogin, function(req, res, next) {
 });
 
 
+createRefNumber = function (start, range){
+
+  var getRef = Math.floor((Math.random() * range) + start);
+
+  while (getRef > range) {
+
+    getRef = Math.floor((Math.random() * range) + start);
+
+  }
+
+  return getRef;
+
+}
+
+
+
 // POST / resister new lead
 router.post('/new-lead',  function(req, res, next) {
   if (req.body.email) {
+
+    createRefNumber = function (start, range){
+
+      var getRef = Math.floor((Math.random() * range) + start);
+
+      while (getRef > range) {
+
+        getRef = Math.floor((Math.random() * range) + start);
+
+      }
+
+      return getRef;
+
+    }
 
       var leadData = {
         firstname: sanitize(req.body.firstname),
@@ -52,6 +82,8 @@ router.post('/new-lead',  function(req, res, next) {
         budget: sanitize(req.body.budget),
         trip: sanitize(req.body.trip),
         notes: sanitize(req.body.notes),
+        country: sanitize(req.body.country),
+        referencenumber: "DI-"+ createRefNumber(1, 99999),
       };
 
       Lead.create(leadData, function (error, lead) {
@@ -66,6 +98,7 @@ router.post('/new-lead',  function(req, res, next) {
             var messageData = {
               text: sanitize(leadData.notes),
               type: "Additional information",
+              by: sanitize("Client"),
               owner: leadID,
             };
 
@@ -113,10 +146,59 @@ router.post('/create-quote', mid.requiresLogin, function(req, res, next) {
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/login', function(req, res, next) {
     var message = req.query.message;
 
     res.render('index', { title: 'Deluxe Iceland', message: message });
+
+
+
+});
+
+
+/* GET home page. */
+router.get('/posi', function(req, res, next) {
+
+  var message = req.query.message;
+  res.render('posi', { title: 'Deluxe Iceland - Posi'});
+
+
+});
+
+
+/* GET home page. */
+router.post('/posi', function(req, res, next) {
+
+  var totalAmount = req.body.totalisk;
+  var bookingNumber = req.body.bookingnumber;
+  var strippedAmount = String(totalAmount).split('.').join("")
+
+  Booking.findOne({bookingnumber: bookingNumber}, function(err, booking) {
+
+    if (err) {
+      console.error(err)
+      return reject(err);
+   }
+
+    var bookingnumber = "";
+    bookingnumber = booking.bookingnumber;
+
+    if (bookingnumber = "") {
+            res.send("Found")
+
+    } else {
+
+
+      res.send("Found")
+
+    }
+
+
+
+  });
+
+  console.log(strippedAmount);
+  console.log(bookingNumber);
 });
 
 /* GET home page. */
@@ -228,24 +310,28 @@ router.post('/settings/:User_id',  mid.requiresLogin, function (req, res) {
 
 
 
-
 /* GET home page. */
-router.get('/dashboard',  mid.requiresLogin, function(req, res, next) {
+router.get('/',  mid.requiresLogin, function(req, res, next) {
 
-        var weekstart = moment().startOf('isoWeek');
-        var weekend = moment().endOf('isoWeek');
-        Transfer.find({created: {
-              $gte: weekstart,
-              $lt: weekend
-          }}).sort([['created', 'descending']]).exec(function(err, transfers) {
+        var monthstart = moment().startOf('month');
+        var monthend = moment().endOf('month');
+        Detail.find({
+  $or: [
+    { arrivaldate: { $gte: monthstart, $lt: monthend } },
+    { departuredate: { $gte: monthstart, $lt: monthend} }
+  ]
+}).sort([['arrivaldate', 'ascending']]).exec(function(err, detailsthisWeek) {
         Booking.count({}, function (err, totalBookings) {
-        Booking.count({status: 'Completed'}, function (err, totalCompleted) {
+        Booking.find({status: 'Pending'}, function (err, totalPending) {
         Booking.count({status: 'Confirmed'}, function (err, totalConfirmed) {
-        Booking.find({"status": "Pending"}).sort({arrivaldate: 'asc'}).exec(function(err, bookings) {
+        Lead.find({status: 'New'}, function (err, newLeads) {
+        Lead.count({status: 'Follow-up'}, function (err, followLeads) {
+        Booking.find({"status": "Pending"}).sort({arrivaldate: 'ascending'}).exec(function(err, bookings) {
         Lead.find({"status": "New"}).sort({arrivaldate: 'asc'}).exec(function(err, leads) {
-            res.render('pages/dashboard', { title: 'Dashboard', moment: moment, totalBookings: totalBookings, leads: leads, totalCompleted: totalCompleted, totalConfirmed: totalConfirmed, bookings: bookings, transfers: transfers});
+            res.render('pages/dashboard', { title: 'Dashboard', moment: moment, followLeads: followLeads, newLeads: newLeads, totalBookings: totalBookings, leads: leads, totalPending: totalPending, totalConfirmed: totalConfirmed, bookings: bookings, detailsthisWeek: detailsthisWeek});
+          });
               });
-
+        });
         })});
     });
     });
@@ -265,8 +351,14 @@ router.post('/login', function(req, res, next) {
       }  else {
         req.session.userId = user._id;
         req.session.userName = user.name;
-        req.session.access = user.access;
-        return res.redirect('/dashboard');
+        req.session.type = user.type;
+
+        registerLogin(user._id);
+        if (user.type == "Admin" || user.type == "Supervisor"){
+           return res.redirect('/');
+        } else if (user.type == "Driver") {
+          return res.redirect('/driver/dashboard');
+        }
       }
     });
   } else {
@@ -295,6 +387,27 @@ router.get('/logout', function(req, res, next) {
 router.get('/new-admin',  mid.requiresLogin, function(req, res, next) {
   res.render('new-user', { title: 'Dashboard' });
 });
+
+
+registerLogin = function(UserID) {
+
+
+
+    User.findById(UserID, function(err, user) {
+
+        if (err)
+          res.send(err);
+          user.lastlogin = Date.now();
+          user.save(function(err) {
+          if (err)
+          res.send(err);
+          return;
+      })
+
+    })
+
+
+}
 
 
 

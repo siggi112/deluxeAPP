@@ -6,6 +6,9 @@ var leadSchema = new mongoose.Schema({
   email: {
     type: String
   },
+  country: {
+    type: String
+  },
   phone: {
     type: String
   },
@@ -31,6 +34,10 @@ var leadSchema = new mongoose.Schema({
   notes: {
     type: String
   },
+  referencenumber: {
+    type: String,
+    unique: true,
+  },
   total: {
     type: Number
   },
@@ -45,6 +52,12 @@ var leadSchema = new mongoose.Schema({
     type: String,
     default: 'Website'
   },
+  assignedId: {
+    type: String,
+  },
+  assignedName: {
+    type: String,
+},
   status: {
     type: String,
     default: 'New'

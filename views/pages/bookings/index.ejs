@@ -11,10 +11,30 @@
           </header>
           <!-- Breadcrumb-->
           <div class="breadcrumb-holder container-fluid">
-            <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-              <li class="breadcrumb-item active">Bookings            </li>
-            </ul>
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                  <li class="breadcrumb-item active">Bookings            </li>
+                </ul>
+              </div>
+                <div class="col-md-6 col-xs-12">
+
+                  <div class="float-right-actions">
+                    <div class="dropdown">
+                        <%if (accessControl  === "Admin") {%>
+                      <form class="incline" action="/bookings/new" method="get">
+                          <button class="btn btn-success btn-sm new-lead-t" type="submit"><span class="fa fa-plus"></span> New Booking</button>
+                      </form>
+                          <%}%>
+
+        </div>
+                  </div>
+
+                </div>
+            </div>
+
+
           </div>
           <section class="tables">
             <div class="container-fluid">
@@ -25,28 +45,26 @@
                       <div class="row">
                         <div class="col-md-8">
                           <div class="search-form">
-                                    <form class="" id="searchForm" action="/bookings" method="get">
+                                    <form action="/bookings" method="get">
                                     <div class="input-group">
-                                        <div class="col-md-8">
-                                        <input type="text" name="search" autocomplete="off" id="searchNow" placeholder="Search for booking..." class="form-control">
-                                        </div>
+                                        <!-- <div class="col-md-8">
+                                        <input type="text" name="firstname" autocomplete="off" value="<%= firstName %>" placeholder="First Name" class="form-control">
+                                        </div> -->
                                           <div class="col-md-4">
-                                            <select class="form-control custom-select" name="source">
-                                              <option disabled selected>Status</option>
-                                              <option value="On-Hold">On-Hold</option>
+                                            <select class="form-control custom-select" name="status">
+                                              <option selected value="">All Statuses</option>
+                                              <option value="Pending">Pending</option>
                                               <option value="Confirmed">Confirmed</option>
                                               <option value="Completed">Completed</option>
                                               <option value="Cancelled">Cancelled</option>
                                             </select>
                                           </div>
                                     </div>
-                                </form>
                           </div>
                         </div>
                             <div class="col-md-4">
                               <div class="float-right">
-                                <form class="incline" action="/bookings/new" method="get">
-                                    <button class="btn btn-success btn-sm new-lead-t" type="submit"><span class="fa fa-plus"></span> New Booking</button>
+                                    <button class="btn btn-primary btn-sm new-lead-t" type="submit">Search Now</button>
                                 </form>
                               </div>
                           </div>
@@ -59,9 +77,8 @@
                             <tr>
                               <th>Name</th>
                               <th>Email</th>
-                              <th>Country</th>
                               <th>Status</th>
-                              <th>Arrival day</th>
+                                <th>Booking Number</th>
                             </tr>
                           </thead>
                           <tbody id="leadsResults">
@@ -73,10 +90,8 @@
   <tr>
     <th scope="row"><a href="/bookings/<%= booking.id %>"><%= booking.firstname %> <%= booking.lastname %></a></th>
     <td><%= booking.email %></td>
-      <td><%= booking.country %></td>
     <td><%= booking.status %></td>
-    <td><%= moment(booking.arrivaldate).format('LL') %></td>
-
+      <td><%= booking.bookingnumber %></td>
 </tr>
       <% }); %>
                           </tbody>
@@ -92,40 +107,3 @@
 
 
 <%- include ../../temp/footer.ejs %>
-<script type="text/javascript">
-
-function getDataOnUpdate(search, status){
-
-  $.get( "/bookings/search?search="+ search, function( data ) {
-  $("#leadsResults").html("");
-
-  console.log(data);
-
-  if (0 < data.length) {
-    for (var i = 0; i < data.length; i++) {
-
-      $("#leadsResults").append('<tr><th scope="row"><a href="/bookings/'+   data[i]._id +'">'+   data[i].firstname  +" "+  data[i].lastname +'</a></th><td>'+ data[i].email +'</td><td>'+ data[i].status +'</td><td>'+ data[i].country +'</td><td>'+ moment(data[i].arrivaldate).format('LL') +'</td></tr>')
-
-
-
-
-    }
-  } else {
-
-    $("#leadsResults").append('<tr><td>There are no bookings...</td><td></td><td></td><td></td><td></td></tr>')
-
-  }
-});
-}
-
-
-
-$( "#searchNow" ).keyup(function(e) {
-  var searchQuery = $(this).val();
-  getDataOnUpdate(searchQuery);
-
-});
-
-
-
-</script>

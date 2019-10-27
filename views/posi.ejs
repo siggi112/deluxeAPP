@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Online Payment</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="stylesheets/fontastic.css">
+    <!-- Google fonts - Poppins -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="stylesheets/style.default.premium.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="stylesheets/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid px-3">
+          <div class="row min-vh-100" style="min-height: 100vh!important;">
+            <div class="col-md-4 col-lg-4 col-xl-4 px-lg-12 d-flex align-items-center">
+              <div class="w-100 py-5">
+                <div class="text-center"><img src="/img/main-logo.png" alt="..."  style="width: 50%; padding-bottom: 50px;" class="img-fluid mb-4">
+                  <h3 class="display-4 mb-3">Online Payment</h3>
+                </div>
+                <form method="post" action="/posi" class="form-validate online-payment" id="firstStep">
+                  <div class="form-group">
+                    <label>Booking Number</label>
+                    <input name="bookingnumber" type="text" autocomplete="off" required=""  class="form-control">
+                  </div>
+                  <div class="form-group mb-4">
+                    <div class="row">
+                      <div class="col">
+                        <label>Amount in ISK</label>
+                      </div>
+                    </div>
+                    <input name="totalisk" id="totalisk" type="text" required="" class="form-control">
+                  </div>
+                  <!-- Submit-->
+                  <button class="btn btn-lg btn-block btn-success mb-3">Pay Now</button>
+                </form>
+                <form id="PaymentAction" novalidate="novalidate" action="https://securepay.borgun.is/securepay/default.aspx" method="post">
+                  <input type="hidden" name="merchantid" value="9000060" />
+                  <input type="hidden" name="paymentgatewayid" value="6983" />
+                  <input type="hidden" name="checkhash" value="" />
+                  <input type="hidden" name="orderid" value="" />
+                  <input type="hidden" name="currency" value="ISK" />
+                  <input type="hidden" name="language" value="EN" />
+                  <input type="hidden" name="buyername" value="" />
+                  <input type="hidden" name="buyeremail" value="booking@deluxeiceland.is" />
+                  <input type="hidden" name="returnurlsuccess" value="http://dashboard.deluxeiceland.is/bookings/payment-received/" />
+                  <input type="hidden" name="returnurlsuccessserver" value="http://dashboard.deluxeiceland.is/bookings/payment-server/" />
+                  <input type="hidden" name="returnurlcancel" value="http://dashboard.deluxeiceland.is/bookings/final-payment/" />
+                  <input type="hidden" ame="returnurlerror" value="http://borgun.is/ReturnUrlError.aspx" />
+                  <input type="hidden" id="itemdescription_0" name="itemdescription_0" value="" />
+                  <input type="hidden" name="itemcount_0" value="1" />
+                  <input type="hidden" id="payNow" name="itemunitamount_0" value="" />
+                  <input type="hidden" id="payNow" name="itemamount_0" value="" />
+                  <input type="hidden" id="payNow" name="amount" value="" />
+                  <input type="hidden" name=" pagetype " value="0" />
+                  <input type="hidden" name="skipreceiptpage " value="1" />
+                  <input type="hidden" name="merchantemail" value="info@deluxeiceland.is" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+      <script src="/javascripts/masknumber.js"></script>
+    <!-- Main File-->
+    <script src="javascripts/front.js"></script>
+
+    <script type="text/javascript">
+    $('input#totalisk').maskNumber({
+       integer: true,
+       decimal: '',
+       thousands: '.'
+
+     });
+
+
+
+
+
+     $( "#confirmDetails" ).submit(function( event ) {
+
+      event.preventDefault();
+
+      if($(this).valid()) {
+
+
+        var description = $(this).find(description).val();
+        var totalAmount = $("#total-isk").val();
+        var strippedAmount = String(totalAmount).split('.').join("")
+
+        alert(strippedAmount);
+
+
+       $("#itemdescription_0").val(description);
+       $("#payNow").val(strippedAmount);
+       var isRight = $("#payNow").val();
+
+       alert(isRight)
+
+
+        var form = $(this);
+         var url = form.attr('action');
+
+         $.ajax({
+               type: "POST",
+               url: url,
+               data: form.serialize(),
+               success: function(data)
+               {
+
+               }
+             });
+
+
+
+
+
+             $( "#PaymentAction" ).submit();
+
+
+
+       }
+
+   });
+
+
+
+
+    </script>
+
+<style>
+  </body>
+</html>

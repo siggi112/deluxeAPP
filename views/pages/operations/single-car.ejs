@@ -1,0 +1,192 @@
+<%- include ../../temp/header.ejs %>
+<%- include ../../temp/nav.ejs %>
+<div class="page-content d-flex align-items-stretch">
+<%- include ../../temp/sidebar.ejs %>
+<div class="content-inner active" style="padding-bottom: 59px;">
+          <!-- Page Header-->
+          <header class="page-header">
+                      <div class="container-fluid">
+                        <h2 class="no-margin-bottom"><%= car.number %> <div class="badge badge-rounded bg-green"></div></h2>
+                      </div>
+          </header>
+
+          <div class="breadcrumb-holder container-fluid">
+            <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                      <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/operations/fleet">Fleet</a></li>
+                        <li class="breadcrumb-item active"><%= car.make %> <%= car.model %> - <%= car.number %></li>
+                      </ul>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+
+                                <div class="float-right-actions">
+                        <button class="btn btn-success btn-sm new-lead-t" type="submit" data-toggle="modal" data-target="#addhistory"><span class="fa fa-plus"></span> Add History</button>
+                                </div>
+
+
+
+
+                              </div>
+
+            </div>
+          </div>
+
+          <section class="forms">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-4">
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Details</h3>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+                          <p class="text-muted mb-0">Registration number: <%= car.number %></p>
+                          <p class="text-muted mb-0">Year: <%= car.year %></p>
+                          <p class="text-muted mb-0">drive: <%= car.drive %></p>
+                          <p class="text-muted mb-0">Passengers: <%= car.passengers %> PAX</p>
+                          <p class="text-muted mb-0">Status: <%= car.status %></p>
+                          <hr>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+</div>
+
+                  <!-- Inline Form-->
+                  <div class="col-lg-8">
+                    <div class="card-header">
+                      <h3 class="card-title">History</h3>
+                      <div class="card-close">
+                      <div class="dropdown">
+
+
+                        </div>
+                    </div>
+                    </div>
+
+                      <table class="table text-sm table-compact table-bordered table-bordered-o text-right" style="background-color: #fff;">
+                  <thead>
+                      <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Service</th>
+                          <th scope="col">KM</th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      <% history.forEach(function(service) { %>
+
+                          <tr>
+         <th scope="row"><%= moment(service.date).format('LL') %></th>
+
+         <% if (service.note) { %>
+
+
+
+                      <td><%= service.service %> <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="<%= service.note %>"></i></td>
+
+         <% } else { %>
+
+
+
+                      <td><%= service.service %></td>
+
+
+         <% } %>
+
+         <td><%= numeral(service.km).format('0,0'); %></td>
+       </tr>
+                        <% }); %>
+
+
+
+
+
+
+
+
+
+
+
+                                  </tbody>
+                </table>
+
+
+
+
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+                                <!-- Modal -->
+                      <div class="modal fade" id="addhistory" tabindex="-1" role="dialog" aria-labelledby="addhistory" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Log history</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/operations/fleet/new-history/<%= car._id %>" method="post" encType="multipart/form-data">
+                                  <input type="hidden" name="car" value"<%= car._id %>"/>
+                                  <div class="form-group">
+                                    <label for="inlineFormInput">Date</label>
+                                     <input type="text" class="form-control datePicker" name="date" autocomplete="off" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="inlineFormInput">KM</label>
+                                    <input id="inlineFormInput" type="text" name="km" class="mr-3 form-control format-isk" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="inlineFormInput">Note</label>
+                                      <input id="inlineFormInput" type="text" name="note"  class="mr-3 form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="inlineFormInputGroup">Service</label>
+                                    <select id="inlineFormInputGroup" name="service" class="mr-3 form-control" required>
+                                        <option value="Service inspection by dealer">Service inspection by dealer</option>
+                                        <option value="Oil Change">Oil Change</option>
+                                        <option value="Breaks">Breaks</option>
+                                        <option value="Tyre replace">Tyre replace</option>
+                                            <option value="Other">Other</option>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                  </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+<%- include ../../temp/footer.ejs %>
+
+<script type="text/javascript">
+$('.datePicker').datepicker({
+    orientation: "bottom auto",
+    todayHighlight: true,
+    autoclose: true
+});
+$('input[type="text"].format-isk').maskNumber({
+   integer: true,
+   decimal: '',
+   thousands: '.'
+
+ })
+</script>

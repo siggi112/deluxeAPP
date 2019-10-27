@@ -8,10 +8,10 @@ const Tour = require('../models/tour');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
+const mid = require('../middleware');
 
 
-
-router.get('/', function(req, res, next) {
+router.get('/', mid.requiresLogin, function(req, res, next) {
   Supplier.find(function(err, suppliers){
         if(err){
             console.log(err);
@@ -23,8 +23,27 @@ router.get('/', function(req, res, next) {
   });
 });
 
+// POST / update single item
+router.post('/upload-pricelist/:Supplier_id', mid.requiresLogin, function (req, res) {
+  Supplier.findById(req.params.Supplier_id, function(err, supplier) {
+    console.log(supplier);
+      let mainName = sanitize(req.params.Supplier_id) + '.pdf';
+      let mainList = sanitize(req.files.list);
+        if (err)
+          res.send(err);
+          supplier.pricelist = '/price-lists/'+ req.params.Booking_number +'.pdf'
+          mainList.mv('./Bakendi/public/'+ supplier.pricelist, function(err) {
+          supplier.save(function(err) {
+            if (err)
+              return res.status(500).send(err);
+          res.redirect('/suppliers/'+ req.params.Supplier_id);
+      });
+    })
+  })
+});
 
-router.get('/new', function(req, res, next) {
+
+router.get('/new', mid.requiresLogin, function(req, res, next) {
 
               var message = req.query.message;
               return res.render('pages/suppliers/new', { title: 'New Supplier', message: message});
@@ -32,7 +51,7 @@ router.get('/new', function(req, res, next) {
 
 });
 
-router.post('/new-room/:supplier_id',  function(req, res, next) {
+router.post('/new-room/:supplier_id',  mid.requiresLogin, function(req, res, next) {
   if (req.body.type &&
     req.body.sleeps) {
 
@@ -60,7 +79,7 @@ router.post('/new-room/:supplier_id',  function(req, res, next) {
     }
 });
 
-router.post('/new-tour/:supplier_id', function(req, res, next) {
+router.post('/new-tour/:supplier_id', mid.requiresLogin, function(req, res, next) {
   if (req.body.name &&
     req.body.duration) {
 
@@ -88,7 +107,7 @@ router.post('/new-tour/:supplier_id', function(req, res, next) {
     }
 });
 
-router.post('/new-season/:supplier_id',  function(req, res, next) {
+router.post('/new-season/:supplier_id',  mid.requiresLogin, function(req, res, next) {
 
   var dates = [];
 
@@ -124,7 +143,7 @@ router.post('/new-season/:supplier_id',  function(req, res, next) {
   setDays(0);
 });
 
-router.post('/new', function(req, res, next) {
+router.post('/new', mid.requiresLogin, function(req, res, next) {
   if (req.body.name &&
     req.body.company) {
 
@@ -150,7 +169,7 @@ router.post('/new', function(req, res, next) {
         if (error) {
           return next(error);
         } else {
-          return res.redirect('/suppliers?message=newDay');
+          return res.redirect('/suppliers?message=new');
         }
       });
 
@@ -162,7 +181,7 @@ router.post('/new', function(req, res, next) {
 });
 
 // POST / update single item
-router.post('/update/:supplier_id', function (req, res) {
+router.post('/update/:supplier_id', mid.requiresLogin, function (req, res) {
   Supplier.findById(req.params.supplier_id, function(err, supplier) {
       if (err)
         res.send(err);
@@ -176,7 +195,7 @@ router.post('/update/:supplier_id', function (req, res) {
   })
 });
 
-router.post('/delete-room/:room_id', function(req, res, next) {
+router.post('/delete-room/:room_id', mid.requiresLogin, function(req, res, next) {
   Room.remove({
         _id: sanitize(req.params.room_id)
     }, function(err, room) {
@@ -187,7 +206,7 @@ router.post('/delete-room/:room_id', function(req, res, next) {
     })
 });
 
-router.post('/delete-season/:season_id', function(req, res, next) {
+router.post('/delete-season/:season_id', mid.requiresLogin, function(req, res, next) {
 
 
           Price.deleteMany({"season": sanitize(req.params.season_id)}, function(err, season) {
@@ -212,7 +231,7 @@ router.post('/delete-season/:season_id', function(req, res, next) {
 });
 
 
-router.post('/delete/:supplier_id', function(req, res, next) {
+router.post('/delete/:supplier_id', mid.requiresLogin, function(req, res, next) {
 
 
   Supplier.remove({
@@ -230,7 +249,7 @@ router.post('/delete/:supplier_id', function(req, res, next) {
 
 
 
-router.post('/new-price/:supplier_id',  function(req, res, next) {
+router.post('/new-price/:supplier_id',  mid.requiresLogin, function(req, res, next) {
 
 
   Season.find({'supplier': req.params.supplier_id, 'name': req.body.seasonName, $and:[{start:{$lte: req.body.seasonEnd}},{start:{$gte: req.body.seasonStart}}]}).exec(function(err, days) {
@@ -316,7 +335,7 @@ router.post('/new-price/:supplier_id',  function(req, res, next) {
 
 
 
-router.post('/update-price/:supplier_id', function(req, res, next) {
+router.post('/update-price/:supplier_id', mid.requiresLogin, function(req, res, next) {
   var totalAmountISK = String(req.body.isk).split('.').join("");
   Price.findById(req.body.id, function(err, price) {
       if (err)
@@ -334,7 +353,7 @@ router.post('/update-price/:supplier_id', function(req, res, next) {
 });
 
 // GET /single partner
-router.get('/rooms/:room_id', function(req, res, next) {
+router.get('/rooms/:room_id', mid.requiresLogin, function(req, res, next) {
           Room.findById(req.params.room_id, function(err, room) {
                   if (err) {
                     console.log(err);
@@ -358,7 +377,7 @@ router.get('/rooms/:room_id', function(req, res, next) {
 
 
 // GET /single partner
-router.get('/:supplier_id',  function(req, res, next) {
+router.get('/:supplier_id',  mid.requiresLogin, function(req, res, next) {
           Supplier.findById(req.params.supplier_id, function(err, supplier) {
                   if (err) {
                     console.log(err);
@@ -395,7 +414,7 @@ router.get('/:supplier_id',  function(req, res, next) {
 
 
 // GET /single partner
-router.get('/ajax/:supplier_id', function(req, res, next) {
+router.get('/ajax/:supplier_id', mid.requiresLogin, function(req, res, next) {
           Supplier.findById(req.params.supplier_id, function(err, supplier) {
                   if (err) {
                     console.log(err);

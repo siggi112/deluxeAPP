@@ -30,6 +30,11 @@ nav.side-navbar ul li a:hover {
     color: #fff;
 }
 
+.email-holder {
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 25px;
+}
+
 nav.side-navbar {
   transition: 0.45s;
 }
@@ -117,6 +122,23 @@ input.form-control.lead-type {
 
 .badge.badge-rounded.bg-green.Inactive {
     background: #E53935!IMPORTANT;
+}
+
+
+
+
+
+form#confirmDetails {
+    width: 60%;
+    margin: auto;
+}
+
+
+@media only screen and (max-width: 2000px) {
+  form#confirmDetails {
+      width: 100% !IMPORTANT;
+      margin: auto;
+  }
 }
 
 .content-inner {
@@ -326,18 +348,24 @@ button.btn.btn-success.add-item {
     padding: 35px;
     background: #fff;
     color: #212121;
-    border-top: 3px solid #eee;
-    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 
 i.material-icons.flight-icon {
-    font-size: 35px;
+    font-size: 45px;
 }
 
 button.btn.btn-outline-dark.btn-sm.no-outline {
     font-size: 12px;
 }
+
+button.view-itinerary {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+
+
 
 .float-right-actions {
     float: right;
@@ -382,9 +410,7 @@ p.item-booking-price {
     border-bottom: 1px solid #e3e3e3;
 }
 
-.card.card-booking-item {
-    border-left: 10px solid #ffc65d;
-}
+
 
 a.extra-info {
     color: #0277BD !IMPORTANT;
@@ -425,4 +451,229 @@ input.btn.btn-danger {
 
 h2.no-bold {
     font-weight: 300;
+}
+
+p.card-warnings {
+    text-align: center;
+    color: red;
+}
+
+i.fa.fa-credit-card.payment-icon {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+td.lead-message-details {
+    text-align: left;
+}
+
+td.lead-message-details {
+    text-align: left;
+    padding: 25px;
+}
+
+td.lead-message-details p.time {
+  font-weight: bold;
+  margin: 0px;
+}
+
+button.dropdown-toggle.delete-message-lead {
+    background: transparent;
+    border: 0px;
+    float: right;
+}
+
+
+button.dropdown-toggle.delete-message-lead.dropdown-toggle::after {
+  display: none;
+}
+
+.card {
+
+-webkit-box-shadow: none !IMPORTANT;
+box-shadow: none !IMPORTANT;
+
+}
+
+
+
+.card-header {
+  border-bottom: none !IMPORTANT;
+
+  -webkit-box-shadow: none !IMPORTANT;
+  box-shadow: none !IMPORTANT;
+
+}
+
+
+td.lead-message-details p {
+    font-size: 14px;
+    width: 60%;
+}
+
+section {
+    padding: 25px 0;
+    background: #fff;
+}
+
+
+.change-book-details {
+    padding: 25px;
+}
+
+.traveller-detail {
+    display: contents;
+}
+
+.badge {
+    font-weight: 400;
+    font-size: 12px;
+    padding: 5px 12px;
+        cursor: pointer;
+}
+
+i.fa.fa-check-circle.paid {
+    font-size: 70px;
+    color: #28a745;
+    margin-bottom: 25px;
+}
+
+.align-right {
+    display: inline-block;
+}
+
+header.page-header {
+    padding: 10px 0;
+}
+
+.page-header {
+    background: #fff;
+    padding: 20px;
+    -webkit-box-shadow: none !IMPORTANT;
+    box-shadow: none !IMPORTANT;
+    position: relative;
+    z-index: 8;
+    border-bottom: 3px solid #f5f5f5;
+}
+
+span.badge.booking-status {
+    padding: 6px 25px;
+    color: #fff;
+    margin-left: 25px;
+}
+
+button.btn.btn-outline-dark.btn-sm.Confirmed {
+    background: #28a745;
+    color: #fff;
+    border-color: #28a745;
+}
+
+button.btn.btn-outline-dark.btn-sm.Completed {
+    background: #6c757d;
+    color: #fff;
+    border-color: #6c757d;
+}
+
+button.btn.btn-outline-dark.btn-sm.Cancelled {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+
+.card-body {
+    padding: 30px;
+    border: 2px solid #f5f5f5;
+}
+
+h2.main-card-heading {
+    padding: 15px;
+}
+
+button.btn.btn-outline-dark.btn-sm.Pending {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #fff;
+      padding: 0.25rem 0.9rem
+}
+
+img.head-logo {
+    width: 165px;
+    height: auto;
+}
+
+.form-group.final-itinerary {
+    padding: 15px 0px;
+}
+
+
+span.small-usd {
+    color: #666;
+}
+
+span.small-usd-unpaid,  span.small-usd-paid, span.small-usd-total-payment {
+  color: #666;
+  font-weight: lighter;
+}
+
+
+
+section.dashboard-header.new {
+    background: transparent;
+    padding: 50px;
+}
+
+.text.empty {
+    padding: 25px 0px;
+}
+
+.pull-right.badge.badge-rounded.bg-green.Pending {
+  background-color: #ffc107 !IMPORTANT;
+  border-color: #ffc107 !IMPORTANT;
+}
+
+
+button.btn.btn-outline-dark.btn-sm.In.Progress {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.pull-right.badge.badge-rounded.bg-green.In.progress {
+  background-color: #007bff !IMPORTANT;
+  border-color: #007bff !IMPORTANT;
+}
+
+
+.pull-right.badge.badge-rounded.bg-green.In.Progress {
+  background-color: #007bff !IMPORTANT;
+  border-color: #007bff !IMPORTANT;
+}
+
+.pull-right.badge.badge-rounded.bg-green.Confirmed {
+  background: #28a745 !IMPORTANT;
+  border-color: #28a745 !IMPORTANT;
+}
+
+.pull-right.badge.badge-rounded.bg-green.Completed {
+  background: #6c757d !IMPORTANT;
+  border-color: #6c757d !IMPORTANT;
+}
+
+a.btn.btn-primary.btn-sm.float-right.create-arrival-sign {
+    margin-left: 10px;
+    font-weight: 100;
+    font-size: 12px;
+}
+
+.form-group.display-none {
+    display: none;
+}
+
+.pull-right.badge.badge-rounded.bg-green.Cancelled {
+  background-color: #dc3545 !IMPORTANT;
+  border-color: #dc3545 !IMPORTANT;
+}
+
+p.Refund strong {
+    color: #dc3545;
 }

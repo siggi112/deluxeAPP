@@ -6,15 +6,107 @@
           <!-- Page Header-->
           <header class="page-header">
                       <div class="container-fluid">
-                        <h2 class="no-margin-bottom"><%= lead.firstname %></h2>
+                        <h2 class="no-margin-bottom"><%= lead.firstname %> #<%= lead.referencenumber %> <div class="badge badge-rounded bg-green <%= lead.status %>"><%= lead.status %></div></h2>
                       </div>
           </header>
 
           <div class="breadcrumb-holder container-fluid">
-            <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/leads">Leads</a></li>
-              <li class="breadcrumb-item active"><%= lead.firstname %></li>
-            </ul>
+            <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                      <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/leads">Leads</a></li>
+                        <li class="breadcrumb-item active"><%= lead.firstname %></li>
+                      </ul>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <% if(!lead.assignedName){ %>
+                                <div class="float-right-actions">
+                        <div class="dropdown">
+                <button class="btn btn-outline-dark btn-sm" type="button" id="dropdownAssign" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="fa fa-user"></span> Assign
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownAssign">
+                <form action="/leads/assign/<%= lead.id %>" method="post">
+                <input type="hidden" name="assignedId" value="5d9f6f7fe95ed7404c3807ca"/>
+                <input type="hidden" name="assignedName" value="Viktor Svan Sigurðson"/>
+                  <button class="dropdown-item" type="submit">Viktor Svan Sigurðson</button>
+              </form>
+              <form action="/leads/assign/<%= lead.id %>" method="post">
+              <input type="hidden" name="assignedId" value="59b0294be32fa37e1fcc7738"/>
+              <input type="hidden" name="assignedName" value="Sigurður Sindri Magnússon"/>
+              <button class="dropdown-item" type="submit">Sigurður Sindri Magnússon</button>
+            </form>
+                </div>
+              </div>
+          </div>
+                                                 <% } else { %>
+
+                                                     <div class="float-right-actions">
+                                             <div class="dropdown">
+                                     <button class="btn btn-outline-dark btn-sm" type="button" id="dropdownAssign" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <span class="fa fa-user"></span> <%= lead.assignedName %>
+                                     </button>
+                                     <div class="dropdown-menu" aria-labelledby="dropdownAssign">
+                                     <form action="/leads/assign/<%= lead.id %>" method="post">
+                                     <input type="hidden" name="assignedId" value="5d9f6f7fe95ed7404c3807ca"/>
+                                     <input type="hidden" name="assignedName" value="Viktor Svan Sigurðson"/>
+                                       <button class="dropdown-item" type="submit">Viktor Svan Sigurðson</button>
+                                   </form>
+                                   <form action="/leads/assign/<%= lead.id %>" method="post">
+                                   <input type="hidden" name="assignedId" value="59b0294be32fa37e1fcc7738"/>
+                                   <input type="hidden" name="assignedName" value="Sigurður Sindri Magnússon"/>
+                                   <button class="dropdown-item" type="submit">Sigurður Sindri Magnússon</button>
+                                 </form>
+                                     </div>
+                                   </div>
+                               </div>
+                               <div class="float-right-actions">
+                                 <div class="dropdown">
+                       <button class="btn btn-outline-dark btn-sm" type="button" id="editBooking" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         <span class="fa fa-pencil"></span> Edit
+                       </button>
+                       <div class="dropdown-menu" aria-labelledby="editBooking">
+                         <a class="dropdown-item" data-toggle="modal" data-target="#removeLead">Delete Lead</a>
+                         <a class="dropdown-item" data-toggle="modal" data-target="#editModal">Edit Details</a>
+                       </div>
+                     </div>
+                               </div>
+                               <div class="float-right-actions">
+                                 <div class="dropdown">
+                       <button class="btn btn-success btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         <span class="fa fa-plus"></span> Add
+                       </button>
+                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                         <a class="dropdown-item" data-toggle="modal" data-target="#logActivity">Log Activity</a>
+                         <a class="dropdown-item" data-toggle="modal" data-target="#markSold">Create Trip</a>
+                       </div>
+                     </div>
+                               </div>
+
+                                                      <% }  %>
+
+                                <% if(lead.arrivaldate){ %>
+
+                                  <div class="float-right-actions">
+                                      <form action="/leads/send-confirmation/<%= lead._id %>" method="post">
+                          <button class="btn btn-primary btn-sm" type="submit" id="editBooking"  aria-haspopup="true" aria-expanded="false">
+                            <span class="fa fa-paper-plane"></span> Send Email Confirmation
+                          </button>
+                        </form>
+                                  </div>
+
+                                <% } %>
+
+
+                                <div class="float-right-actions">
+
+
+
+
+                                </div>
+                              </div>
+
+            </div>
           </div>
 
           <section class="forms">
@@ -24,12 +116,11 @@
 
                   <div class="card">
                     <div class="card-header">
-                      <h3 class="card-title">Contact <div class="badge badge-rounded bg-green <%= lead.status %>"><%= lead.status %></div></h3>
+                      <h3 class="card-title">Contact</h3>
                       <div class="card-close">
                       <div class="dropdown">
                         <% if(lead.status === "Sold"){ %>
                         <% } else { %>
-                                                <a href="#" class="edit-model" data-toggle="modal" data-target="#editModal"> <i class="fa fa-pencil"></i></a>
                         <% } %>
                         </div>
                     </div>
@@ -41,7 +132,10 @@
                           <% if(lead.phone){ %>
                           <i class="fa fa-phone"></i> <%= lead.phone %></br>
                           <% } %>
-                          <i class="fa fa-envelope"></i> <%= lead.email %>
+                          <i class="fa fa-envelope"></i> <%= lead.email %></br>
+                            <% if(lead.country){ %>
+                          <i class="fa fa-globe"></i> <%= lead.country %>
+                                <% } %>
                         </div>
                       </div>
                     </div>
@@ -63,67 +157,225 @@
                           <i class="fa fa-send"></i> <%= lead.trip %></br>
                           <hr>
                           <% } %>
-                          <% if(lead.status === "Sold"){ %>
-                              <button type="button" class="btn btn-success" disabled><span class="fa fa-check"></span> Marked as sold!</button>
-                          <% } else { %>
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#markSold"><i class="fa fa-paper-plane"></i> Send Confirmation Email</button>
-                          <% } %>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                </div>
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Emails</h3>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+
+
+                          <% emails.forEach(function(email) { %>
+
+                          <div class="email-holder">
+                            <p><a target="_blank" href="https://account.postmarkapp.com/servers/4603770/messages/<%= email.MessageID %>?from=outbound"><%= email.Subject %></a></p>
+                            <p><%= moment(email.ReceivedAt).format("LL") %> -  <span class="badge badge-success"><%= email.Status %></span></p>
+                          </div>
+
+                            <% }); %>
+
+
+
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <% if(lead.arrivaldate){ %>
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Trip</h3>
+                    </div>
+                    <div class="card-body client">
+                      <div class="media">
+                        <div class="media-body">
+                          <p class="text-muted mb-0">Arrival: <%= moment(lead.arrivaldate).format("LL") %> - Departure: <%= moment(lead.departuredate).format("LL") %></p>
+                          <p class="text-muted mb-0">Duration: <%= tripDuration %> Days</p>
+                          <p class="text-muted mb-0">Travellers: <%= lead.pax %> PAX</p>
+                          <p class="text-muted mb-0">Total Cost: <%= numeral(lead.total).format('0,0'); %> ISK</p>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+
+                  <div class="recent-updates card">
+                      <div class="card-header">
+                        <h3 class="h4">Payments</h3>
+                      </div>
+                      <div class="card-body no-padding">
+
+
+                        <% if(payments.length === 0){ %>
+
+                          <div class="item d-flex justify-content-between">
+                             <div class="info d-flex">
+                               <div class="title">
+                                 <h5>There are no payments</h5>
+
+
+
+
+                               </div>
+                             </div>
+                           </div>
+
+                       <% } else { %>
+
+                         <% payments.forEach(function(payment) { %>
+
+                           <div class="item d-flex justify-content-between">
+                             <div class="info d-flex">
+                               <div class="title">
+                                 <h5><%= moment(payment.date).format('LL') %></h5>
+                                 <p><strong><%= numeral(payment.amount).format('0,0'); %> ISK</strong>
+                                 <% if (payment.status === "Paid") { %>
+
+                                   <span class="badge badge-success"><%= payment.status %></span>
+
+                                   </p>
+
+                                 <% } else { %>
+
+                               <span class="badge badge-danger"><%= payment.status %></span>
+
+                               </p>
+
+
+                                 <% } %>
+
+                               </div>
+                             </div>
+                             <div class="payment-action">
+                               <button class="btn btn-outline-dark btn-sm no-outline" type="button" data-toggle="modal" data-target="#editPayment" data-date="<%= moment(payment.date).format('LL') %>" data-status="<%= payment.status %>" data-id="<%= payment.id %>" data-amount="<%= numeral(payment.amount).format('0,0'); %>"><span class="fa fa-pencil"></span></button>
+                             </div>
+                           </div>
+                         <!-- Item-->
+
+                         <div class="modal fade" id="editPayment" tabindex="-1" role="dialog" aria-labelledby="editPayment" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+       <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Payment</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <form method="post" action="" class="paymentToUpdate" encType="multipart/form-data">
+         <input type="hidden" name="lead" value="<%= lead._id %>">
+           <div class="form-group">
+             <label for="recipient-name" class="col-form-label">Payment Status:</label>
+             <select class="form-control custom-select payment-status" name="status">
+                               <option value="Paid">Paid</option>
+                               <option value="Unpaid">Unpaid</option>
+                             </select>
+           </div>
+         <h2 class="modal-amount"></h2>
+       </div>
+       <div class="modal-footer">
+         <button type="button" data-toggle="modal" data-target="#removePayment" data-paymentid="" aria-haspopup="true" aria-expanded="false" class="btn btn-danger">Delete</button>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-primary">Save</button>
+         </form>
+       </div>
+       </div>
+       </div>
+       </div>
+
+       <div class="modal fade" id="removePayment" tabindex="-1" role="dialog" aria-labelledby="removePayment" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+       <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Delete Payment</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <p>Do you want to delete this payment?</p>
+         <form method="post" action="" class="deletePayment">
+           <input type="hidden" name="bookingID" value="<%= lead._id %>">
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-danger">Delete</button>
+       </form>
+       </div>
+       </div>
+       </div>
+       </div>
+
+
+
+                         <% }); %>
+
+                        <% } %>
+
+
+
+                      </div>
+</div>
+</div>
 
                   <!-- Inline Form-->
                   <div class="col-lg-8">
-                      <div class="card">
-                        <div class="card-header pt-2 pb-2">
-                          <ul class="nav nav-pills card-header-pills">
-                            <li class="nav-item"><a data-toggle="pill" href="#log" role="tab" class="nav-link active">Activity log</a></li>
-                          </ul>
-                        </div>
-                        <div class="card-close">
-                  <div class="dropdown">
-                    <button data-toggle="modal" data-target="#logActivity" class="btn btn-primary"><span class="fa fa-money"></span> Pricing Details</button>
-                    <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeLead" data-lead="<%= lead._id %>" aria-haspopup="true" aria-expanded="false" class="btn btn-danger">Delete Lead</button>
-                    </div>
-                </div>
-                        <div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="log" role="tabpanel" aria-labelledby="pills-contact-tab">
-      <div class="card lead-single">
-                    <div class="list-group card-list-group">
-
-                      <% messages.forEach(function(message) { %>
-
-
-                        <div class="list-group-item py-5">
-                          <div class="media">
-                          <div class="media-body">
-                              <div class="media-heading">
-                                <h5><%= moment(message.created).format('lll') %></h5>
-                              </div>
-                              <div class="text-muted text-small"><%= message.text %></div>
-                            </div>
-                            <div class="card-close">
+                    <div class="card-header">
+                      <h3 class="card-title">Messages</h3>
+                      <div class="card-close">
                       <div class="dropdown">
-                        <button type="button" id="closeCard1" data-toggle="modal" data-target="#removeMessage" data-message="<%= message._id %>" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-times"></i></button>
-                        </div>
-                        <br>
-                    </div>
-                          </div>
-                        </div>
 
-    <% }); %>
 
-                    </div>
-                  </div>
-                  <div class="card-footer text-right">
-                      <button data-toggle="modal" data-target="#logActivity" class="btn btn-primary">Log Activity</button>
-                    </div>
-    </div>
                         </div>
-                      </div>
+                    </div>
+                    </div>
+
+                      <table class="table text-sm table-compact table-bordered table-bordered-o text-right" style="background-color: #fff;">
+                  <thead>
+
+                  </thead>
+
+                  <tbody>
+
+                    <% messages.forEach(function(message) { %>
+
+
+                      <tr class="lead-message">
+                        <td class="lead-message-details">
+                          <p class="time"><%= moment(message.created).format('lll') %> - By <%= message.by %></p>
+                          <p><%= message.text %></p>
+                          <button type="button" data-toggle="modal" data-target="#removeMessage" data-message="<%= message._id %>" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle delete-message-lead"><i class="fa fa-times"></i></button>
+                        </td>
+                      </tr>
+
+
+
+  <% }); %>
+
+
+
+
+
+
+
+
+
+                                  </tbody>
+                </table>
+
+
+
+
+
                     </div>
 
 
@@ -143,6 +395,7 @@
       <div class="modal-body">
         <form method="post" action="/leads/new-message">
             <input type="hidden" value="<%= lead.id %>" name="owner">
+            <input type="hidden" name="by" value="<%= currentUserName %>">
                         <div class="form-group">
                           <label class="form-label">Message</label>
                           <textarea rows="8" class="form-control" name="message"></textarea>
@@ -204,12 +457,18 @@
                           <% } %> <% if(lead.status === "Inactive"){ %>
                               <option value="Inactive" selected>Inactive</option>
                               <option value="Follow-up">Follow-up</option>
-                          <% }  %> <% if(lead.status === "Follow-up"){ %>
-                              <option value="Follow-up" selected>Follow-up</option>
-                              <option value="Waiting for confirmation">Waiting for confirmation</option>
+                          <% }  %> <% if(lead.status === "Follow-up" || lead.status === "2nd - Follow-up" || lead.status === "3rd - Follow-up" || lead.status === "2nd Week - Follow-up" || lead.status === "3rd Week - Follow-up"){ %>
+                              <option value="Follow-up">Follow-up</option>
+                              <option value="2nd - Follow-up">2nd - Follow-up</option>
+                              <option value="3rd - Follow-up">3rd - Follow-up</option>
+                              <option disabled>Weekly Follow-Up</option>
+                              <option value="2nd Week - Follow-up">2nd Week - Follow-up</option>
+                              <option value="3rd Week - Follow-up">3rd Week - Follow-up</option>
+                              <option disabled>No reponse</option>
                               <option value="Inactive">Inactive</option>
                           <% } %>
                           <% if(lead.status === "Waiting for confirmation"){ %>
+                              <option value="Sold">Sold</option>
                               <option value="Inactive" selected>Inactive</option>
                           <% } %>
                       </select>
@@ -228,7 +487,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Send Confirmation Email</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Create Trip</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -247,20 +506,54 @@
             <div class="col">
               <div class="form-group">
               <label for="recipient-name" class="col-form-label">Arrival date</label>
-              <input type="text" class="input-sm form-control" name="arrival" value="<%= lead.arrivaldate %>" required autocomplete="off" />
+              <input type="text" class="input-sm form-control" name="arrival" value="<%= moment(lead.arrivaldate).format('LL')%>" required autocomplete="off" />
             </div>
             </div>
             <div class="col">
               <div class="form-group">
                 <label for="recipient-name" class="col-form-label">Departure date</label>
-              <input type="text" class="input-sm form-control" name="departure" value="<%= lead.departuredate %>" required autocomplete="off" />
+              <input type="text" class="input-sm form-control" name="departure" value="<%= moment(lead.departuredate).format('LL')%>" required autocomplete="off" id="departureDate"/>
               </div>
             </div>
           </div>
           </div>
 
-
-
+          <hr>
+          <p>Payment</p>
+          <div class="i-checks">
+          <input name="splitPayment" id="splitPayment" type="checkbox" value="" class="checkbox-template" checked>
+          <label for="checkboxCustom1">Split total amount into two payments</label>
+        </div>
+<div id="paymentsOptions">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+      <label for="recipient-name" class="col-form-label">Amount</label>
+        <input type="text" class="form-control total-isk" autocomplete="off" name="amountDeposit" id="depositAmount">
+    </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="recipient-name" class="col-form-label">Due date</label>
+      <input type="text" class="input-sm form-control" name="dueDeposit" value="<%= moment().format('LL'); %>" required autocomplete="off" />
+      </div>
+    </div>
+  </div>
+  <div class="row payment-two">
+    <div class="col">
+      <div class="form-group">
+      <label for="recipient-name" class="col-form-label">Amount</label>
+        <input type="text" class="form-control total-isk" autocomplete="off" name="amountFinal" id="finaltAmount">
+    </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="recipient-name" class="col-form-label">Due date</label>
+      <input type="text" class="input-sm form-control" name="dueFinal" required autocomplete="off" id="finalPaymentDayDate"/>
+      </div>
+    </div>
+  </div>
+</div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Number of Travellers</label>
             <input type="number" class="form-control" name="pax" id="recipient-name"  value="<%= lead.pax %>" required autocomplete="off">
@@ -310,7 +603,7 @@
       <div class="modal-body">
         <p>Do you want to delete this lead?</p>
         <form method="post" action="/leads/delete-lead">
-          <input type="hidden" id="leadID" name="leadID" value="">
+          <input type="hidden" name="thisLead" value="<%= lead._id %>">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -326,6 +619,33 @@
 
 <script type="text/javascript">
 
+$('#removePayment').on('show.bs.modal', function (event) {
+
+var button = $(event.relatedTarget) // Button that triggered the modal
+var id = button.data('paymentid');
+
+
+var modal = $(this)
+$('.deletePayment').attr('action', '/leads/remove/payments/'+ id);
+
+});
+
+$('#editPayment').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var amount = button.data('amount'); // Extract info from data-* attributes
+  var status = button.data('status');
+  var date = button.data('date');
+  var id = button.data('id');
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  modal.find('.modal-title').text('Payment: ' + date)
+  modal.find('h2.modal-amount').html('<i class="material-icons">attach_money</i> ' + amount + ' ISK')
+  modal.find('select.form-control.custom-select.payment-status').val(status);
+  modal.find('.btn-danger').attr('data-paymentid', id);
+  $('.paymentToUpdate').attr('action', '/leads/payment/update-status/'+ id);
+});
+
 $('input#total-isk').maskNumber({
    integer: true,
    decimal: '',
@@ -338,6 +658,39 @@ $('input#total-isk').maskNumber({
      autoclose: true,
      todayHighlight: true,
  });
+
+ $( "input#splitPayment" ).change(function() {
+
+   if ($('input#splitPayment').prop('checked')) {
+
+     $(".row.payment-two").html( '<div class="col"><div class="form-group"><label for="recipient-name" class="col-form-label">Amount</label><input type="text" class="form-control total-isk" autocomplete="off" name="amountFinal" id="finaltAmount"></div></div><div class="col"><div class="form-group"><label for="recipient-name" class="col-form-label">Due date</label> <input type="text" class="input-sm form-control" name="dueFinalDate" required autocomplete="off" id="finalPaymentDayDate"/></div></div>');
+
+
+ } else {
+
+   $(".row.payment-two").html( "");
+
+ }
+
+ });
+
+
+ $( "#total-isk" ).change(function() {
+   totalAmount = $(this).val();
+   var makeNumber = String(totalAmount).split('.').join("");
+   var depositAmount = (30 / 100) * makeNumber;
+   var finalAmount = (70 / 100) * makeNumber;
+   $("input#depositAmount").val(depositAmount);
+   $("input#finaltAmount").val(finalAmount);
+
+});
+
+
+$( "#departureDate" ).change(function() {
+  departureday = $(this).val();
+  var finalPaymentDay = moment(departureday).subtract(60, 'days').format('LL');
+  $("#finalPaymentDayDate").val(finalPaymentDay);
+});
 
 
 $('#removeMessage').on('show.bs.modal', function (event) {
@@ -360,17 +713,19 @@ modal.find('input#leadID').val(message)
 
 </script>
 <% if (message === "newMessage") { %>
+
   <script type="text/javascript">
+    toastr.success('New Message created!!')
+  </script>
 
 
-  Messenger().post({
-    extraClasses: 'messenger-fixed messenger-on-top  messenger-on-right',
-    theme: 'flat',
-  message: 'New Message created!',
-  type: 'success'
-  });
 
+<% } %>
 
+<% if (message === "Emailsent") { %>
+
+  <script type="text/javascript">
+    toastr.success('Email has been sent to client!')
   </script>
 
 <% } %>

@@ -15,6 +15,12 @@ var supplierSchema = new mongoose.Schema({
   city: {
     type: String
   },
+  pricelist: {
+    type: String
+  },
+  valid: {
+    type: String
+  },
   zip: {
     type: String
   },

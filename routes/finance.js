@@ -7,78 +7,10 @@ const Transaction = require('../models/transaction');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment');
 const numeral = require('numeral');
-const pdf = require('pdfkit');
 const fs = require('fs');
 
 
 
-
-router.post('/upload/:Request_id', mid.requiresLogin, function(req, res, next) {
-  Request.findById(req.params.Request_id, function(err, request) {
-    console.log(request);
-    let mainName = sanitize(req.params.Request_id) + '.pdf';
-    let mainInvoice = sanitize(req.files.invoice);
-      if (err)
-        res.send(err);
-        request.file = '/uploads/invoices/'+ mainName,
-        mainInvoice.mv('./public/uploads/invoices/'+ mainName, function(err) {
-        request.save(function(err) {
-            if (err)
-            res.send(err);
-            res.redirect('/finance/invoices?message=attached');
-    })
-  })
-  })
-});
-
-
-
-router.get(['/invoices', '/invoices/:period'], mid.requiresLogin, function(req, res, next) {
-  var Period = req.params.period;
-  var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-
-  var start = moment().startOf('year').format();
-  var end   = moment().endOf('year').format();
-
-  var timeView = moment(start).format('YYYY');
-
-  if (req.query.selectedDateView) {
-
-    start = moment(req.query.selectedDateView).startOf('month').format();
-    end = moment(start).endOf('month').format();
-
-    timeView = moment(start).format('MMMM');
-
-
-  }
-
-
-  Request.find({date: {
-    $gte: start,
-    $lt: end
-  }}).sort({date: 'descending'}).exec(function(err, requests) {
-        if(err){
-            console.log(err);
-          } else {
-            var message = req.query.message;
-            var getTotalDebt = 0;
-            var totalInvoices = 0;
-
-                for (var i = 0; i < requests.length; i++) {
-
-                  if (requests[i].paymentstatus === "Unpaid") {
-                      getTotalDebt += requests[i].debt;
-                  }
-
-                  totalInvoices += requests[i].debt;
-
-                }
-
-            res.render('pages/invoices', { title: 'Invoice Overview', timeView: timeView, message: message, requests: requests, moment: moment, numeral: numeral, totalDebt: getTotalDebt, totalInvoices: totalInvoices});
-
-        }
-  });
-});
 
 router.get(['/payments', '/payments/:period'], mid.requiresLogin, function(req, res, next) {
 
@@ -87,6 +19,9 @@ router.get(['/payments', '/payments/:period'], mid.requiresLogin, function(req, 
 
     var start = moment().startOf('year').format();
     var end   = moment().endOf('year').format();
+
+    var startYear = moment().startOf('year').format();
+    var endYear   = moment().endOf('year').format();
 
     var timeView = moment(start).format('YYYY');
 
@@ -99,6 +34,9 @@ router.get(['/payments', '/payments/:period'], mid.requiresLogin, function(req, 
 
 
   }
+
+
+
 
 
   Transaction.find({date: {
@@ -135,7 +73,7 @@ router.get(['/payments', '/payments/:period'], mid.requiresLogin, function(req, 
 });
 
 
-router.get(['/reports', '/reports/:period'], function(req, res, next) {
+router.get(['/reports', '/reports/:period'], mid.requiresLogin, function(req, res, next) {
   var Period = req.params.period;
   var date = new Date(), y = date.getFullYear(), m = date.getMonth();
 
@@ -186,6 +124,17 @@ router.post('/payment/update-status/:Payment_id', mid.requiresLogin, function (r
     })
 
   })
+});
+
+router.post('/payment/remove/:Payment_id',  function(req, res, next) {
+  Transaction.remove({
+        _id: sanitize(req.params.Payment_id)
+    }, function(err, item) {
+        if (err) {
+          return next(err);
+        } else
+      res.redirect('/finance/payments/?message=deleted');
+    })
 });
 
 
